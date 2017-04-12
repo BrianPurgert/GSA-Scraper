@@ -1,0 +1,73 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    archive-zip (0.7.0)
+      io-like (~> 0.3.0)
+    childprocess (0.6.3)
+      ffi (~> 1.0, >= 1.0.11)
+    chromedriver-helper (1.1.0)
+      archive-zip (~> 0.7.0)
+      nokogiri (~> 1.6)
+    colorize (0.8.1)
+    connection_pool (2.2.1)
+    data_magic (1.0)
+      faker (>= 1.1.2)
+      yml_reader (>= 0.6)
+    faker (1.7.3)
+      i18n (~> 0.5)
+    ffi (1.9.18-x64-mingw32)
+    ffi (1.9.18-x86-mingw32)
+    i18n (0.8.1)
+    in_threads (1.4.0)
+    io-like (0.3.0)
+    mini_portile2 (2.1.0)
+    monetize (1.6.0)
+      money (~> 6.8)
+    money (6.8.3)
+      i18n (>= 0.6.4, < 0.9)
+      sixarm_ruby_unaccent (>= 1.1.1, < 2)
+    mysql2 (0.4.5-x64-mingw32)
+    mysql2 (0.4.5-x86-mingw32)
+    net-http-persistent (3.0.0)
+      connection_pool (~> 2.2)
+    nokogiri (1.7.1-x64-mingw32)
+      mini_portile2 (~> 2.1.0)
+    nokogiri (1.7.1-x86-mingw32)
+      mini_portile2 (~> 2.1.0)
+    page-object (2.1.1)
+      net-http-persistent (~> 3.0)
+      page_navigation (>= 0.9)
+      selenium-webdriver (~> 3.0)
+      watir (~> 6.0)
+    page_navigation (0.10)
+      data_magic (>= 0.22)
+    ruby-ole (1.2.12.1)
+    rubyzip (1.0.0)
+    selenium-webdriver (3.3.0)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0)
+    sixarm_ruby_unaccent (1.1.1)
+    spreadsheet (1.1.4)
+      ruby-ole (>= 1.0)
+    watir (6.2.1)
+      selenium-webdriver (~> 3.0)
+    websocket (1.2.4)
+    yml_reader (0.7)
+
+PLATFORMS
+  x64-mingw32
+  x86-mingw32
+
+DEPENDENCIES
+  chromedriver-helper (~> 1.1)
+  colorize (~> 0.8.1)
+  in_threads
+  monetize
+  mysql2 (~> 0.4.5)
+  page-object (~> 2.1, >= 2.1.1)
+  spreadsheet (~> 1.1, >= 1.1.4)
+  watir (~> 6.2, >= 6.2.1)
+
+BUNDLED WITH
+   1.14.6

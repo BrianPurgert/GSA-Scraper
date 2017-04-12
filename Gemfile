@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
+gem 'chromedriver-helper', '~> 1.1'
+gem 'watir', '~> 6.2', '>= 6.2.1'
+gem 'page-object', '~> 2.1', '>= 2.1.1'
+gem 'colorize', '~> 0.8.1'
+gem 'mysql2', '~> 0.4.5'
+gem 'monetize'
+gem 'in_threads'
+# gem 'mechanize', '~> 2.7', '>= 2.7.5'
