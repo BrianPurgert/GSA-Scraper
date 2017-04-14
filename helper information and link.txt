@@ -3,9 +3,12 @@
 # rescue
 # ensure
 # end
-https://dev.mysql.com/downloads/file/?id=412152
 
-https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=A
+
+https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}
+https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&q=28:5#{mfr}
+
+
 https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:1PP454P&s=0&c=10&searchType=1
 https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:1PP454P&s=0&c=1&searchType=0
 "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:2#{}&s=0&c=1&searchType=0"

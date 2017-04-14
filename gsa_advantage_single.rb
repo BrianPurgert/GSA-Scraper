@@ -1,4 +1,3 @@
-require 'page-object'
 require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
@@ -19,15 +18,22 @@ gsa_advantage = []
 N_threads = 10
 N_threads_plus_one = N_threads+1
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+@client = Mysql2::Client.new(
+host:     "70.61.131.180",
+username: "mft_data",
+password: "GoV321CoN",
+reconnect: true,
+cast: false
+)
 
 def ask_user
     puts "0:\t Run GSA Advantage search on items from database".colorize(:cyan)
     puts "1:\t Add excel data to database only".colorize(:cyan)
     puts "2:\t Add excel data to database and run GSAAdvantage search on items from database".colorize(:cyan)
     puts "3:\t Add all excel files in directory to database".colorize(:cyan)
-    user_value = gets.to_i
+    user_value = 0
+	    # user_value = gets.to_i
 end
-
 def xls_read
     Spreadsheet.client_encoding = 'UTF-8'
     basedir                     = './../Input-Files/'
@@ -70,7 +76,6 @@ def xls_read
     puts @mfrn_found ? "Manufacture found".colorize(:green) : 'Manufacture not found'.colorize(:red)
     exit if !@mfrn_found
 end
-
 def xls_to_database(client)
     insert_mfr_part = client.prepare('
 INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
@@ -83,7 +88,6 @@ VALUES (?, ?);
 	  insert_mfr_part.execute(@search_items[mfr_index], @mfr_name[mfr_index])
     end
 end
-
 def write_new_xls(output_xls)
     out_book    = Spreadsheet::Workbook.new
     sheet1      = out_book.create_worksheet
@@ -96,22 +100,29 @@ def write_new_xls(output_xls)
     }
     out_book.write(output_xls)
 end
-
 def skip(search_item)
     puts "skipping MFT: #{search_item}"
 end
-
 def benchmark
     Bench_time << Time.now
     elapsed       = Bench_time[-1] - Bench_time[-2]
     total_elapsed = Bench_time[-1] - Bench_time[0]
     print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 end
-
+def move_empty_queue
+	@client.query('
+UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
+SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
+    lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
+    lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
+    lowest_price_contractor.mpn_page_url = queue.mpn_page_url
+WHERE lowest_price_contractor.mpn = queue.mpn;
+')
+	@client.query('TRUNCATE `mft_data`.`queue`;')
+end
 def search_url(mpn, mft)
     return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
 end
-
 def initialize_browsers(browser, gsa_advantage)
 	(0..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
@@ -128,14 +139,8 @@ def initialize_browsers(browser, gsa_advantage)
     end
 end
 
-@client = Mysql2::Client.new(
-host:     "70.61.131.180",
-username: "mft_data",
-password: "GoV321CoN",
-reconnect: true,
-cast: false
-)
 
+move_empty_queue
 
 def use_database_items
 	result = @client.query('
@@ -207,9 +212,9 @@ def search_on_browser(gsa_advantage, update_mfr,si,mn)
 		end
 	else
 		puts "Search #{si} returned no items"
-		@semaphore.synchronize{
-		  update_mfr.execute(si,'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND')
-		}
+		# @semaphore.synchronize{
+		#   update_mfr.execute(si,'NOT FOUND', 'NOT FOUND', 'NOT FOUND', 'NOT FOUND')
+		# }
 	end
 	
 end
@@ -228,22 +233,12 @@ t_count = 0;
 	    t_count = 0
     end
 end
-puts 'Joining'
+puts 'Joining Threads'
 Thread.list.each { |t| t.join if t != Thread.current }
-write_new_xls(output_xls)
+# write_new_xls(output_xls)
 
-def move_empty_queue
-	@client.query('
-UPDATE lowest_price_contractor, queue
-SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-    lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-    lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-    lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-WHERE lowest_price_contractor.mpn = queue.mpn;
-TRUNCATE queue;
-')
-end
-# move_empty_queue
+
+
 
 # @data_out.each { |key, value|
 #     puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"

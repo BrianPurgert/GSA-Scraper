@@ -41,6 +41,7 @@ GEM
       watir (~> 6.0)
     page_navigation (0.10)
       data_magic (>= 0.22)
+    rake (12.0.0)
     ruby-ole (1.2.12.1)
     rubyzip (1.0.0)
     selenium-webdriver (3.3.0)
@@ -66,6 +67,7 @@ DEPENDENCIES
   monetize
   mysql2 (~> 0.4.5)
   page-object (~> 2.1, >= 2.1.1)
+  rake (~> 12.0)
   spreadsheet (~> 1.1, >= 1.1.4)
   watir (~> 6.2, >= 6.2.1)
 
