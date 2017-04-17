@@ -138,7 +138,23 @@ def initialize_browsers(browser, gsa_advantage)
 		benchmark
     end
 end
+def scrape_manufactures(browser, gsa_advantage)
+	rx_mfr = /(?<=\q=28:5).*/
+	("A".."Z").in_threads(2).each_with_index do |letter, index|
+		r_proxy = Proxy_list.sample
+		browser[index]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		gsa_advantage[index] = GsaAdvantagePage.new(browser[index])
+		gsa_advantage[index].browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
+		@href_mfrs = []
+		gsa_advantage[index].mft_table_element.links.each do |link|
+			href_mfr = rx_mfr.match(link.href)
+			puts href_mfr
+			@href_mfrs << href_mfr
+		end
+	end
+end
 
+"https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
 
 move_empty_queue
 
@@ -178,6 +194,8 @@ end
 # update_mfr = @client.prepare("UPDATE mft_data.lowest_price_contractor SET lowest_contractor=?, lowest_contractor_price=?, lowest_contractor_page_url=?, mpn_page_url=? WHERE mpn = ?;")
 update_mfr = @client.prepare("INSERT INTO mft_data.queue(mpn, lowest_contractor, lowest_contractor_price, lowest_contractor_page_url, mpn_page_url) VALUES (?, ?, ?, ?, ?)")
 
+scrape_manufactures(browser, gsa_advantage)
+sleep 200
 initialize_browsers(browser, gsa_advantage)
 puts "_____________________________________________________________________________".colorize(:orange)
 @data_out = {}

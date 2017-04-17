@@ -5,6 +5,16 @@ require 'spreadsheet'
 require_relative 'pages/gsa_advantage_page'
 require 'mysql2'
 
+mfr_list_pages = ("A".."Z").to_a << "0"
+puts mfr_list_pages
+sleep 10
+testst = "https://www.gsaadvantage.gov/advantage/s/refineSearch.do;jsessionid=F47E648BFB6508CEBD083ABD30A4CFCB.F4?q=1:4*&_a=u&_q=28:5SCOTSMAN"
+rx_mfr = /(?<=\q=28:5).*/
+puts rx_mfr.match()
+
+sleep 200
+whitespace =""
+
 client = Mysql2::Client.new(
 		host:     "70.61.131.180",
 		username: "mft_data",
@@ -15,7 +25,7 @@ client = Mysql2::Client.new(
   gsa_advantage = GsaAdvantagePage.new(browser)
   gsa_advantage.browser.goto 'https://brianpurgert.com'
 sleep 10
-gsa_advantage.browser.window.
+
 
 
 
