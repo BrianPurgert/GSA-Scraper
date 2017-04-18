@@ -3,7 +3,7 @@
 # rescue
 # ensure
 # end
-
+https://vsc.gsa.gov/ediuser/gsaadvdocs.cfm
 
 https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}
 https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&q=28:5#{mfr}
