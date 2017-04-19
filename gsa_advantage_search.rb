@@ -16,9 +16,13 @@ browser       = []
 gsa_advantage = []
 @search_items = []
 @mfr_name     = []
-N_threads = 10
+N_threads      = 10
 N_threads_plus_one = N_threads+1
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list     = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Basedir        = './Input-Files/'
+Files          = Dir.glob(Basedir+"*.xls")
+Current_time   = Time.new
+
 
 def info_user
 	puts "\n\nSteps"
@@ -29,23 +33,18 @@ def info_user
 	puts "4:\t perform searches on on mpn & mft to find the featured price".colorize(:cyan)
 	puts "4:\t this script specifically is not able to find sale prices"
 	puts "5:\t generates filename-out.xls containing this data".colorize(:cyan)
-
-
 end
 
 def xls_read
 		Spreadsheet.client_encoding = 'UTF-8'
-		basedir                     = './Input-Files/'
-		files                       = Dir.glob(basedir+"*.xls")
 		puts "\nInput file number & press enter"
-		files.each_with_index do |file, num|
+		Files.each_with_index do |file, num|
 				puts "#{num}\t#{file}\t".colorize(:green)
 		end
 		pick_num   = gets.to_i
-		book       = Spreadsheet.open files[pick_num]
-		output_xls = "#{files[pick_num]}-out.xls"
+		user_excel_file_name = Files[pick_num]
+		book       = Spreadsheet.open Files[pick_num]
 		sheet      = book.worksheet 0
-
 		@mfr_found  = false
 		@mfrn_found = false
 		sheet.each_with_index do |row, r_index|
@@ -71,37 +70,27 @@ def xls_read
 						end
 				end
 		end
-		output_xls
 		puts @mfrn_found ? "Manufacture found".colorize(:green) : 'Manufacture not found'.colorize(:red)
 		exit if !@mfrn_found
-end
-
-def write_new_xls(output_xls)
-		out_book    = Spreadsheet::Workbook.new
-		sheet1      = out_book.create_worksheet
-		sheet1.name = 'Lowest Price Contractor'
-		row_1       = ['mpn', 'manufacturer_name', 'lowest_contractor', 'lowest_contractor_price', 'lowest_contractor_page_url', 'mpn_page_url']
-		out_book.worksheet(0).insert_row(0, row_1)
-		@data_out.each { |key, value|
-				lst = out_book.worksheet(0).last_row_index + 1
-				out_book.worksheet(0).insert_row(lst, [key, value[0], value[1], value[2], value[3], value[4]])
-		}
-		out_book.write(output_xls)
+		return user_excel_file_name
 end
 
 def skip(search_item)
 		@data_out[search_item] = ['SKIPPED', 'SKIPPED', 'SKIPPED', 'SKIPPED']
 		puts "skipping MFT PN: #{search_item}".colorize(:red)
 end
+
 def benchmark
 		Bench_time << Time.now
 		elapsed = Bench_time[-1] - Bench_time[-2]
 		total_elapsed = Bench_time[-1] - Bench_time[0]
 		print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 end
+
 def search_url(mpn, mft)
 		return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
 end
+
 def initialize_browsers(browser, gsa_advantage)
 	(0..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
@@ -119,7 +108,8 @@ def initialize_browsers(browser, gsa_advantage)
 end
 
 info_user
-output_xls = xls_read
+excel_file_out_name = "#{xls_read}--#{Current_time.day} #{Current_time.hour} #{Current_time.min}.xls"
+
 @search_items.each_index  do |index|
 	print "\t#{index}\t".colorize(:magenta)
 	puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
@@ -191,10 +181,28 @@ t_count = 0;
 end
 puts 'Threads Started'
 Thread.list.each { |t| t.join if t != Thread.current }
-@data_out.each { |key, value|
+
+@data_out.each_pair do |key, value|
 	puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
-}
-write_new_xls(output_xls)
+end
+
+n_row = 0
+
+puts excel_file_out_name
+excel_file_out       = Spreadsheet::Workbook.new
+gsa_price_sheet      = excel_file_out.create_worksheet
+gsa_price_sheet.name = 'GSA Product Price'
+puts '1'
+gsa_price_sheet.insert_row(n_row, ['mpn', 'manufacturer_name', 'lowest_contractor', 'lowest_contractor_price', 'lowest_contractor_page_url', 'mpn_page_url'])
+n_row = n_row + 1
+
+@data_out.each_pair do |key, value|
+	gsa_price_sheet.insert_row(n_row, ["#{key}", "#{value[0]}", "#{value[1]}", "#{value[2]}", "#{value[3]}", "#{value[4]}"])
+	n_row = n_row + 1
+	print "#{n_row}\t"
+end
+
+excel_file_out.write(excel_file_out_name)
 
 
 

@@ -4,7 +4,43 @@ require 'page-object/page_factory'
 require 'spreadsheet'
 require_relative 'pages/gsa_advantage_page'
 require 'mysql2'
+require 'sharepoint-ruby'
 
+site = Sharepoint::Site.new 'govconsvcs.sharepoint.com', 'MD'
+site.session.authenticate 'brianpurgert', 'JBM123!@#'
+lists = site.lists
+for l in lists
+	puts l.title
+end
+
+# book = Spreadsheet::Workbook.new
+# sheet1 = book.create_worksheet
+# sheet2 = book.create_worksheet :name => 'My Second Worksheet'
+# sheet1.name = 'Price'
+# sheet1.row(0).concat %w{Name Country Acknowlegement}
+# sheet1[1,0] = 'Japan'
+# row = sheet1.row(1)
+# row.push 'Creator of Ruby'
+# row.unshift 'Yukihiro Matsumoto'
+# sheet1.row(2).replace [ 'Daniel J. Berger', 'U.S.A.',
+#                         'Author of original code for Spreadsheet::Excel' ]
+# sheet1.row(3).push 'Charles Lowe', 'Author of the ruby-ole Library'
+# sheet1.row(3).insert 1, 'Unknown'
+# sheet1.update_row 4, 'Hannes Wyss', 'Switzerland', 'Author'
+#
+# sheet1.row(0).height = 18
+#
+# format = Spreadsheet::Format.new :color => :blue,
+#                                  :weight => :bold,
+#                                  :size => 18
+# sheet1.row(0).default_format = format
+#
+# bold = Spreadsheet::Format.new :weight => :bold
+# 4.times do |x| sheet1.row(x + 1).set_format(0, bold) end
+#
+# book.write 'excel-file.xls'
+
+sleep 100
 mfr_list_pages = ("A".."Z").to_a << "0"
 puts mfr_list_pages
 sleep 10

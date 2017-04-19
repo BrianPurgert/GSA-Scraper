@@ -44,11 +44,12 @@ end
 mfr_mysql = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 
 
-def scrape_mft_step_1(letter,mfr_mysql,index)
+def scrape_mft_step_1(mfr_mysql,index)
+	
 		@r_proxy = Proxy_list.sample
 		@browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{@r_proxy}"]
 		@gsa_advantage = GsaAdvantagePage.new(@browser)
-		@gsa_advantage.browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
+		@gsa_advantage.browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{@mfr_list[index]}"
 		@mfrs = []
 		@href_mfrs = []
 		@gsa_advantage.mft_table_element.links.each do |link|
@@ -74,9 +75,9 @@ end
 @threads = []
 @mfr_list = ("A".."F").to_a << "0"
 
-@mfr_list.in_threads.each_with_index do |letter, index|
+@mfr_list.in_threads.each_index do |index|
 	    # @threads << Thread.new do
-		    scrape_mft_step_1(letter,mfr_mysql,index)
+		    scrape_mft_step_1(mfr_mysql,index)
 	    # end
 end
 puts 'Threads launced waiting to complete'

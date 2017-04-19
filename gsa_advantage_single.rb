@@ -27,15 +27,6 @@ cast: false
 )
 
 def ask_user
-	puts "\t\t This script will"
-	puts "0:\t open an excel xls file (NOT XLSX)".colorize(:cyan)
-	puts "1:\t looks for  cell that contains ".colorize(:cyan)
-	mfr part
-	manufacturer part
-	mpn
-	mfgpart
-	puts "2:\t Add excel data to database and run GSAAdvantage search on items from database".colorize(:cyan)
-	puts "3:\t Add all excel files in directory to database".colorize(:cyan)
     user_value = 0
 	    # user_value = gets.to_i
 end
@@ -158,7 +149,7 @@ def scrape_manufactures(browser, gsa_advantage)
 	end
 end
 
-"https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
+# "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
 
 move_empty_queue
 
@@ -198,8 +189,8 @@ end
 # update_mfr = @client.prepare("UPDATE mft_data.lowest_price_contractor SET lowest_contractor=?, lowest_contractor_price=?, lowest_contractor_page_url=?, mpn_page_url=? WHERE mpn = ?;")
 update_mfr = @client.prepare("INSERT INTO mft_data.queue(mpn, lowest_contractor, lowest_contractor_price, lowest_contractor_page_url, mpn_page_url) VALUES (?, ?, ?, ?, ?)")
 
-scrape_manufactures(browser, gsa_advantage)
-sleep 200
+# scrape_manufactures(browser, gsa_advantage)
+# sleep 200
 initialize_browsers(browser, gsa_advantage)
 puts "_____________________________________________________________________________".colorize(:orange)
 @data_out = {}
