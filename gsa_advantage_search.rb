@@ -191,14 +191,13 @@ t_count = 0;
 end
 puts 'Threads Started'
 Thread.list.each { |t| t.join if t != Thread.current }
-
-@data_out[si] = [mn,contractor, contractor_price, contractor_page_url, product_page_url]
+@data_out.each { |key, value|
+	puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
+}
 write_new_xls(output_xls)
 
 
-@data_out.each { |key, value|
-#     puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
-# }
+
 
 
 
