@@ -1,6 +1,4 @@
-
-puts 'if you reading this, right click on the gsa_scripts folder and select SVN Update'
-puts 'still not ready :('
-sleep 500
+require_relative 'gsa_advantage_search.rb'
+run gsa_advantage_search
 
 
