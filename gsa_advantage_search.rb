@@ -1,4 +1,3 @@
-require 'page-object'
 require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
@@ -8,24 +7,37 @@ require 'colorize'
 require 'colorized_string'
 require 'mysql2'
 require 'monetize'
+require 'yaml'
+require 'in_threads'
 
-Bench_time = [Time.now]
+
+Bench_time    = [Time.now]
 browser       = []
 gsa_advantage = []
 @search_items = []
-@mfr_name = []
+@mfr_name     = []
+N_threads = 10
+N_threads_plus_one = N_threads+1
+Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
-def ask_user
-		puts "0:\t Run GSA Advantage search on items from database".colorize(:cyan)
-		puts "1:\t Add excel data to database only".colorize(:cyan)
-		puts "2:\t Add excel data to database and run GSAAdvantage search on items from database".colorize(:cyan)
-		puts "3:\t Add all excel files in directory to database".colorize(:cyan)
-		user_value = gets.to_i
+def info_user
+	puts "\n\nSteps"
+	puts "0:\t open an excel xls file (NOT XLSX) contained in the Input-Files folder".colorize(:cyan)
+	puts "1:\t gets the Manufacture Part column by using the first cell containing either: mfr part, manufacturer part, mpn, mfgpart".colorize(:cyan)
+	puts "2:\t gets the Manufacture Name column by using the first cell containing either: manufacturer name, mfgname, mfr part".colorize(:cyan)
+	puts "3:\t open browsers, check proxies".colorize(:cyan)
+	puts "4:\t perform searches on on mpn & mft to find the featured price".colorize(:cyan)
+	puts "4:\t this script specifically is not able to find sale prices"
+	puts "5:\t generates filename-out.xls containing this data".colorize(:cyan)
+
+
 end
+
 def xls_read
 		Spreadsheet.client_encoding = 'UTF-8'
-		basedir                     = './../Input-Files/'
+		basedir                     = './Input-Files/'
 		files                       = Dir.glob(basedir+"*.xls")
+		puts "\nInput file number & press enter"
 		files.each_with_index do |file, num|
 				puts "#{num}\t#{file}\t".colorize(:green)
 		end
@@ -63,18 +75,6 @@ def xls_read
 		puts @mfrn_found ? "Manufacture found".colorize(:green) : 'Manufacture not found'.colorize(:red)
 		exit if !@mfrn_found
 end
-def xls_to_database(client)
-		insert_mfr_part = client.prepare('
-INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
-VALUES (?, ?);
-')
-		
-		@search_items.each_index do |mfr_index|
-				print "#{mfr_index}\t".colorize(:magenta)
-				puts "#{@search_items[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
-				insert_mfr_part.execute(@search_items[mfr_index], @mfr_name[mfr_index])
-		end
-end
 
 def write_new_xls(output_xls)
 		out_book    = Spreadsheet::Workbook.new
@@ -88,9 +88,10 @@ def write_new_xls(output_xls)
 		}
 		out_book.write(output_xls)
 end
+
 def skip(search_item)
 		@data_out[search_item] = ['SKIPPED', 'SKIPPED', 'SKIPPED', 'SKIPPED']
-		puts "skipping MFT: #{search_item}"
+		puts "skipping MFT PN: #{search_item}".colorize(:red)
 end
 def benchmark
 		Bench_time << Time.now
@@ -101,120 +102,104 @@ end
 def search_url(mpn, mft)
 		return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
 end
-def initialize_browsers(browser, gsa_advantage, proxy_list)
-		proxy_list.each_with_index do |proxy, index|
-				benchmark
-				browser[index]       = Watir::Browser.new :chrome, switches: ["--proxy-server=#{proxy}"]
-				gsa_advantage[index] = GsaAdvantagePage.new(browser[index])
-				gsa_advantage[index].browser.goto 'https://ifconfig.co/ip'
-				print "\nProxy #{index}\t"
-				print "#{gsa_advantage[index].browser.text}\t#{proxy}"
-				benchmark
-				gsa_advantage[index].browser.driver.manage.window.resize_to(300, 950)
-				gsa_advantage[index].browser.driver.manage.window.move_to(((index % 8)*200), 0)
-				gsa_advantage[index].browser.goto 'https://www.gsaadvantage.gov'
-				benchmark
-		end
+def initialize_browsers(browser, gsa_advantage)
+	(0..N_threads).in_threads.each do |nt|
+		r_proxy = Proxy_list.sample
+		browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
+		# gsa_advantage[nt].browser.goto 'https://ifconfig.co/ip'
+		print "\nBrowser #{nt}\t".colorize(:blue)
+		print "#{gsa_advantage[nt].browser.text}\t#{r_proxy}"
+		gsa_advantage[nt].browser.driver.manage.window.resize_to(300, 950)
+		gsa_advantage[nt].browser.driver.manage.window.move_to(((nt % 8)*200), 0)
+		gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
+		puts gsa_advantage[nt]
+		benchmark
+	end
+end
+
+info_user
+output_xls = xls_read
+@search_items.each_index  do |index|
+	print "\t#{index}\t".colorize(:magenta)
+	puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
+end
+puts 'Is this data correct? y/n'
+puts 'If not, exit this, fix excel file, save, close, rerun this script'
+
+loop do
+	system("stty raw -echo")
+	c = STDIN.getc
+	system("stty -raw echo")
+	case c
+		when 'y'
+			puts 'Yes'
+			break
+		when 'n'
+			puts 'No'
+			exit
+		else puts 'Please type "y" or "n"'
+	end
 end
 
 
-proxy_list = %w(
-  155.254.183.52:60099
-  155.254.183.63:60099
-  155.254.183.67:60099
-  155.254.183.73:60099
-  104.151.234.179:8080
-  104.151.234.180:8080
-  104.151.234.181:8080
-  104.151.234.182:8080
-)
+initialize_browsers(browser, gsa_advantage)
 
-
-client = Mysql2::Client.new(
-		host:       "70.61.131.180",    username:   "mft_data",
-		password:   "GoV321CoN",        flags:      Mysql2::Client::MULTI_STATEMENTS)
-
-
-
-user_value = ask_user
-case user_value
-		when 0
-				puts 'Skipping XLS read'
-		when 1
-				output_xls = xls_read
-				xls_to_database(client)
-		when 2
-				output_xls = xls_read
-				xls_to_database(client)
-	
-end
-
-
-result = client.query('
-SELECT *
-FROM `mft_data`.`lowest_price_contractor`
-WHERE lowest_contractor IS NULL ;
-')
-
-result.each_with_index  do |row, index|
-		# puts row["mpn"]
-		@search_items << row['mpn']
-		@mfr_name << row['manufacturer_name']
-		print "\t#{index}\t".colorize(:magenta)
-		puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
-end
-
-
-update_mfr = client.prepare("
-UPDATE mft_data.lowest_price_contractor
-SET lowest_contractor = ?,
-lowest_contractor_price = ?,
-lowest_contractor_page_url = ?,
-mpn_page_url = ?
-WHERE mpn = ?
-;")
-
-
-initialize_browsers(browser, gsa_advantage, proxy_list)
-puts "_____________________________________________________________________________".colorize(:orange)
 @data_out = {}
-		@search_items.each_index do |index|
-				browser_n = index % proxy_list.size
-				unless gsa_advantage[browser_n].current_url.include? @search_items[index]
-						threads = []
-						(0..6).each do |thr_n|
-								if (index+thr_n) < @search_items.size
-								threads << Thread.new {gsa_advantage[((index+thr_n) % proxy_list.size)].browser.goto search_url(@search_items[(index+thr_n)], @mfr_name[(index+thr_n)])}
-								end
-						end
-						threads.each { |thr| thr.join }
-				else
-						puts "URL Contained:\t#{@search_items[index]}"
-				end
-				unless gsa_advantage[browser_n].first_result_element.exist?
-						skip @search_items[index];	next # should search again
-				end
-				gsa_advantage[browser_n].first_result
-				product_page_url = gsa_advantage[browser_n].current_url
-				unless gsa_advantage[browser_n].contractor_highlight_link_element.exist? && gsa_advantage[browser_n].contractor_highlight_price_element.exists?
-						skip @search_items[index]; next
-				end
-				contractor = gsa_advantage[browser_n].contractor_highlight_link_element.text
-				contractor_price = gsa_advantage[browser_n].contractor_highlight_price
-				contractor_price = Monetize.parse(contractor_price)
-				contractor_page_url = gsa_advantage[browser_n].contractor_highlight_link_element.href
-				# puts contractor_page_url
-				@data_out[@search_items[index]] = [@mfr_name[index],contractor, contractor_price, contractor_page_url, product_page_url]
-				update_mfr.execute(contractor, contractor_price, contractor_page_url, product_page_url,@search_items[index])
-				print "#{@search_items[index]}\t|\t#{index}\t/\t#{@search_items.size}"
-				benchmark
+def search_on_browser(gsa_advantage, si,mn)
+	# sleep 1
+	# puts "#{mn}:#{si}\t|\t/"#{@search_items.size}
+	# benchmark
+	# puts "Search Current thread = " + Thread.current.to_s
+	gsa_advantage.browser.goto search_url(si, mn)
+	if gsa_advantage.first_result_element.exist?
+		gsa_advantage.first_result
+		product_page_url = gsa_advantage.current_url
+		if gsa_advantage.contractor_highlight_link_element.exist? && gsa_advantage.contractor_highlight_price_element.exists?
+			contractor          = gsa_advantage.contractor_highlight_link_element.text
+			contractor_price    = gsa_advantage.contractor_highlight_price
+			contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
+			begin
+				@semaphore.synchronize{
+					@data_out[si] = [mn,contractor, contractor_price, contractor_page_url, product_page_url]
+				}
+			rescue Exception => e
+				puts "MPN:\t#{si}\tMSG:\t#{e.message}"
+			end
+		else
+			puts 'can not find search result'
 		end
-@data_out.each { |key, value|
-		puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
-}
+	else
+		puts "Search #{si} returned no items"
+	end
 
+end
 
+@semaphore = Mutex.new
+@threads = []
+t_count = 0;
+@search_items.each_index do |index|
+	thr_n = index % N_threads_plus_one
+	t_count = t_count+1
+	@threads << Thread.new do
+		search_on_browser(gsa_advantage[thr_n], @search_items[index], @mfr_name[index])
+	end
+	if t_count >= N_threads
+		@threads.each { |t| t.join if t != Thread.current }
+		t_count = 0
+	end
+end
+puts 'Threads Started'
+Thread.list.each { |t| t.join if t != Thread.current }
+
+@data_out[si] = [mn,contractor, contractor_price, contractor_page_url, product_page_url]
 write_new_xls(output_xls)
+
+
+@data_out.each { |key, value|
+#     puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
+# }
+
 
 
 

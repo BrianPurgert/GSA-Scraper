@@ -27,10 +27,15 @@ cast: false
 )
 
 def ask_user
-    puts "0:\t Run GSA Advantage search on items from database".colorize(:cyan)
-    puts "1:\t Add excel data to database only".colorize(:cyan)
-    puts "2:\t Add excel data to database and run GSAAdvantage search on items from database".colorize(:cyan)
-    puts "3:\t Add all excel files in directory to database".colorize(:cyan)
+	puts "\t\t This script will"
+	puts "0:\t open an excel xls file (NOT XLSX)".colorize(:cyan)
+	puts "1:\t looks for  cell that contains ".colorize(:cyan)
+	mfr part
+	manufacturer part
+	mpn
+	mfgpart
+	puts "2:\t Add excel data to database and run GSAAdvantage search on items from database".colorize(:cyan)
+	puts "3:\t Add all excel files in directory to database".colorize(:cyan)
     user_value = 0
 	    # user_value = gets.to_i
 end
@@ -58,7 +63,6 @@ def xls_read
 	  row.each_with_index do |col, c_index|
 		cell = col.to_s.downcase
 		if cell.include?('mfr part') || cell.include?('manufacturer part') || cell.include?('mpn') || cell.include?('mfgpart')
-		
 		@mfr_col   = c_index
 		    @mfr_row   = r_index
 		    @mfr_found = true
