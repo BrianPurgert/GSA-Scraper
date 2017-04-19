@@ -10,6 +10,8 @@ require 'monetize'
 require 'yaml'
 require 'in_threads'
 
+browser       = []
+gsa_advantage = []
 RX_mfr = /(?<=\q=28:5).*/
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
@@ -42,23 +44,26 @@ end
 mfr_mysql = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 
 
-def scrape_mft_step_1(letter,mfr_mysql)
-		r_proxy = Proxy_list.sample
-		@browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+def scrape_mft_step_1(letter,mfr_mysql,index)
+		@r_proxy = Proxy_list.sample
+		@browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{@r_proxy}"]
 		@gsa_advantage = GsaAdvantagePage.new(@browser)
 		@gsa_advantage.browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
 		@mfrs = []
+		@href_mfrs = []
 		@gsa_advantage.mft_table_element.links.each do |link|
 			@href_mfr = RX_mfr.match(link.href)
 			@name_mfr = link.text
-			@parent_mfr = link.parent
+			# @parent_mfr = link.parent
 			@href_mfrs << @href_mfr
+			puts @href_mfr
 		end
-	@semaphore.synchronize{
-		puts '1'
-		# @href_mfrs
-		# mfr_mysql.execute(name, href_name, item_count)
-	}
+		
+	# @semaphore.synchronize{
+	# 	puts '1'
+	# 	# @href_mfrs
+	# 	# mfr_mysql.execute(name, href_name, item_count)
+	# }
 	
 end
 #  next step load the parts
@@ -67,14 +72,14 @@ end
 
 @semaphore = Mutex.new
 @threads = []
-@mfr_list = ("A".."Z").to_a << "0"
+@mfr_list = ("A".."F").to_a << "0"
 
-@mfr_list.each_with_index do |letter, index|
-	    @threads << Thread.new do
-		    scrape_mft_step_1(letter,mfr_mysql)
-	    end
+@mfr_list.in_threads.each_with_index do |letter, index|
+	    # @threads << Thread.new do
+		    scrape_mft_step_1(letter,mfr_mysql,index)
+	    # end
 end
-puts 'Joining Threads'
+puts 'Threads launced waiting to complete'
 Thread.list.each { |t| t.join if t != Thread.current }
 puts 'Errors or na?'
 
