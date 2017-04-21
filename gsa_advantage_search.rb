@@ -19,8 +19,12 @@ gsa_advantage = []
 N_threads      = 10
 N_threads_plus_one = N_threads+1
 Proxy_list     = YAML::load_file(File.join(__dir__, 'proxy.yml'))
-Basedir        = './Input-Files/'
-Files          = Dir.glob(Basedir+"*.xls")
+
+# Basedir_input  = 'a:/input/'
+Basedir_input  = '//hudson/gsa_price/input/'
+Basedir_output = '//hudson/gsa_price/output/'
+Files_input    = Dir.glob(Basedir_input+"*.xls")
+Files_output   = Dir.glob(Basedir_output+"*.xls")
 Current_time   = Time.new
 
 
@@ -38,12 +42,15 @@ end
 def xls_read
 		Spreadsheet.client_encoding = 'UTF-8'
 		puts "\nInput file number & press enter"
-		Files.each_with_index do |file, num|
+		Files_input.each_with_index do |file, num|
 				puts "#{num}\t#{file}\t".colorize(:green)
 		end
-		pick_num   = gets.to_i
-		user_excel_file_name = Files[pick_num]
-		book       = Spreadsheet.open Files[pick_num]
+		# pick_num   = gets.to_i
+		pick_num = 0
+		user_excel_file_name = Dir.entries(Basedir_input)
+		user_excel_file_name = user_excel_file_name[2]
+		puts user_excel_file_name
+		book       = Spreadsheet.open Files_input[pick_num]
 		sheet      = book.worksheet 0
 		@mfr_found  = false
 		@mfrn_found = false
@@ -108,29 +115,30 @@ def initialize_browsers(browser, gsa_advantage)
 end
 
 info_user
-excel_file_out_name = "#{xls_read}--#{Current_time.day} #{Current_time.hour} #{Current_time.min}.xls"
+excel_file_out_name = "#{Basedir_output}#{Current_time.month}-#{Current_time.day}-#{Current_time.hour}-#{Current_time.min}--#{xls_read}"
+puts excel_file_out_name
 
 @search_items.each_index  do |index|
 	print "\t#{index}\t".colorize(:magenta)
 	puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
 end
-puts 'Is this data correct? y/n'
-puts 'If not, exit this, fix excel file, save, close, rerun this script'
-
-loop do
-	system("stty raw -echo")
-	c = STDIN.getc
-	system("stty -raw echo")
-	case c
-		when 'y'
-			puts 'Yes'
-			break
-		when 'n'
-			puts 'No'
-			exit
-		else puts 'Please type "y" or "n"'
-	end
-end
+# puts 'Is this data correct? y/n'
+# puts 'If not, exit this, fix excel file, save, close, rerun this script'
+#
+# loop do
+# 	system("stty raw -echo")
+# 	c = STDIN.getc
+# 	system("stty -raw echo")
+# 	case c
+# 		when 'y'
+# 			puts 'Yes'
+# 			break
+# 		when 'n'
+# 			puts 'No'
+# 			exit
+# 		else puts 'Please type "y" or "n"'
+# 	end
+# end
 
 
 initialize_browsers(browser, gsa_advantage)
