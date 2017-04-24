@@ -176,6 +176,7 @@ end
 @semaphore = Mutex.new
 @threads = []
 t_count = 0;
+begin
 @search_items.each_index do |index|
 	thr_n = index % N_threads_plus_one
 	t_count = t_count+1
@@ -187,8 +188,12 @@ t_count = 0;
 		t_count = 0
 	end
 end
+
+
 puts 'Threads Started'
 Thread.list.each { |t| t.join if t != Thread.current }
+rescue
+ensure
 
 @data_out.each_pair do |key, value|
 	puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
@@ -212,7 +217,7 @@ end
 
 excel_file_out.write(excel_file_out_name)
 
-
+end
 
 
 
