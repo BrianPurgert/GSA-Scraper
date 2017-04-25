@@ -23,14 +23,9 @@ reconnect: true,
 cast: false
 )
 
-
-
-
-
-
 def move_empty_queue
 	@client.query('
-UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
+UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
 SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
     lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
     lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
@@ -40,12 +35,20 @@ WHERE lowest_price_contractor.mpn = queue.mpn;
 	@client.query('TRUNCATE `mft_data`.`queue`;')
 end
 
+# create_mfrs = @client.prepare("CREATE TABLE `mft_data`.`queue_nr`? (
+# 	`mpn` VARCHAR(255) NOT NULL
+# )
+# COLLATE='utf8_general_ci'
+# ENGINE=InnoDB
+# ;
+# ")
+
+# create_mfrs.execute(3)
 
 mfr_mysql = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-
+mfr_mysql.execute('1','1','1')
 
 def scrape_mft_step_1(mfr_mysql,index)
-	
 		@r_proxy = Proxy_list.sample
 		@browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{@r_proxy}"]
 		@gsa_advantage = GsaAdvantagePage.new(@browser)
@@ -56,8 +59,9 @@ def scrape_mft_step_1(mfr_mysql,index)
 			@href_mfr = RX_mfr.match(link.href)
 			@name_mfr = link.text
 			# @parent_mfr = link.parent
-			@href_mfrs << @href_mfr
-			puts @href_mfr
+			mfr_mysql.execute("#{@name_mfr}","#{@href_mfr}",'1')
+			# @href_mfrs << @href_mfr
+			# puts @href_mfr
 		end
 		
 	# @semaphore.synchronize{
