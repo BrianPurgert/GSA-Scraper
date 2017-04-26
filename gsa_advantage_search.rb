@@ -15,13 +15,13 @@ browser            = []
 gsa_advantage      = []
 @search_items      = []
 @mfr_name          = []
-N_threads          = 25
+N_threads          = 5
 N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
 # Basedir_input  = 'a:/input/'
-Basedir_input      = '//localhost/gsa_price/input/'
-Basedir_output     = '//localhost/gsa_price/output/'
+Basedir_input      = '//192.168.1.104/gsa_price/input/'
+Basedir_output     = '//192.168.1.104/gsa_price/output/'
 Files_input        = Dir.glob(Basedir_input+"*.xls")
 Files_output       = Dir.glob(Basedir_output+"*.xls")
 Current_time       = Time.new
