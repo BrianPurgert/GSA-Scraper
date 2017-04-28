@@ -1,65 +1,50 @@
 require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
-require 'spreadsheet'
 require_relative 'pages/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
-require 'monetize'
 require 'yaml'
 require 'in_threads'
+require_relative 'mft_db'
 
+N_threads = 10
+N_threads_plus_one = N_threads+1
+@browser_threads = (0..N_threads)
 browser       = []
 gsa_advantage = []
 RX_mfr = /(?<=\q=28:5).*/
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+# @search_items = []
+# @mfr_name     = []
 
-@client = Mysql2::Client.new(
-host:     "70.61.131.180",
-username: "mft_data",
-password: "GoV321CoN",
-reconnect: true,
-cast: false
-)
 
-def move_empty_queue
-	@client.query('
-UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
-SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-    lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-    lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-    lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-WHERE lowest_price_contractor.mpn = queue.mpn;
-')
-	@client.query('TRUNCATE `mft_data`.`queue`;')
+
+
+@hudson_db = MftDb.new
+
+def initialize_browsers(browser, gsa_advantage)
+	@browser_threads.in_threads.each do |nt|
+		r_proxy = Proxy_list.sample
+		browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
+		print "\nBrowser #{nt}\t".colorize(:blue)
+		print "#{gsa_advantage[nt].browser.text}\t#{r_proxy}\t"
+		puts gsa_advantage[nt]
+		gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
+
+	end
 end
 
-# create_mfrs = @client.prepare("CREATE TABLE `mft_data`.`queue_nr`? (
-# 	`mpn` VARCHAR(255) NOT NULL
-# )
-# COLLATE='utf8_general_ci'
-# ENGINE=InnoDB
-# ;
-# ")
-
-# create_mfrs.execute(3)
-
-mfr_mysql = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-mfr_mysql.execute('1','1','1')
-
-def scrape_mft_step_1(mfr_mysql,index)
-		@r_proxy = Proxy_list.sample
-		@browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{@r_proxy}"]
-		@gsa_advantage = GsaAdvantagePage.new(@browser)
-		@gsa_advantage.browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{@mfr_list[index]}"
+def scrape_mft_step_1(index,gsa_advantage)
 		@mfrs = []
 		@href_mfrs = []
-		@gsa_advantage.mft_table_element.links.each do |link|
+		gsa_advantage.mft_table_element.links.each do |link|
 			@href_mfr = RX_mfr.match(link.href)
 			@name_mfr = link.text
 			# @parent_mfr = link.parent
-			mfr_mysql.execute("#{@name_mfr}","#{@href_mfr}",'1')
+			@hudson_db.insert_mfr(@name_mfr,@href_mfr)
 			# @href_mfrs << @href_mfr
 			# puts @href_mfr
 		end
@@ -74,6 +59,7 @@ end
 #  next step load the parts
 # "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
 
+initialize_browsers(browser, gsa_advantage)
 
 @semaphore = Mutex.new
 @threads = []
@@ -81,7 +67,7 @@ end
 
 @mfr_list.in_threads.each_index do |index|
 	    # @threads << Thread.new do
-		    scrape_mft_step_1(mfr_mysql,index)
+		    scrape_mft_step_1(index, gsa_advantage)
 	    # end
 end
 puts 'Threads launced waiting to complete'

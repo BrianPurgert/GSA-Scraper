@@ -15,7 +15,7 @@ browser            = []
 gsa_advantage      = []
 @search_items      = []
 @mfr_name          = []
-N_threads          = 5
+N_threads          = 20
 N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
@@ -94,7 +94,8 @@ def search_url(mpn, mft) return "https://www.gsaadvantage.gov/advantage/s/search
 end
 
 
-def initialize_browsers(browser, gsa_advantage) (0..N_threads).in_threads.each do |nt| begin
+def initialize_browsers(browser, gsa_advantage)
+     (0..N_threads).in_threads.each do |nt|
      r_proxy           = Proxy_list.sample
      browser[nt]       = Watir::Browser.start 'https://www.gsaadvantage.gov/', :chrome, switches: ["proxy-server=#{r_proxy}"]
      gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
@@ -103,15 +104,12 @@ def initialize_browsers(browser, gsa_advantage) (0..N_threads).in_threads.each d
      gsa_advantage[nt].browser.driver.manage.window.resize_to(300, 950)
      gsa_advantage[nt].browser.driver.manage.window.move_to(((nt % 8)*200), 0)
      gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:1USB-BT400'
-     raise 'Cannot find result' unless gsa_advantage[nt].first_result_element.exist?
-rescue Exception => e
-     @redo_counter = @redo_counter + 1
-     puts "Proxy:#{r_proxy}\tMSG:#{e.message}\tRedo:#{@redo_counter}"
-     gsa_advantage[nt].browser.close
-     redo if @redo_counter < 4
-end
+     unless gsa_advantage[nt].first_result_element.exist?
+          puts 'redo'
+          redo
+     end
 
-end
+     end
 end
 
 info_user

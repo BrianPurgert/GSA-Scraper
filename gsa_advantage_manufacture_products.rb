@@ -26,10 +26,6 @@ reconnect: true,
 cast: false
 )
 
-def ask_user
-    user_value = 0
-	    # user_value = gets.to_i
-end
 def xls_read
     Spreadsheet.client_encoding = 'UTF-8'
     basedir                     = './../Input-Files/'
@@ -116,7 +112,19 @@ WHERE lowest_price_contractor.mpn = queue.mpn;
 	@client.query('TRUNCATE `mft_data`.`queue`;')
 end
 def search_url(mpn, mft)
-    return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
+	
+	# "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
+	# &db=0&searchType=1
+	
+	# "q=9,8:1#{}"#mpn includes
+	
+# "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:3#{mpn_seen}&q=1:4*&s=4&c=100&q=28:5#{mfr_href_name}&p=#{page_number}"
+# 	"&q=0:#{}" "q=9,29:3XXXX"#not
+	
+	
+	return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
+	# "/advantage/catalog/product_detail.do?gsin=11000041004128"
+	
 end
 def initialize_browsers(browser, gsa_advantage)
 	(0..N_threads).in_threads.each do |nt|
@@ -149,7 +157,7 @@ def scrape_manufactures(browser, gsa_advantage)
 	end
 end
 
-# "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
+
 
 move_empty_queue
 
@@ -169,7 +177,7 @@ WHERE lowest_contractor IS NULL ;
 end
 
 
-user_value = ask_user
+user_value = 0
 case user_value
     when 0
 	  puts 'Skipping XLS read'
