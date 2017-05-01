@@ -13,9 +13,12 @@ require 'in_threads'
 Bench_time    = [Time.now]
 browser       = []
 gsa_advantage = []
-@search_items = []
+@href_name    = []
 @mfr_name     = []
-N_threads = 10
+@last_updated = []
+@item_count   = []
+
+N_threads = 1
 N_threads_plus_one = N_threads+1
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 @client = Mysql2::Client.new(
@@ -26,70 +29,35 @@ reconnect: true,
 cast: false
 )
 
-def xls_read
-    Spreadsheet.client_encoding = 'UTF-8'
-    basedir                     = './../Input-Files/'
-    files                       = Dir.glob(basedir+"*.xls")
-    files.each_with_index do |file, num|
-	  puts "#{num}\t#{file}\t".colorize(:green)
-    end
-    pick_num   = gets.to_i
-    book       = Spreadsheet.open files[pick_num]
-    output_xls = "#{files[pick_num]}-out.xls"
-    sheet      = book.worksheet 0
-    
-    @mfr_found  = false
-    @mfrn_found = false
-    sheet.each_with_index do |row, r_index|
-	  if @mfr_found == true && !row[@mfr_col].nil?
-		@search_items << row[@mfr_col].to_s
-	  end
-	  if @mfrn_found == true && !row[@mfrn_col].nil?
-		@mfr_name << row[@mfrn_col].to_s
-	  end
-	  row.each_with_index do |col, c_index|
-		cell = col.to_s.downcase
-		if cell.include?('mfr part') || cell.include?('manufacturer part') || cell.include?('mpn') || cell.include?('mfgpart')
-		@mfr_col   = c_index
-		    @mfr_row   = r_index
-		    @mfr_found = true
-		    puts "MPN Found at:#{@mfr_col} #{@mfr_row}"
-		end
-		if cell.include?('mfr name') || cell.include?('manufacturer name') || cell.include?('mfgname') || (cell.include?('mfr') && !cell.include?('part'))
-		    @mfrn_col   = c_index
-		    @mfrn_row   = r_index
-		    @mfrn_found = true
-		    puts "Mft Found at:#{@mfrn_col} #{@mfrn_row}"
-		end
-	  end
-    end
-    output_xls
-    puts @mfrn_found ? "Manufacture found".colorize(:green) : 'Manufacture not found'.colorize(:red)
-    exit if !@mfrn_found
+def load_table_mfr
+	result = @client.query('
+SELECT *
+FROM `mft_data`.`mfr`
+ORDER BY last_updated ;
+')
+	
+	result.each_with_index do |row, index| # puts row["mpn"]
+		# changes this, this is bad
+		@href_name << row['href_name']
+		@mfr_name << row['name']
+		@last_updated << row['last_updated']
+		@item_count << row['item_count']
+		
+		print "\t#{index}\t".colorize(:magenta)
+		puts "\t#{@href_name[index]}\t#{@mfr_name[index]}".colorize(:cyan)
+	end
 end
+
 def xls_to_database(client)
     insert_mfr_part = client.prepare('
 INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
 VALUES (?, ?);
 ')
-    
-    @search_items.each_index do |mfr_index|
+    @href_name.each_index do |mfr_index|
 	  print "#{mfr_index}\t".colorize(:magenta)
-	  puts "#{@search_items[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
-	  insert_mfr_part.execute(@search_items[mfr_index], @mfr_name[mfr_index])
+	  puts "#{@href_name[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
+	  insert_mfr_part.execute(@href_name[mfr_index], @mfr_name[mfr_index])
     end
-end
-def write_new_xls(output_xls)
-    out_book    = Spreadsheet::Workbook.new
-    sheet1      = out_book.create_worksheet
-    sheet1.name = 'Lowest Price Contractor'
-    row_1       = ['mpn', 'manufacturer_name', 'lowest_contractor', 'lowest_contractor_price', 'lowest_contractor_page_url', 'mpn_page_url']
-    out_book.worksheet(0).insert_row(0, row_1)
-    @data_out.each { |key, value|
-	  lst = out_book.worksheet(0).last_row_index + 1
-	  out_book.worksheet(0).insert_row(lst, [key, value[0], value[1], value[2], value[3], value[4]])
-    }
-    out_book.write(output_xls)
 end
 def skip(search_item)
     puts "skipping MFT: #{search_item}"
@@ -100,33 +68,32 @@ def benchmark
     total_elapsed = Bench_time[-1] - Bench_time[0]
     print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 end
-def move_empty_queue
-	@client.query('
-UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
-SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-    lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-    lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-    lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-WHERE lowest_price_contractor.mpn = queue.mpn;
-')
-	@client.query('TRUNCATE `mft_data`.`queue`;')
-end
-def search_url(mpn, mft)
-	
-	# "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
-	# &db=0&searchType=1
-	
-	# "q=9,8:1#{}"#mpn includes
-	
-# "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:3#{mpn_seen}&q=1:4*&s=4&c=100&q=28:5#{mfr_href_name}&p=#{page_number}"
-# 	"&q=0:#{}" "q=9,29:3XXXX"#not
-	
-	
-	return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
-	# "/advantage/catalog/product_detail.do?gsin=11000041004128"
+# def move_empty_queue
+# 	@client.query('
+# UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
+# SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
+#     lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
+#     lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
+#     lowest_price_contractor.mpn_page_url = queue.mpn_page_url
+# WHERE lowest_price_contractor.mpn = queue.mpn;
+# ')
+# 	@client.query('TRUNCATE `mft_data`.`queue`;')
+# end
+
+# &q=14:6#{more_than_price}
+# &q=14:7#{less_than_price}
+def search_url(mfr_href_name, current_lowest_price,page_number)
+	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
+	url = url + "q=28:5#{mfr_href_name}"
+	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
+	url = url + "&&c=100"# sort by price highest to lowest
+	url = url + "&s=9" # sort by price high to how
+	url = url + "&p=#{page_number}"
+	return url
 	
 end
 def initialize_browsers(browser, gsa_advantage)
+	down = 0
 	(0..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
 		browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
@@ -137,9 +104,16 @@ def initialize_browsers(browser, gsa_advantage)
 		gsa_advantage[nt].browser.driver.manage.window.resize_to(300, 950)
 		gsa_advantage[nt].browser.driver.manage.window.move_to(((nt % 8)*200), 0)
 		gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
+		if gsa_advantage[nt].browser.text.include?('This site can’t be reached')
+			puts 'down'
+			down = down + 1
+		end
 		puts gsa_advantage[nt]
-		benchmark
-    end
+	end
+	puts "down count:\t#{down}"
+	if(down > 3)
+		exit
+	end
 end
 def scrape_manufactures(browser, gsa_advantage)
 	rx_mfr = /(?<=\q=28:5).*/
@@ -159,33 +133,17 @@ end
 
 
 
-move_empty_queue
-
-def use_database_items
-	result = @client.query('
-SELECT *
-FROM `mft_data`.`lowest_price_contractor`
-WHERE lowest_contractor IS NULL ;
-')
-	
-	result.each_with_index do |row, index| # puts row["mpn"]
-		@search_items << row['mpn']
-		@mfr_name << row['manufacturer_name']
-		print "\t#{index}\t".colorize(:magenta)
-		puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
-	end
-end
-
+# move_empty_queue
 
 user_value = 0
 case user_value
     when 0
 	  puts 'Skipping XLS read'
-	  use_database_items
+	  load_table_mfr
     when 1
 	  output_xls = xls_read
 	  xls_to_database(@client)
-	  use_database_items
+	  load_table_mfr
     when 2
 	  output_xls = xls_read
 	  xls_to_database(@client)
@@ -202,6 +160,14 @@ update_mfr = @client.prepare("INSERT INTO mft_data.queue(mpn, lowest_contractor,
 initialize_browsers(browser, gsa_advantage)
 puts "_____________________________________________________________________________".colorize(:orange)
 @data_out = {}
+
+# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:790000000&searchType=0&s=9
+# $3,800,470.59
+# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:73800470&searchType=0&s=9
+# $1,714,588.24
+# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:71714588&searchType=0&s=9
+
+
 def search_on_browser(gsa_advantage, update_mfr,si,mn)
 		gsa_advantage.browser.goto search_url(si, mn)
 	if gsa_advantage.first_result_element.exist?
@@ -231,11 +197,11 @@ end
 @threads = []
 t_count = 0;
 
-@search_items.each_index do |index|
+@href_name.each_index do |index|
     thr_n = index % N_threads_plus_one
 	    t_count = t_count+1
 	    @threads << Thread.new do
-		    search_on_browser(gsa_advantage[thr_n], update_mfr, @search_items[index], @mfr_name[index])
+		    search_on_browser(gsa_advantage[thr_n], update_mfr, @href_name[index], @mfr_name[index])
 	    end
     if t_count >= N_threads
 	    @threads.each { |t| t.join if t != Thread.current }

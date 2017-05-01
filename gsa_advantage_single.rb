@@ -10,15 +10,15 @@ require 'monetize'
 require 'yaml'
 require 'in_threads'
 
-Bench_time    = [Time.now]
-browser       = []
-gsa_advantage = []
-@search_items = []
-@mfr_name     = []
-N_threads = 10
+Bench_time         = [Time.now]
+browser            = []
+gsa_advantage      = []
+@href_name         = []
+@mfr_name          = []
+N_threads          = 10
 N_threads_plus_one = N_threads+1
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
-@client = Mysql2::Client.new(
+Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+@client            = Mysql2::Client.new(
 host:     "70.61.131.180",
 username: "mft_data",
 password: "GoV321CoN",
@@ -46,7 +46,7 @@ def xls_read
     @mfrn_found = false
     sheet.each_with_index do |row, r_index|
 	  if @mfr_found == true && !row[@mfr_col].nil?
-		@search_items << row[@mfr_col].to_s
+		@href_name << row[@mfr_col].to_s
 	  end
 	  if @mfrn_found == true && !row[@mfrn_col].nil?
 		@mfr_name << row[@mfrn_col].to_s
@@ -77,10 +77,10 @@ INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
 VALUES (?, ?);
 ')
     
-    @search_items.each_index do |mfr_index|
+    @href_name.each_index do |mfr_index|
 	  print "#{mfr_index}\t".colorize(:magenta)
-	  puts "#{@search_items[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
-	  insert_mfr_part.execute(@search_items[mfr_index], @mfr_name[mfr_index])
+	  puts "#{@href_name[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
+	  insert_mfr_part.execute(@href_name[mfr_index], @mfr_name[mfr_index])
     end
 end
 def write_new_xls(output_xls)
@@ -161,10 +161,10 @@ WHERE lowest_contractor IS NULL ;
 ')
 	
 	result.each_with_index do |row, index| # puts row["mpn"]
-		@search_items << row['mpn']
+		@href_name << row['mpn']
 		@mfr_name << row['manufacturer_name']
 		print "\t#{index}\t".colorize(:magenta)
-		puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
+		puts "\t#{@href_name[index]}\t#{@mfr_name[index]}".colorize(:cyan)
 	end
 end
 
@@ -223,11 +223,11 @@ end
 @threads = []
 t_count = 0;
 
-@search_items.each_index do |index|
+@href_name.each_index do |index|
     thr_n = index % N_threads_plus_one
 	    t_count = t_count+1
 	    @threads << Thread.new do
-		    search_on_browser(gsa_advantage[thr_n], update_mfr, @search_items[index], @mfr_name[index])
+		    search_on_browser(gsa_advantage[thr_n], update_mfr, @href_name[index], @mfr_name[index])
 	    end
     if t_count >= N_threads
 	    @threads.each { |t| t.join if t != Thread.current }

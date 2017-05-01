@@ -13,7 +13,7 @@ require 'in_threads'
 Bench_time         = [Time.now]
 browser            = []
 gsa_advantage      = []
-@search_items      = []
+@href_name         = []
 @mfr_name          = []
 N_threads          = 20
 N_threads_plus_one = N_threads+1
@@ -54,7 +54,7 @@ def xls_read
      @mfr_found  = false
      @mfrn_found = false
      sheet.each_with_index do |row, r_index| if @mfr_found == true && !row[@mfr_col].nil?
-                                                  @search_items << row[@mfr_col].to_s
+                                                  @href_name << row[@mfr_col].to_s
                                              end
      if @mfrn_found == true && !row[@mfrn_col].nil?
           @mfr_name << row[@mfrn_col].to_s
@@ -116,8 +116,8 @@ info_user
 excel_file_out_name = "#{Basedir_output}#{Current_time.month}-#{Current_time.day}-#{Current_time.hour}-#{Current_time.min}--#{xls_read}"
 puts excel_file_out_name
 
-@search_items.each_index do |index| print "\t#{index}\t".colorize(:magenta)
-puts "\t#{@search_items[index]}\t#{@mfr_name[index]}".colorize(:cyan)
+@href_name.each_index do |index| print "\t#{index}\t".colorize(:magenta)
+puts "\t#{@href_name[index]}\t#{@mfr_name[index]}".colorize(:cyan)
 end
 
 
@@ -156,9 +156,9 @@ end
 @threads   = []
 t_count    = 0;
 
-@search_items.each_index do |index| thr_n = index % N_threads_plus_one
-t_count                                   = t_count+1
-@threads << Thread.new do search_on_browser(gsa_advantage[thr_n], @search_items[index], @mfr_name[index])
+@href_name.each_index do |index| thr_n = index % N_threads_plus_one
+t_count                                = t_count+1
+@threads << Thread.new do search_on_browser(gsa_advantage[thr_n], @href_name[index], @mfr_name[index])
 end
 if t_count >= N_threads
      @threads.each { |t| t.join if t != Thread.current }

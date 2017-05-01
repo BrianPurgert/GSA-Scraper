@@ -10,14 +10,14 @@ require 'monetize'
 require 'yaml'
 require 'in_threads'
 
-Bench_time    = [Time.now]
-browser       = []
-gsa_advantage = []
-@search_items = []
-@mfr_name     = []
-N_threads = 10
+Bench_time         = [Time.now]
+browser            = []
+gsa_advantage      = []
+@href_name         = []
+@mfr_name          = []
+N_threads          = 10
 N_threads_plus_one = N_threads+1
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 # Watir.default_timeout = 90
 
 def search_url(mpn, mft)
