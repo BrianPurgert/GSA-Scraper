@@ -77,6 +77,9 @@ end
 
 # &q=14:6#{more_than_price}
 # &q=14:7#{less_than_price}
+
+
+#TODO search url
 def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
@@ -85,8 +88,9 @@ def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
 	return url
-	
+
 end
+
 def initialize_browsers(browser, gsa_advantage)
 	down = 0
 	(1..N_threads).in_threads.each do |nt|
@@ -128,9 +132,16 @@ def scrape_manufactures(browser, gsa_advantage)
 	end
 end
 
-def search_on_browser(gsa_advantage, update_mfr,si,mn)
-	#TODO get manufacture product page lists of
-	gsa_advantage.browser.goto search_url(si, mn)
+#TODO search manufacture
+def search_on_browser(gsa_advantage, mfr)
+     puts "Search Start:\t#{mfr['name']}"
+     @current_lowest_price = 900000000
+     @has_more_pages = false
+     While @has_more_pages do
+          @current_search = search_url(mfr['name'], current_lowest_price,1)
+	gsa_advantage.browser.goto @current_search
+          #TODO check has_more_pages
+          #TODO get page links
 	if gsa_advantage.first_result_element.exist?
 		gsa_advantage.first_result
 		product_page_url = gsa_advantage.current_url
@@ -138,19 +149,18 @@ def search_on_browser(gsa_advantage, update_mfr,si,mn)
 			contractor          = gsa_advantage.contractor_highlight_link_element.text
 			contractor_price    = gsa_advantage.contractor_highlight_price
 			contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
-			begin
 				@semaphore.synchronize{
 					update_mfr.execute(si,contractor, contractor_price, contractor_page_url, product_page_url)
 				}
-			rescue Exception => e
 				puts "MPN:\t#{si}\tMSG:\t#{e.message}"
-			end
 		else
 			puts 'DO SOMETHING HERE'
 		end
 	else
 		puts "Search #{si} returned no items"
-	end
+     end
+
+     end
 end
 
 # move_empty_queue
@@ -158,10 +168,8 @@ load_table_mfr
 initialize_browsers(browser, gsa_advantage)
 puts "\n------------------------\n------------------------\n".colorize(:orange)
 
-# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:790000000&searchType=0&s=9&c=100
-# $3,800,470.59
-# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:73800470&searchType=0&s=9&c=100
-# $1,714,588.24
+# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:790000000&searchType=0&s=9&c=100 $3,800,470.59
+# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:73800470&searchType=0&s=9&c=100 $1,714,588.24
 # https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:71714588&searchType=0&s=9&c=100
 # ...
 # ...

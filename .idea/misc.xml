@@ -7,7 +7,7 @@
         <entry key="$PROJECT_DIR$">
           <value>
             <SvnBranchConfiguration>
-              <option name="trunkUrl" value="http://192.168.1.104:81/svn/GCS_Automation" />
+              <option name="trunkUrl" value="http://hudson.govconsvcs.com:81/svn/GCS_Automation" />
             </SvnBranchConfiguration>
           </value>
         </entry>
