@@ -1,0 +1,46 @@
+
+td a[href*="product_detail.do?gsin"]:first-child{
+background-color: rgba(0, 136, 204, 0.3);
+}
+tbody tr > td font{
+background-color: rgba(0, 136, 204, 0.3);
+}
+span.newOrange.black12pt.arial > strong{
+background-color: rgba(0, 136, 204, 0.3);
+}
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{
+background-color: rgba(0, 136, 204, 0.3);
+}
+table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3){
+background-color: rgba(0, 136, 204, 0.3);
+}
+body > pre{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#searchText{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#main{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td a[href*="product_detail.do?gsin"]:first-child{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td{
+background-color: rgba(0, 136, 204, 0.3);
+}
+table.pricehighlight > tbody > tr:nth-child(2) > td > a{
+background-color: rgba(0, 136, 204, 0.3);
+}
+table.pricehighlight > tbody > tr:nth-child(1) > td > span:first-child{
+background-color: rgba(0, 136, 204, 0.3);
+}
+table.pricehighlight{
+background-color: rgba(0, 136, 204, 0.3);
+}
+#main > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2){
+background-color: rgba(0, 136, 204, 0.3);
+}

@@ -88,7 +88,6 @@ def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
 	return url
-
 end
 
 def initialize_browsers(browser, gsa_advantage)
@@ -136,10 +135,13 @@ end
 def search_on_browser(gsa_advantage, mfr)
      puts "Search Start:\t#{mfr['name']}"
      @current_lowest_price = 900000000
-     @has_more_pages = false
-     While @has_more_pages do
-          @current_search = search_url(mfr['name'], current_lowest_price,1)
-	gsa_advantage.browser.goto @current_search
+     @has_more_pages = true
+     while @has_more_pages do
+          @current_search = search_url(mfr['href_name'], current_lowest_price,1)
+        #  https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1
+          
+          
+          gsa_advantage.browser.goto @current_search
           #TODO check has_more_pages
           #TODO get page links
 	if gsa_advantage.first_result_element.exist?
@@ -182,7 +184,6 @@ t_count = 0;
 
 @mfr_table.each_index do |index|
      puts @mfr_table[index]
-     exit
     thr_n = index % N_threads_plus_one
 	    t_count = t_count+1
 	    @threads << Thread.new do
