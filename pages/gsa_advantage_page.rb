@@ -22,3 +22,9 @@ class GsaAdvantagePage
           link(:first_result, css: '#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td a[href*="product_detail.do?gsin"]:first-child')
           cell(:first_result_container, css: '#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td')
 end
+
+# a.arial[href*="product_detail.do?gsin"]{
+#      background-color: rgba(0, 136, 204, 0.3);
+#      box-shadow:0px 0px 1px 15px rgba(0, 136, 204, 0.3);
+# }
+
