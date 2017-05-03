@@ -99,9 +99,7 @@ def initialize_browsers(browser, gsa_advantage)
 		# gsa_advantage[nt].browser.goto 'https://ifconfig.co/ip'
 		print "\nBrowser #{nt}\t".colorize(:blue)
 		print "#{gsa_advantage[nt].browser.text}\t#{r_proxy}"
-		gsa_advantage[nt].browser.driver.manage.window.resize_to(300, 300)
-		
-		gsa_advantage[nt].browser.driver.manage.window.move_to((nt/N_threads*1600), 0)
+		gsa_advantage[nt].browser.driver.manage.window.maximize
 		gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
 		if gsa_advantage[nt].browser.text.include?('This site can’t be reached')
 			puts 'down'
@@ -134,69 +132,59 @@ end
 #TODO search manufacture
 def search_on_browser(gsa_advantage, mfr)
      puts "Search Start:\t#{mfr['name']}"
-     @current_lowest_price = 900000000
-     @has_more_pages = true
-     while @has_more_pages do
-          @current_search = search_url(mfr['href_name'], current_lowest_price,1)
-        #  https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1
+     @manufacture_name             = mfr['name']
+     @manufacture_href             = mfr['href_name']
+     @manufacture_item_count       = mfr['item_count']
+     @manufacture_product_results  = []
+     @n_low                        = 900000000
+     @has_more_pages               = true
           
-          
-          gsa_advantage.browser.goto @current_search
-          #TODO check has_more_pages
-          #TODO get page links
-	if gsa_advantage.first_result_element.exist?
-		gsa_advantage.first_result
-		product_page_url = gsa_advantage.current_url
-		if gsa_advantage.contractor_highlight_link_element.exist? && gsa_advantage.contractor_highlight_price_element.exists?
-			contractor          = gsa_advantage.contractor_highlight_link_element.text
-			contractor_price    = gsa_advantage.contractor_highlight_price
-			contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
-				@semaphore.synchronize{
-					update_mfr.execute(si,contractor, contractor_price, contractor_page_url, product_page_url)
-				}
-				puts "MPN:\t#{si}\tMSG:\t#{e.message}"
-		else
-			puts 'DO SOMETHING HERE'
-		end
-	else
-		puts "Search #{si} returned no items"
-     end
+          while @has_more_pages do
+                    gsa_advantage.browser.goto search_url(@manufacture_href, @n_low,1)
 
-     end
+                    gsa_advantage.browser.product_detail.each do |product_link|
+                         puts product_link
+                         # link.parent
+                    end
+          end
 end
 
 # move_empty_queue
 load_table_mfr
 initialize_browsers(browser, gsa_advantage)
-puts "\n------------------------\n------------------------\n".colorize(:orange)
 
-# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:790000000&searchType=0&s=9&c=100 $3,800,470.59
-# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:73800470&searchType=0&s=9&c=100 $1,714,588.24
-# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:71714588&searchType=0&s=9&c=100
-# ...
-# ...
-# https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?gsin=11000012297910&cview=true
-
-
-@semaphore = Mutex.new
-@threads = []
-t_count = 0;
 
 @mfr_table.each_index do |index|
-     puts @mfr_table[index]
-    thr_n = index % N_threads_plus_one
-	    t_count = t_count+1
-	    @threads << Thread.new do
-		    search_on_browser(gsa_advantage[thr_n], @mfr_table[index])
-              sleep @speed
-	    end
-    if t_count >= N_threads
-	    @threads.each { |t| t.join if t != Thread.current }
-	    t_count = 0
-    end
+     puts "@mfr_table[index] #{@mfr_table[index]}"
+     sleep @speed
+     puts gsa_advantage[0]
+     puts thr_n
+     search_on_browser(gsa_advantage[thr_n], @mfr_table[index])
 end
-puts 'Joining Threads'
-Thread.list.each { |t| t.join if t != Thread.current }
+
+
+# @semaphore = Mutex.new
+# @threads = []
+# t_count = 0;
+# @mfr_table.each_index do |index|
+#      puts "@mfr_table[index] #{@mfr_table[index]}"
+#     thr_n = index % N_threads_plus_one
+#      puts "thr_n #{thr_n}"
+# 	    t_count = t_count+1
+# 	    @threads << Thread.new do
+#               sleep @speed
+#               puts gsa_advantage[thr_n]
+#               puts thr_n
+# 		    search_on_browser(gsa_advantage[thr_n], @mfr_table[index])
+#
+# 	    end
+#     if t_count >= N_threads
+# 	    @threads.each { |t| t.join if t != Thread.current }
+# 	    t_count = 0
+#     end
+# end
+# puts 'Joining Threads'
+# Thread.list.each { |t| t.join if t != Thread.current }
 
 
 

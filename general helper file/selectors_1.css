@@ -1,33 +1,7 @@
 #main-alt > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(2){
-    box-shadow:0px 0px 1px 10px #26b85c ;
+    box-shadow:0px 0px 1px 10px #26b85c;
     /* background-color:orange; */
 }
-
-
-/* #main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td a[href*="product_detail.do?gsin"]:first-child{
-  background-color:green;
-}
-
-
-#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td{
-  background-color:red;
-}
-
-#main > table:nth-child(3) > tbody > tr > td > table > tbody > tr:nth-child(6) > td:nth-child(2) > table.greybox > tbody > tr:nth-child(2){
-
-}
-
-table.pricehighlight{
-  background-color:yellow;
-}
-
-table.pricehighlight > tbody > tr:nth-child(1) > td > span:first-child{
-  background-color:purple;
-}
-
-table.pricehighlight > tbody > tr:nth-child(2) > td > a{
-  background-color:orange;
-} */
 
 td a[href*="product_detail.do?gsin"]:first-child{
     background-color:black;
@@ -37,15 +11,53 @@ tbody tr > td font{
     background-color:orange;
 }
 
+
 span.newOrange.black12pt.arial > strong{
     background-color:yellow;
+    box-shadow:0px 0px 1px 10px yellow;
 }
 
-
+/* short description on search results page */
 tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{
-    background-color:red;
+    background-color:rgba(255,0,0,.3);
+    box-shadow:0px 0px 1px 10px rgba(255,0,0,.3);
 }
 
 table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span{
     background-color:blue;
 }
+
+
+a[href*="product_detail.do?gsin"]:first-child{
+    background-color: rgba(0, 136, 204, 0.3);
+    box-shadow:0px 0px 1px 10px #26b85c;
+}
+
+
+table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span{
+    background-color:blue;
+}
+/*#main-alt > table > tbody > tr > td:nth-child(3) > table > tbody > tr:nth-child(2){*/
+    /*box-shadow:0px 0px 1px 10px #26b85c;*/
+    /*!* background-color:orange; *!*/
+/*}*/
+/* #main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td a[href*="product_detail.do?gsin"]:first-child{
+  background-color:green;
+}
+#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td{
+  background-color:red;
+}
+#main > table:nth-child(3) > tbody > tr > td > table > tbody > tr:nth-child(6) > td:nth-child(2) > table.greybox > tbody > tr:nth-child(2){
+}
+table.pricehighlight{
+  background-color:yellow;
+}
+table.pricehighlight > tbody > tr:nth-child(1) > td > span:first-child{
+  background-color:purple;
+}
+table.pricehighlight > tbody > tr:nth-child(2) > td > a{
+  background-color:orange;
+} */
+
+
+
