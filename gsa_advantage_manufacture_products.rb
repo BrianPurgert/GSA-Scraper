@@ -6,7 +6,6 @@ require_relative 'pages/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
-require 'monetize'
 require 'yaml'
 require 'in_threads'
 
@@ -14,7 +13,7 @@ BENCH_TIME     = [Time.now]
 @browser       = []
 @gsa_advantage = []
 @mfr_table     = []
-@speed         = 5
+@speed         = 2
 
 N_threads = 1
 N_threads_plus_one = N_threads+1
@@ -76,25 +75,25 @@ end
 
 def initialize_browsers
      down = 0
+     # @gsa_advantage = []
+     # @browser = []
 	(1..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
-		browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
-		gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
+		@browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		@gsa_advantage[nt] = GsaAdvantagePage.new(@browser[nt])
 		# @gsa_advantage[nt].@browser.goto 'https://ifconfig.co/ip'
 		print "\nBrowser #{nt}\t".colorize(:blue)
-		print "#{gsa_advantage[nt].browser.text}\t#{r_proxy}"
-		gsa_advantage[nt].browser.driver.manage.window.maximize
-		gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
-		if gsa_advantage[nt].browser.text.include?('This site can’t be reached')
+		print "#{@gsa_advantage[nt].browser.text}\t#{r_proxy}"
+		@gsa_advantage[nt].browser.driver.manage.window.maximize
+		@gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
+		if @gsa_advantage[nt].browser.text.include?('This site can’t be reached')
 			puts 'down'
 			down = down + 1
+               exit if down > 3
 		end
-		puts gsa_advantage[nt]
+		puts @gsa_advantage[nt]
 	end
-	puts "down count:\t#{down}"
-	if down > 3
-		exit
-	end
+
 end
 
 def scrape_manufactures(browser, gsa_advantage)
@@ -114,23 +113,29 @@ def scrape_manufactures(browser, gsa_advantage)
 end
 
 #TODO search manufacture
-def search_on_browser(gsa_advantage, mfr)
-	puts "Search Start:\t#{mfr['name']}"
+def search_on_browser(n, mfr)
+	puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
 	@manufacture_name             = mfr['name']
 	@manufacture_href             = mfr['href_name']
 	@manufacture_item_count       = mfr['item_count']
 	@manufacture_product_results  = []
 	@n_low                        = 900000000
 	@has_more_pages               = true
-		
-		while @has_more_pages do
-				gsa_advantage.browser.goto search_url(@manufacture_href, @n_low,1)
-
-				gsa_advantage.browser.product_detail.each do |product_link|
-					puts product_link
-					# link.parent
-				end
-		end
+     
+     sleep @speed
+	@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
+     sleep @speed
+     puts @gsa_advantage[n].browser.url
+     divs = @gsa_advantage[n].browser.elements(css: 'a.arial[href*="product_detail.do?gsin"]')
+     divs.each do |e|
+          puts e.text
+     end
+#=> "month-2013-05-0"
+     
+     
+     
+     puts "\n"
+     sleep @speed
 end
 
 # move_empty_queue
@@ -140,10 +145,9 @@ initialize_browsers()
 
 @mfr_table.each_index do |index|
 	sleep @speed
-	puts "@gsa_advantage[0] #{@gsa_advantage[0]}     @mfr_table[index] #{@mfr_table[index]}"
-	
-
-	search_on_browser(@gsa_advantage[thr_n], @mfr_table[index])
+	puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
+	search_on_browser(1, @mfr_table[index])
+     sleep @speed
 end
 
 
