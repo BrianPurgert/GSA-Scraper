@@ -10,22 +10,22 @@ require 'monetize'
 require 'yaml'
 require 'in_threads'
 
-Bench_time    = [Time.now]
-browser       = []
-gsa_advantage = []
-@mfr_table    = []
-@speed = 5
+BENCH_TIME     = [Time.now]
+@browser       = []
+@gsa_advantage = []
+@mfr_table     = []
+@speed         = 5
 
 N_threads = 1
 N_threads_plus_one = N_threads+1
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
 @client = Mysql2::Client.new(
-host:     "70.61.131.180",
-username: "mft_data",
-password: "GoV321CoN",
-reconnect: true,
-cast: false
+     host:      '70.61.131.180',
+     username:  'mft_data',
+     password:  'GoV321CoN',
+     reconnect: true,
+     cast:      false
 )
 
 def load_table_mfr
@@ -41,26 +41,10 @@ def load_table_mfr
 	end
 end
 
-def xls_to_database(client)
-    insert_mfr_part = client.prepare('
-INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
-VALUES (?, ?);
-')
-    @href_name.each_index do |mfr_index|
-	  print "#{mfr_index}\t".colorize(:magenta)
-	  puts "#{@href_name[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
-	  insert_mfr_part.execute(@href_name[mfr_index], @mfr_name[mfr_index])
-    end
-end
-
-def skip(search_item)
-    puts "skipping MFT: #{search_item}"
-end
-
 def benchmark
-    Bench_time << Time.now
-    elapsed       = Bench_time[-1] - Bench_time[-2]
-    total_elapsed = Bench_time[-1] - Bench_time[0]
+    BENCH_TIME << Time.now
+    elapsed       = BENCH_TIME[-1] - BENCH_TIME[-2]
+    total_elapsed = BENCH_TIME[-1] - BENCH_TIME[0]
     print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 end
 # def move_empty_queue
@@ -90,13 +74,13 @@ def search_url(mfr_href_name, current_lowest_price,page_number)
 	return url
 end
 
-def initialize_browsers(browser, gsa_advantage)
-	down = 0
+def initialize_browsers
+     down = 0
 	(1..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
 		browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
-		# gsa_advantage[nt].browser.goto 'https://ifconfig.co/ip'
+		# @gsa_advantage[nt].@browser.goto 'https://ifconfig.co/ip'
 		print "\nBrowser #{nt}\t".colorize(:blue)
 		print "#{gsa_advantage[nt].browser.text}\t#{r_proxy}"
 		gsa_advantage[nt].browser.driver.manage.window.maximize
@@ -108,7 +92,7 @@ def initialize_browsers(browser, gsa_advantage)
 		puts gsa_advantage[nt]
 	end
 	puts "down count:\t#{down}"
-	if(down > 3)
+	if down > 3
 		exit
 	end
 end
@@ -131,35 +115,35 @@ end
 
 #TODO search manufacture
 def search_on_browser(gsa_advantage, mfr)
-     puts "Search Start:\t#{mfr['name']}"
-     @manufacture_name             = mfr['name']
-     @manufacture_href             = mfr['href_name']
-     @manufacture_item_count       = mfr['item_count']
-     @manufacture_product_results  = []
-     @n_low                        = 900000000
-     @has_more_pages               = true
-          
-          while @has_more_pages do
-                    gsa_advantage.browser.goto search_url(@manufacture_href, @n_low,1)
+	puts "Search Start:\t#{mfr['name']}"
+	@manufacture_name             = mfr['name']
+	@manufacture_href             = mfr['href_name']
+	@manufacture_item_count       = mfr['item_count']
+	@manufacture_product_results  = []
+	@n_low                        = 900000000
+	@has_more_pages               = true
+		
+		while @has_more_pages do
+				gsa_advantage.browser.goto search_url(@manufacture_href, @n_low,1)
 
-                    gsa_advantage.browser.product_detail.each do |product_link|
-                         puts product_link
-                         # link.parent
-                    end
-          end
+				gsa_advantage.browser.product_detail.each do |product_link|
+					puts product_link
+					# link.parent
+				end
+		end
 end
 
 # move_empty_queue
 load_table_mfr
-initialize_browsers(browser, gsa_advantage)
+initialize_browsers()
 
 
 @mfr_table.each_index do |index|
-     puts "@mfr_table[index] #{@mfr_table[index]}"
-     sleep @speed
-     puts gsa_advantage[0]
-     puts thr_n
-     search_on_browser(gsa_advantage[thr_n], @mfr_table[index])
+	sleep @speed
+	puts "@gsa_advantage[0] #{@gsa_advantage[0]}     @mfr_table[index] #{@mfr_table[index]}"
+	
+
+	search_on_browser(@gsa_advantage[thr_n], @mfr_table[index])
 end
 
 
@@ -173,9 +157,9 @@ end
 # 	    t_count = t_count+1
 # 	    @threads << Thread.new do
 #               sleep @speed
-#               puts gsa_advantage[thr_n]
+#               puts @gsa_advantage[thr_n]
 #               puts thr_n
-# 		    search_on_browser(gsa_advantage[thr_n], @mfr_table[index])
+# 		    search_on_browser(@gsa_advantage[thr_n], @mfr_table[index])
 #
 # 	    end
 #     if t_count >= N_threads
