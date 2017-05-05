@@ -68,7 +68,7 @@ def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
 	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
-	url = url + "&&c=100"# sort by price highest to lowest
+	url += "&&c=100"# sort by price highest to lowest
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
 	return url
