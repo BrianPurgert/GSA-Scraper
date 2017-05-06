@@ -1,3 +1,4 @@
+# helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
 	include PageObject
 	page_url('https://www.gsaadvantage.gov/')
@@ -6,11 +7,12 @@ class GsaAdvantagePage
           table(:mft_table, css: '#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3)')
      
      # /advantage/s/search.do?
-	     link(:ms_name, css: 'td a[href*="product_detail.do?gsin"]:first-child')
-          link(:product_detail, css: 'a.arial[href*="product_detail.do?gsin"]')
-          link(:ms_low_price, css: 'span.newOrange.black12pt.arial > strong')
-          cell(:ms_desc, css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td')
-          span(:ms_sources, css: 'table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span')
+            links(:product_detail, css: 'a.arial[href*="product_detail.do?gsin"]')
+		table(:pagination, id: '#pagination')
+		fonts(:ms_mpn, css: 'tbody tr > td font.black8pt')
+		links(:ms_low_price, css: 'span.newOrange.black12pt.arial > strong')
+		cells(:ms_desc, css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td')
+		spans(:ms_sources, css: 'table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span')
      
      # /advantage/catalog/product_detail.do?gsin=
           div(:main, id: 'main')

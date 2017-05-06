@@ -207,6 +207,7 @@ def search_on_browser(gsa_advantage, update_mfr,si,mn)
 				@semaphore.synchronize{
 					@data_out[si] = [mn,contractor, contractor_price, contractor_page_url, product_page_url]
 					update_mfr.execute(si,contractor, contractor_price, contractor_page_url, product_page_url)
+					
 				}
 			rescue Exception => e
 				puts "MPN:\t#{si}\tMSG:\t#{e.message}"
@@ -239,23 +240,6 @@ Thread.list.each { |t| t.join if t != Thread.current }
 
 
 
-
 # @data_out.each { |key, value|
 #     puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
 # }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -9,6 +9,9 @@ class MftDb
           cast: false
      )
      @insert_manufacture = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
+     
+     # TODO yeah
+     # @insert_search_result = @client.prepare("INSERT IGNORE INTO mft_data.mfr_parts(mfr, mpn, desc) VALUES (?, ?, ?)")
 
      
      def insert_mfr(name,href_name,item_count=1)

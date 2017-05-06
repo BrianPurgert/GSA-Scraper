@@ -1,46 +1,39 @@
 
-td a[href*="product_detail.do?gsin"]:first-child{
-background-color: rgba(0, 136, 204, 0.3);
+a.arial[href*="product_detail.do?gsin"]{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+a.arial[href*="product_detail.do?gsin"]::before{
+  content:"product_detail";
+position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
 }
-tbody tr > td font{
-background-color: rgba(0, 136, 204, 0.3);
+
+
+span.newOrange.black12pt.arial > strong{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+span.newOrange.black12pt.arial > strong::before{
+  	content:"ms_low_price";
+ 	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
 }
-span.newOrange.black12pt.arial > strong{
-background-color: rgba(0, 136, 204, 0.3);
+
+
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td::before{
+ 	content:"ms_desc";
+	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
 }
-tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{
-background-color: rgba(0, 136, 204, 0.3);
+
+
+tbody tr > td black8pt.font{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody tr > td black8pt.font::before{
+    content:"ms_mpn";
+    position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
 }
-table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span{
-background-color: rgba(0, 136, 204, 0.3);
+
+
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td::before{
+    content:"ms_desc";
+	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
 }
-#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3){
-background-color: rgba(0, 136, 204, 0.3);
-}
-body > pre{
-background-color: rgba(0, 136, 204, 0.3);
-}
-#searchText{
-background-color: rgba(0, 136, 204, 0.3);
-}
-#main{
-background-color: rgba(0, 136, 204, 0.3);
-}
-#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td a[href*="product_detail.do?gsin"]:first-child{
-background-color: rgba(0, 136, 204, 0.3);
-}
-#main-alt > table > tbody > tr > td:nth-child(3) > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(1) > td > table > tbody > tr:nth-child(1) > td{
-background-color: rgba(0, 136, 204, 0.3);
-}
-table.pricehighlight > tbody > tr:nth-child(2) > td > a{
-background-color: rgba(0, 136, 204, 0.3);
-}
-table.pricehighlight > tbody > tr:nth-child(1) > td > span:first-child{
-background-color: rgba(0, 136, 204, 0.3);
-}
-table.pricehighlight{
-background-color: rgba(0, 136, 204, 0.3);
-}
-#main > table:nth-child(3) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(3) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > table:nth-child(2) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2){
-background-color: rgba(0, 136, 204, 0.3);
-}
+
+/* a[href*="product_detail.do?gsin"]:first-child{
+    background-color: rgba(0, 136, 204, 0.3);
+    box-shadow:0px 0px 1px 10px #26b85c;
+} */

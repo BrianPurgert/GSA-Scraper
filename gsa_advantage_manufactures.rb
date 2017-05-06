@@ -20,9 +20,8 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 # @mfr_name     = []
 
 
+require_relative 'mft_db'
 
-
-@hudson_db = MftDb.new
 
 def initialize_browsers(browser, gsa_advantage)
 	@browser_threads.in_threads.each do |nt|

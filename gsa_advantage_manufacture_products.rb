@@ -8,16 +8,21 @@ require 'colorized_string'
 require 'mysql2'
 require 'yaml'
 require 'in_threads'
-
-BENCH_TIME     = [Time.now]
-@browser       = []
-@gsa_advantage = []
-@mfr_table     = []
-@speed         = 2
+require_relative 'mft_db'
 
 N_threads = 1
 N_threads_plus_one = N_threads+1
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+
+@browser       = []
+@gsa_advantage = []
+@mfr_table     = []
+@hudson_db = MftDb.new
+@speed         = 2
+
+
+# black|light_black|red|light_red|green|light_green|yellow|light_yellow|blue|light_blue|magenta|light_magenta|cyan|light_cyan|white|light_white|default
+
 
 @client = Mysql2::Client.new(
      host:      '70.61.131.180',
@@ -40,26 +45,6 @@ def load_table_mfr
 	end
 end
 
-def benchmark
-    BENCH_TIME << Time.now
-    elapsed       = BENCH_TIME[-1] - BENCH_TIME[-2]
-    total_elapsed = BENCH_TIME[-1] - BENCH_TIME[0]
-    print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
-end
-# def move_empty_queue
-# 	@client.query('
-# UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
-# SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-#     lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-#     lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-#     lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-# WHERE lowest_price_contractor.mpn = queue.mpn;
-# ')
-# 	@client.query('TRUNCATE `mft_data`.`queue`;')
-# end
-
-# &q=14:6#{more_than_price}
-# &q=14:7#{less_than_price}
 
 
 #TODO search url
@@ -67,16 +52,15 @@ def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
 	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
-	url += "&&c=100"# sort by price highest to lowest
+	url = url + "&c=100"
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
+	puts "#{url}".colorize(String.colors.sample)
 	return url
 end
 
 def initialize_browsers
      down = 0
-     # @gsa_advantage = []
-     # @browser = []
 	(1..N_threads).in_threads.each do |nt|
 		r_proxy = Proxy_list.sample
 		@browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
@@ -121,35 +105,52 @@ def search_on_browser(n, mfr)
 	@manufacture_product_results  = []
 	@n_low                        = 900000000
 	@has_more_pages               = true
-     
-     sleep @speed
-	@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
-     sleep @speed
-     puts @gsa_advantage[n].browser.url
-     divs = @gsa_advantage[n].browser.elements(css: 'a.arial[href*="product_detail.do?gsin"]')
-     divs.each do |e|
-          puts e.text
-     end
-#=> "month-2013-05-0"
-     
-     
-     
-     puts "\n"
+ 
+	begin
+		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
+	      puts @gsa_advantage[n].browser.url
+		n_results = @gsa_advantage[n].product_detail_elements.length
+		case n_results
+			when 0
+				p 'refresh_page next_manufacture'
+			when 1..99,100
+			
+			puts	@gsa_advantage[n].product_detail_elements.map(&:text)
+			puts	@gsa_advantage[n].product_detail_elements.map(&:href)
+			puts	@gsa_advantage[n].ms_mpn_elements.map(&:text)
+			puts	@gsa_advantage[n].ms_low_price_elements.map(&:text)
+			puts	@gsa_advantage[n].ms_desc_elements.map(&:text)
+				# @gsa_advantage[n].product_detail_elements.each do|base_element|
+				# 	base_element
+				# 	# parent = browser.link(:text, 'Link 2')
+				# 	# parent = parent.parent until parent.tag_name == 'div' and parent.class_name == 'parent'
+				# end
+			when 100
+				p 'same_manufacture set lowest price'
+				@n_low  = gsa_advantage[n].ms_low_price_elements.last
+			else
+				p 'error'
+		end
+		
+	end while n_results >= 100
+
+     puts " \n"
+	# @hudson_db.insert_mfr(@name_mfr,@href_mfr)
      sleep @speed
 end
 
-# move_empty_queue
+
+
+
+
 load_table_mfr
 initialize_browsers()
-
-
 @mfr_table.each_index do |index|
 	sleep @speed
 	puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
 	search_on_browser(1, @mfr_table[index])
      sleep @speed
 end
-
 
 # @semaphore = Mutex.new
 # @threads = []
