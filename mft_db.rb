@@ -26,6 +26,14 @@ require 'mysql2'
 
      end
 
+     def mfr_time(name)
+	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{name}'"
+          puts insert_string
+          @client.query("#{insert_string}")
+
+     end
+
+
      def move_empty_queue
           @client.query('
                UPDATE `mft_data`.`mfr`, `mft_data`.`queue`

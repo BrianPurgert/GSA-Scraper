@@ -8,7 +8,6 @@ require 'colorized_string'
 require 'mysql2'
 require 'yaml'
 require 'in_threads'
-require 'watir-scroll'
 require_relative 'mft_db'
 
 N_threads = 1
@@ -19,13 +18,14 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 @gsa_advantage = []
 @mfr_table     = []
 
-@speed         = 2
+@speed         = 0
 
-money = '$18.28'
-puts money
-money = money.to_currency
-puts money
-sleep 1111
+# money = '$18.28'
+# puts money
+# money = money.scan(/\d+/).first
+# money.map {|x| x[/\d+/]}
+# puts money
+# sleep 1111
 
 def load_table_mfr
 	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
@@ -108,6 +108,8 @@ def check_result_numbers(n)
      end
 end
 
+
+
 #TODO search manufacture
 def search_on_browser(n, mfr)
 	puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
@@ -118,34 +120,33 @@ def search_on_browser(n, mfr)
  
 	begin
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
-          n_results       = check_result_numbers(n)
-          result = []
-          
+		n_results            = @gsa_advantage[n].product_detail_elements.length
+		result = []
           case n_results
-			when 0
+	          when 0
 				p 'refresh_page next_manufacture'
-               when 1..100
-                    link = @gsa_advantage[n].product_links_elements.map(&:href).uniq
-                  p link
+	          when 1..100
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
-                         # mfr,
-                         # mpn,
-                         # name,
-                         # href_name,
-                         # low_price,
-                         # `desc`
-                         result_set = [@manufacture_name,
-                                       @gsa_advantage[n].ms_mpn_elements[i].text,
-                                       @gsa_advantage[n].product_detail_elements[i].text,
-                                       link[i],
-                                       @gsa_advantage[n].ms_low_price_elements[i].text,
-                                       @gsa_advantage[n].ms_desc_elements[i].text]
+	                    mpn       = @gsa_advantage[n].ms_mpn_elements[i]
+                          name      = @gsa_advantage[n].product_detail_elements[i]
+                          link      = @gsa_advantage[n].product_link_elements[i]
+                          price     = @gsa_advantage[n].ms_low_price_elements[i]
+                          desc      = @gsa_advantage[n].ms_desc_elements[i]
+
+	                    mpn.scroll_into_view
+	                    # mpn.flash
+	                    # name.flash
+	                    # price.flash
+	                    # desc.flash
+	                    
+                          result_set = [@manufacture_name,
+                                       mpn.text,
+                                       name.text,
+                                       link.href,
+                                       price.text,
+                                       desc.text]
                          result << result_set
-                         result_set.each {|r| p r}
-                         puts '  '
-                         @gsa_advantage[n].ms_mpn_elements[i].scroll_into_view
-                         @gsa_advantage[n].ms_mpn_elements[i].flash
-                         @n_low = result_set[5]
+                         @n_low = result_set[4].scan(/\d+/).first
                    
                          # pr = bot.parent
                          # until pr.text.include? "Mfr"
@@ -154,7 +155,7 @@ def search_on_browser(n, mfr)
                          #      pr.focus
                          # end
                     end
-                    insert_mfr_parts(result)
+                        insert_mfr_parts(result)
 			else
 				puts "error in number of results on page, n_results: #{n_results}"
 		end
@@ -163,6 +164,7 @@ def search_on_browser(n, mfr)
 
      puts " \n"
 	# @hudson_db.insert_mfr(@name_mfr,@href_mfr)
+	mfr_time(@manufacture_name)
      sleep @speed
 end
 

@@ -7,9 +7,9 @@ class GsaAdvantagePage
           table(:mft_table, css: '#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3)')
      
      # /advantage/s/search.do?
-          links(:product_detail, css: 'a[href*="product_detail.do?gsin"] > :not(img)')
-          links(:product_links, css: 'a[href*="product_detail.do?gsin"]')
-          b(:product_thumb, css: 'a[href*="product_detail.do?gsin"] > img')
+          bs(:product_detail, css: 'a[href*="product_detail.do?gsin"] > :not(img)')
+          links(:product_link,  css: 'a.arial[href*="product_detail.do?gsin"]')
+          # img(:product_thumb, css: 'a[href*="product_detail.do?gsin"] > img')
 		table(:pagination, id: '#pagination')
 		fonts(:ms_mpn, css: 'tbody tr > td font.black8pt')
 		links(:ms_low_price, css: 'span.newOrange.black12pt.arial > strong')
