@@ -8,6 +8,7 @@ require 'colorized_string'
 require 'mysql2'
 require 'yaml'
 require 'in_threads'
+require 'watir-scroll'
 require_relative 'mft_db'
 
 N_threads = 1
@@ -17,20 +18,14 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 @browser       = []
 @gsa_advantage = []
 @mfr_table     = []
-@hudson_db = MftDb.new
+
 @speed         = 2
 
-
-# black|light_black|red|light_red|green|light_green|yellow|light_yellow|blue|light_blue|magenta|light_magenta|cyan|light_cyan|white|light_white|default
-
-
-@client = Mysql2::Client.new(
-     host:      '70.61.131.180',
-     username:  'mft_data',
-     password:  'GoV321CoN',
-     reconnect: true,
-     cast:      false
-)
+money = '$18.28'
+puts money
+money = money.to_currency
+puts money
+sleep 1111
 
 def load_table_mfr
 	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
@@ -69,6 +64,8 @@ def initialize_browsers
 		print "\nBrowser #{nt}\t".colorize(:blue)
 		print "#{@gsa_advantage[nt].browser.text}\t#{r_proxy}"
 		@gsa_advantage[nt].browser.driver.manage.window.maximize
+          size = @gsa_advantage[nt].browser.driver.manage.window.size
+          @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width/2,size.height/2)
 		@gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
 		if @gsa_advantage[nt].browser.text.include?('This site can’t be reached')
 			puts 'down'
@@ -96,43 +93,73 @@ def scrape_manufactures(browser, gsa_advantage)
 	end
 end
 
+def check_result_numbers(n)
+     n_obj = []
+     n_obj[0]                          = @gsa_advantage[n].product_detail_elements.length
+     n_obj[1]                          = @gsa_advantage[n].ms_mpn_elements.length
+     n_obj[2]                          = @gsa_advantage[n].ms_low_price_elements.length
+     n_obj[3]                          = @gsa_advantage[n].ms_desc_elements.length
+     @data_consistent                  = n_obj[0] == n_obj[1] && n_obj[0] == n_obj[2] && n_obj[0] == n_obj[3]
+     puts "Data Consistent?: #{@data_consistent} length: #{n_obj[0]}"
+     if @data_consistent
+          return n_obj[0]
+     else
+          return -1
+     end
+end
+
 #TODO search manufacture
 def search_on_browser(n, mfr)
 	puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
 	@manufacture_name             = mfr['name']
 	@manufacture_href             = mfr['href_name']
 	@manufacture_item_count       = mfr['item_count']
-	@manufacture_product_results  = []
 	@n_low                        = 900000000
-	@has_more_pages               = true
  
 	begin
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
-	      puts @gsa_advantage[n].browser.url
-		n_results = @gsa_advantage[n].product_detail_elements.length
-		case n_results
+          n_results       = check_result_numbers(n)
+          result = []
+          
+          case n_results
 			when 0
 				p 'refresh_page next_manufacture'
-			when 1..99,100
-			
-			puts	@gsa_advantage[n].product_detail_elements.map(&:text)
-			puts	@gsa_advantage[n].product_detail_elements.map(&:href)
-			puts	@gsa_advantage[n].ms_mpn_elements.map(&:text)
-			puts	@gsa_advantage[n].ms_low_price_elements.map(&:text)
-			puts	@gsa_advantage[n].ms_desc_elements.map(&:text)
-				# @gsa_advantage[n].product_detail_elements.each do|base_element|
-				# 	base_element
-				# 	# parent = browser.link(:text, 'Link 2')
-				# 	# parent = parent.parent until parent.tag_name == 'div' and parent.class_name == 'parent'
-				# end
-			when 100
-				p 'same_manufacture set lowest price'
-				@n_low  = gsa_advantage[n].ms_low_price_elements.last
+               when 1..100
+                    link = @gsa_advantage[n].product_links_elements.map(&:href).uniq
+                  p link
+                    @gsa_advantage[n].product_detail_elements.each_index do |i|
+                         # mfr,
+                         # mpn,
+                         # name,
+                         # href_name,
+                         # low_price,
+                         # `desc`
+                         result_set = [@manufacture_name,
+                                       @gsa_advantage[n].ms_mpn_elements[i].text,
+                                       @gsa_advantage[n].product_detail_elements[i].text,
+                                       link[i],
+                                       @gsa_advantage[n].ms_low_price_elements[i].text,
+                                       @gsa_advantage[n].ms_desc_elements[i].text]
+                         result << result_set
+                         result_set.each {|r| p r}
+                         puts '  '
+                         @gsa_advantage[n].ms_mpn_elements[i].scroll_into_view
+                         @gsa_advantage[n].ms_mpn_elements[i].flash
+                         @n_low = result_set[5]
+                   
+                         # pr = bot.parent
+                         # until pr.text.include? "Mfr"
+                         #      pr = pr.parent
+                         #      pr.flash
+                         #      pr.focus
+                         # end
+                    end
+                    insert_mfr_parts(result)
 			else
-				p 'error'
+				puts "error in number of results on page, n_results: #{n_results}"
 		end
 		
-	end while n_results >= 100
+	end while n_results == 100
 
      puts " \n"
 	# @hudson_db.insert_mfr(@name_mfr,@href_mfr)

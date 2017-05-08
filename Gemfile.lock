@@ -53,6 +53,8 @@ GEM
       ruby-ole (>= 1.0)
     watir (6.2.1)
       selenium-webdriver (~> 3.0)
+    watir-scroll (0.3.0)
+      watir (>= 6.0)
     websocket (1.2.4)
     yml_reader (0.7)
 
@@ -70,6 +72,7 @@ DEPENDENCIES
   rake (~> 12.0)
   spreadsheet (~> 1.1, >= 1.1.4)
   watir (~> 6.2, >= 6.2.1)
+  watir-scroll
 
 BUNDLED WITH
    1.14.6

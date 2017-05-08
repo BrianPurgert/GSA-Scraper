@@ -1,6 +1,5 @@
 require 'mysql2'
 
-class MftDb
      @client = Mysql2::Client.new(
           host:     "70.61.131.180",
           username: "mft_data",
@@ -8,16 +7,25 @@ class MftDb
           reconnect: true,
           cast: false
      )
-     @insert_manufacture = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-     
-     # TODO yeah
-     # @insert_search_result = @client.prepare("INSERT IGNORE INTO mft_data.mfr_parts(mfr, mpn, desc) VALUES (?, ?, ?)")
 
-     
      def insert_mfr(name,href_name,item_count=1)
+          @insert_manufacture = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
           @insert_manufacture.execute("#{name}","#{href_name}",'1')
      end
-     
+
+     def insert_mfr_parts(mfr_parts_data)
+          insert_string = 'REPLACE INTO mft_data.mfr_parts
+          (mfr, mpn, name, href_name, low_price, `desc`)
+           VALUES'
+          mfr_parts_data.each_with_index do |mfr_part, i|
+               insert_string += ',' if i > 0
+               insert_string += " ('#{mfr_part[0]}', '#{mfr_part[1]}', '#{@client.escape(mfr_part[2])}', '#{mfr_part[3]}', '#{mfr_part[4]}', '#{@client.escape(mfr_part[5])}')"
+          end
+          puts insert_string
+          @client.query("#{insert_string}")
+
+     end
+
      def move_empty_queue
           @client.query('
                UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
@@ -29,5 +37,8 @@ class MftDb
                     ')
           @client.query('TRUNCATE `mft_data`.`queue`;')
      end
-     
-end
+
+
+
+
+
