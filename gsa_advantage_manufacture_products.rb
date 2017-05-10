@@ -134,15 +134,21 @@ def search_on_browser(n, mfr)
 	@manufacture_href             = mfr[:href_name]
 	@manufacture_item_count       = mfr[:item_count]
      @n_low                        = 900000000
- 
+
 	begin
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
 		n_results            = @gsa_advantage[n].product_detail_elements.length
 		result = []
+		if n_results == 0
+			@gsa_advantage[n].browser.refresh
+			n_results            = @gsa_advantage[n].product_detail_elements.length
+		end
+		
           
           case n_results
                when 0
                     p "No Results on #{@gsa_advantage[n].browser.url}"
+				exit
 	          when 1..100
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
                          mpn       = @gsa_advantage[n].ms_mpn_elements[i]
@@ -174,11 +180,9 @@ end
 # load_table_mfr
 initialize_browsers()
 (0..2000).each do |index|
-	sleep @speed
 	# puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
      puts "Companies Processed: #{index}"
 	search_on_browser(1, get_mfr)
-     sleep @speed
 end
 
 # @semaphore = Mutex.new
