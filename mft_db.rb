@@ -27,17 +27,24 @@ require 'mysql2'
      end
 
      def mfr_time(name)
-	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{name}'"
+	     escaped = @client.escape("#{name}")
+	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{escaped}'"
           puts insert_string
           @client.query("#{insert_string}")
      end
 
-def check_out(name)
-     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{name}'"
-     puts insert_string
-     @client.query("#{insert_string}")
-end
+	def check_out(name)
+		escaped = @client.escape("#{name}")
+	     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
+	     puts insert_string
+	      @client.query("#{insert_string}")
+	end
 
+	def check_in
+	     insert_string = "UPDATE mft_data.mfr SET check_out=0 WHERE check_out=1"
+	     puts insert_string
+	      @client.query("#{insert_string}")
+	end
 
      def get_mfr
           row_list = []
@@ -48,6 +55,7 @@ end
           check_out(mfr[:name])
           return mfr
      end
+
 
      def move_empty_queue
           @client.query('
