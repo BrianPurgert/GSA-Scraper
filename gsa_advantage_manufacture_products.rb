@@ -174,7 +174,6 @@ end
 # load_table_mfr
 initialize_browsers()
 (0..2000).each do |index|
-     # current_mfr =  get_mfr
 	sleep @speed
 	# puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
      puts "Companies Processed: #{index}"
@@ -183,27 +182,21 @@ initialize_browsers()
 end
 
 # @semaphore = Mutex.new
-# @threads = []
-# t_count = 0;
-# @mfr_table.each_index do |index|
-#      puts "@mfr_table[index] #{@mfr_table[index]}"
-#     thr_n = index % N_threads_plus_one
-#      puts "thr_n #{thr_n}"
-# 	    t_count = t_count+1
-# 	    @threads << Thread.new do
-#               sleep @speed
-#               puts @gsa_advantage[thr_n]
-#               puts thr_n
-# 		    search_on_browser(@gsa_advantage[thr_n], @mfr_table[index])
-#
-# 	    end
-#     if t_count >= N_threads
-# 	    @threads.each { |t| t.join if t != Thread.current }
-# 	    t_count = 0
-#     end
-# end
-# puts 'Joining Threads'
-# Thread.list.each { |t| t.join if t != Thread.current }
+#  @threads = []
+#  t_count = 0;
+# (0..2000).each do |index|
+#      thr_n = index % N_threads_plus_one
+#       puts "thr_n #{thr_n}"
+#  	    t_count = t_count+1
+#  	    @threads << Thread.new do
+#  		    search_on_browser(thr_n, get_mfr)
+#  	    end
+#      if t_count >= N_threads
+#  	    @threads.each { |t| t.join if t != Thread.current }
+#  	    t_count = 0
+#      end
+#  end
+#  Thread.list.each { |t| t.join if t != Thread.current }
 
 
 

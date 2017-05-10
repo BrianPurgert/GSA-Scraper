@@ -5,6 +5,9 @@ require 'mysql2'
           username: "mft_data",
           password: "GoV321CoN",
           reconnect: true,
+          read_timeout: 20,
+          write_timeout: 15,
+          connect_timeout: 18,
           cast: false
      )
 
