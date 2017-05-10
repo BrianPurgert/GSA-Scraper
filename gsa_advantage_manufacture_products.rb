@@ -148,23 +148,25 @@ def search_on_browser(n, mfr)
           case n_results
                when 0
                     p "No Results on #{@gsa_advantage[n].browser.url}"
-				exit
 	          when 1..100
+			    
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
                          mpn       = @gsa_advantage[n].ms_mpn_elements[i]
-                         name      = @gsa_advantage[n].product_detail_elements[i]
-                         link      = @gsa_advantage[n].product_link_elements[i]
-                         price     = @gsa_advantage[n].ms_low_price_elements[i]
-                         desc      = @gsa_advantage[n].ms_desc_elements[i]
-                          # get_parent(mpn)
-                         mpn.scroll_into_view
-                         mpn.flash
+                         name      = @gsa_advantage[n].product_detail_elements[i].text
+                         link      = @gsa_advantage[n].product_link_elements[i].href
+                         price     = @gsa_advantage[n].ms_low_price_elements[i].text
+                         desc      = @gsa_advantage[n].ms_desc_elements[i].text
+                           # get_parent(mpn)
+        
+                               pr = mpn.parent.parent.parent
+                              pr.scroll_into_view
+                              pr.flash
                           result_set = [@manufacture_name,
                                        mpn.text,
-                                       name.text,
-                                       link.href,
-                                       price.text,
-                                       desc.text]
+                                       name,
+                                       link,
+                                       price,
+                                       desc]
                           result << result_set
                           @n_low = result_set[4].scan(/\d+/).first
                     end
