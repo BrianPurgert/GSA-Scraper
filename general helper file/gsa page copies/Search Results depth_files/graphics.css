@@ -1,0 +1,75 @@
+@charset "utf-8";
+/* CSS Document */
+/* UPDATED 5/20/13 */
+#fullspangraphic {
+	display: block;
+	border: 1px solid #CCCCCC;
+	min-height:200px;
+	background: url(../images/gui/bgs/dept_landing_headgraphic_bg.jpg) repeat-y right center;
+	margin-bottom:10px;
+}
+#fullspangraphic table{
+	padding:20px !important
+}
+
+
+#fullspangraphic .gtitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16pt;
+	font-weight: bold;
+	color: #CD2712;
+}
+#filtergraphic {
+	/*background-image: url(../images/gui/buttons/filters/filter_temp.jpg);
+	background-repeat: no-repeat;*/
+	padding-top: 5px;
+	width: 331px;
+	height: 100px;
+		border: 1px solid #CCCCCC;
+	background-color: #FFFFFF;
+	
+	margin-left:5px;
+	margin-top:auto;
+	margin-bottom:auto;
+}
+#filtergraphic  .glink {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 8pt;
+	color: #666666;
+	letter-spacing: -1px;
+}
+#filtergraphic  .gtext {
+	font-family: "Lucida Sans";
+	font-size: 9pt;
+	color: #333333;
+	line-height: 9pt;
+}
+#filtergraphicContainer {
+	display: block;
+	text-align: left;
+	background-color: #F9F9F9;
+	background-image: url(../images/gui/bgs/grad_fill_05.jpg);
+	background-repeat: repeat-x;
+	background-position: top;
+	border: 1px solid #CCCCCC;
+	
+}
+
+#frontpgfullspangraphic {
+	display: block;
+	background-image: url(../images/opening_art.gif);
+	background-repeat: no-repeat;
+	padding-right: 0px;
+	position: relative;
+	left: 0px;
+	top: 0px;
+	height: 260px;
+	background-position: bottom;
+}
+#frontpgfullspangraphic .gtitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16pt;
+	font-weight: bold;
+	color: #00477D;
+	line-height: 18px;
+}
