@@ -142,6 +142,7 @@ def search_on_browser(n, mfr)
 		if n_results == 0
 			@gsa_advantage[n].browser.refresh
 			n_results            = @gsa_advantage[n].product_detail_elements.length
+				# We found no Product matches for your search terms
 		end
 		
           
