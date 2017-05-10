@@ -16,7 +16,7 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
 @browser       = []
 @gsa_advantage = []
-@mfr_table     = []
+# @mfr_table     = []
 
 @speed         = 0
 
@@ -63,9 +63,12 @@ def initialize_browsers
 		# @gsa_advantage[nt].@browser.goto 'https://ifconfig.co/ip'
 		print "\nBrowser #{nt}\t".colorize(:blue)
 		print "#{@gsa_advantage[nt].browser.text}\t#{r_proxy}"
+          @gsa_advantage[nt].browser.driver.manage.window.move_to(2000, 100)
 		@gsa_advantage[nt].browser.driver.manage.window.maximize
           size = @gsa_advantage[nt].browser.driver.manage.window.size
-          @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width/2,size.height/2)
+          pos = @gsa_advantage[nt].browser.driver.manage.window.position
+          @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width,size.height/2)
+          @gsa_advantage[nt].browser.driver.manage.window.move_to(pos.x, pos.y)
 		@gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
 		if @gsa_advantage[nt].browser.text.include?('This site can’t be reached')
 			puts 'down'
@@ -108,76 +111,74 @@ def check_result_numbers(n)
      end
 end
 
+def get_parent(mpn) pr = mpn.parent
+     c                      = 0
+     until pr.text.include? @manufacture_name || c == 4
+          pr = pr.parent
+     end
+     puts pr.single_product
+     pr.scroll_into_view
+     pr.flash
+end
 
-
-#TODO search manufacture
+# :name=>"A.O. SMITH CORP",
+# :href_name=>"A.O.+SMITH+CORP",
+# :last_updated=>"2017-04-21 23:11:10",
+# :item_count=>"1",
+# :update_count=>"0"}
 def search_on_browser(n, mfr)
-	puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
-	@manufacture_name             = mfr['name']
-	@manufacture_href             = mfr['href_name']
-	@manufacture_item_count       = mfr['item_count']
-	@n_low                        = 900000000
+     # mfr = mfr[0]
+     p mfr
+	# puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
+	@manufacture_name             = mfr[:name]
+	@manufacture_href             = mfr[:href_name]
+	@manufacture_item_count       = mfr[:item_count]
+     @n_low                        = 900000000
  
 	begin
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
 		n_results            = @gsa_advantage[n].product_detail_elements.length
 		result = []
+          
           case n_results
-	          when 0
-				p 'refresh_page next_manufacture'
+               when 0
+                    p "No Results on #{@gsa_advantage[n].browser.url}"
 	          when 1..100
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
-	                    mpn       = @gsa_advantage[n].ms_mpn_elements[i]
-                          name      = @gsa_advantage[n].product_detail_elements[i]
-                          link      = @gsa_advantage[n].product_link_elements[i]
-                          price     = @gsa_advantage[n].ms_low_price_elements[i]
-                          desc      = @gsa_advantage[n].ms_desc_elements[i]
-
-	                    mpn.scroll_into_view
-	                    # mpn.flash
-	                    # name.flash
-	                    # price.flash
-	                    # desc.flash
-	                    
+                         mpn       = @gsa_advantage[n].ms_mpn_elements[i]
+                         name      = @gsa_advantage[n].product_detail_elements[i]
+                         link      = @gsa_advantage[n].product_link_elements[i]
+                         price     = @gsa_advantage[n].ms_low_price_elements[i]
+                         desc      = @gsa_advantage[n].ms_desc_elements[i]
+                          # get_parent(mpn)
+                         mpn.scroll_into_view
+                         mpn.flash
                           result_set = [@manufacture_name,
                                        mpn.text,
                                        name.text,
                                        link.href,
                                        price.text,
                                        desc.text]
-                         result << result_set
-                         @n_low = result_set[4].scan(/\d+/).first
-                   
-                         # pr = bot.parent
-                         # until pr.text.include? "Mfr"
-                         #      pr = pr.parent
-                         #      pr.flash
-                         #      pr.focus
-                         # end
+                          result << result_set
+                          @n_low = result_set[4].scan(/\d+/).first
                     end
                         insert_mfr_parts(result)
 			else
 				puts "error in number of results on page, n_results: #{n_results}"
 		end
-		
 	end while n_results == 100
-
-     puts " \n"
-	# @hudson_db.insert_mfr(@name_mfr,@href_mfr)
 	mfr_time(@manufacture_name)
      sleep @speed
 end
 
-
-
-
-
-load_table_mfr
+# load_table_mfr
 initialize_browsers()
-@mfr_table.each_index do |index|
+(0..2000).each do |index|
+     # current_mfr =  get_mfr
 	sleep @speed
-	puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
-	search_on_browser(1, @mfr_table[index])
+	# puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
+     puts "Companies Processed: #{index}"
+	search_on_browser(1, get_mfr)
      sleep @speed
 end
 

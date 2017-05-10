@@ -30,9 +30,24 @@ require 'mysql2'
 	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{name}'"
           puts insert_string
           @client.query("#{insert_string}")
-
      end
 
+def check_out(name)
+     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{name}'"
+     puts insert_string
+     @client.query("#{insert_string}")
+end
+
+
+     def get_mfr
+          row_list = []
+          @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_updated LIMIT 1;", :symbolize_keys => true).each do |row|
+               row_list << row
+          end
+          mfr = row_list[0]
+          check_out(mfr[:name])
+          return mfr
+     end
 
      def move_empty_queue
           @client.query('
