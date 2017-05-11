@@ -144,13 +144,10 @@ def search_on_browser(n, mfr)
 			n_results            = @gsa_advantage[n].product_detail_elements.length
 				# We found no Product matches for your search terms
 		end
-		
-          
           case n_results
                when 0
                     p "No Results on #{@gsa_advantage[n].browser.url}"
 	          when 1..100
-			    
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
                          mpn       = @gsa_advantage[n].ms_mpn_elements[i]
                          name      = @gsa_advantage[n].product_detail_elements[i].text
@@ -158,20 +155,19 @@ def search_on_browser(n, mfr)
                          price     = @gsa_advantage[n].ms_low_price_elements[i].text
                          desc      = @gsa_advantage[n].ms_desc_elements[i].text
                            # get_parent(mpn)
-        
-                               pr = mpn.parent.parent.parent
-                              pr.scroll_into_view
-                              pr.flash
-                          result_set = [@manufacture_name,
+                           # pr = mpn.parent.parent.parent
+                         mpn.scroll_into_view
+
+                         result_set = [@manufacture_name,
                                        mpn.text,
                                        name,
                                        link,
                                        price,
                                        desc]
-                          result << result_set
-                          @n_low = result_set[4].scan(/\d+/).first
+                         result << result_set
+                         @n_low = result_set[4].scan(/\d+/).first
                     end
-                        insert_mfr_parts(result)
+                         insert_mfr_parts(result)
 			else
 				puts "error in number of results on page, n_results: #{n_results}"
 		end
@@ -180,11 +176,9 @@ def search_on_browser(n, mfr)
      sleep @speed
 end
 
-# load_table_mfr
 initialize_browsers()
 (0..2000).each do |index|
-	# puts "@gsa_advantage[1] #{@gsa_advantage[1]}     @mfr_table[index] #{@mfr_table[index]}"
-     puts "Companies Processed: #{index}"
+	puts "Companies Processed: #{index}"
 	search_on_browser(1, get_mfr)
 end
 
