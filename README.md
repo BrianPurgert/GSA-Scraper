@@ -2,8 +2,7 @@ Data Scraper for GSA Advantage!
 ===================
 
 - - - - 
-
-# TODO this and all the other todos
+### TODO this and all the other todos
 At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
 
 ## Code Example
@@ -19,6 +18,8 @@ A short description of the motivation behind the creation and maintenance of the
 - [ ] An uncompleted task
 - [x] A completed task
 
+## Scrapping Process Overview
+
 
 ## Database Reference
 
@@ -28,8 +29,8 @@ Content Cell  | Content Cell
 Content Cell  | Content Cell
 
 
-## Contributors
-
+## Reference & External Sources
+[general helper file/gsa page copies/Search_Results.html]()
 https://github.com/brianmario/mysql2
 http://www.rubydoc.info/gems/watir/Watir
 https://binarapps.com/blog/browser-automation-with-watir-guide
