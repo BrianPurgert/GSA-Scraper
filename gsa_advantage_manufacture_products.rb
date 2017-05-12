@@ -14,6 +14,8 @@ N_threads = 1
 N_threads_plus_one = N_threads+1
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
+
+
 @browser       = []
 @gsa_advantage = []
 # @mfr_table     = []
@@ -27,22 +29,8 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 # puts money
 # sleep 1111
 
-def load_table_mfr
-	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
-	result.each do |row|
-		@mfr_table  << row
-	end
-	@mfr_table.each do |mfr|
-		 print "#{mfr['name']}\t".colorize(:white)
-		 print "#{mfr['href_name']}\t".colorize(:magenta)
-		 print "#{mfr['last_updated']}\t".colorize(:blue)
-		 puts "#{mfr['item_count']}\t".colorize(:green)
-	end
-end
 
 
-
-#TODO search url
 def search_url(mfr_href_name, current_lowest_price,page_number)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"

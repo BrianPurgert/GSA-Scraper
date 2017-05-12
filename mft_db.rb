@@ -6,8 +6,8 @@ require 'mysql2'
           password: "GoV321CoN",
           reconnect: true,
           read_timeout: 20,
-          write_timeout: 15,
-          connect_timeout: 18,
+          write_timeout: 25,
+          connect_timeout: 25,
           cast: false
      )
 
@@ -17,16 +17,14 @@ require 'mysql2'
      end
 
      def insert_mfr_parts(mfr_parts_data)
-          insert_string = 'REPLACE INTO mft_data.mfr_parts
-          (mfr, mpn, name, href_name, low_price, `desc`)
-           VALUES'
+          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
+			         VALUES'
           mfr_parts_data.each_with_index do |mfr_part, i|
                insert_string += ',' if i > 0
-               insert_string += " ('#{mfr_part[0]}', '#{mfr_part[1]}', '#{@client.escape(mfr_part[2])}', '#{mfr_part[3]}', '#{mfr_part[4]}', '#{@client.escape(mfr_part[5])}')"
+               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}')\n"
           end
           puts insert_string
           @client.query("#{insert_string}")
-
      end
 
      def mfr_time(name)
@@ -71,6 +69,20 @@ require 'mysql2'
                     ')
           @client.query('TRUNCATE `mft_data`.`queue`;')
      end
+
+def load_table_mfr
+	@mfr_table = []
+	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
+	result.each do |row|
+		@mfr_table  << row
+	end
+	@mfr_table.each do |mfr|
+		print "#{mfr['name']}\t".colorize(:white)
+		print "#{mfr['href_name']}\t".colorize(:magenta)
+		print "#{mfr['last_updated']}\t".colorize(:blue)
+		puts "#{mfr['item_count']}\t".colorize(:green)
+	end
+end
 
 
 
