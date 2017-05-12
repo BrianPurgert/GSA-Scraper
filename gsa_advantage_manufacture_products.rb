@@ -164,7 +164,7 @@ def search_on_browser(n, mfr)
 end
 
 initialize_browsers()
-(0..2000).each do |index|
+(0..25).each do |index|
 	puts "Companies Processed: #{index}"
 	search_on_browser(1, get_mfr)
 end
