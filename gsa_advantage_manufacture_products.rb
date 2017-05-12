@@ -153,7 +153,7 @@ def search_on_browser(n, mfr)
                          @n_low = result_set[4].scan(/\d+/).first
                     end
                          insert_mfr_parts(result)
-			else
+	          else
 				puts "error in number of results on page, n_results: #{n_results}"
 		end
 	end while n_results == 100
@@ -164,7 +164,9 @@ end
 initialize_browsers()
 (0..25).each do |index|
 	puts "Companies Processed: #{index}".colorize(:red)
+	
 	search_on_browser(1, get_mfr)
+	#TODO add shutdown command from database
 end
 
 # @semaphore = Mutex.new
