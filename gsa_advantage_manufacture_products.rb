@@ -51,12 +51,12 @@ def initialize_browsers
 		# @gsa_advantage[nt].@browser.goto 'https://ifconfig.co/ip'
 		print "\nBrowser #{nt}\t".colorize(:blue)
 		print "#{@gsa_advantage[nt].browser.text}\t#{r_proxy}"
-          @gsa_advantage[nt].browser.driver.manage.window.move_to(2000, 100)
+            @gsa_advantage[nt].browser.driver.manage.window.move_to(2000, 100)
 		@gsa_advantage[nt].browser.driver.manage.window.maximize
-          size = @gsa_advantage[nt].browser.driver.manage.window.size
-          pos = @gsa_advantage[nt].browser.driver.manage.window.position
-          @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width,size.height/2)
-          @gsa_advantage[nt].browser.driver.manage.window.move_to(pos.x, pos.y)
+            size = @gsa_advantage[nt].browser.driver.manage.window.size
+            pos = @gsa_advantage[nt].browser.driver.manage.window.position
+            @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width,size.height/2)
+            @gsa_advantage[nt].browser.driver.manage.window.move_to(pos.x, pos.y)
 		@gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
 		if @gsa_advantage[nt].browser.text.include?('This site can’t be reached')
 			puts 'down'
@@ -120,20 +120,16 @@ def search_on_browser(n, mfr)
 	@manufacture_name             = mfr[:name]
 	@manufacture_href             = mfr[:href_name]
 	@manufacture_item_count       = mfr[:item_count]
-     @n_low                        = 900000000
+      @n_low                        = 900000000
 
 	begin
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
 		n_results            = @gsa_advantage[n].product_detail_elements.length
 		result = []
-		if n_results == 0
-			@gsa_advantage[n].browser.refresh
-			n_results            = @gsa_advantage[n].product_detail_elements.length
-				# We found no Product matches for your search terms
-		end
+
           case n_results
                when 0
-                    p "No Results on #{@gsa_advantage[n].browser.url}"
+                    puts "No Results on #{@gsa_advantage[n].browser.url}"
 	          when 1..100
                     @gsa_advantage[n].product_detail_elements.each_index do |i|
                          mpn       = @gsa_advantage[n].ms_mpn_elements[i]
