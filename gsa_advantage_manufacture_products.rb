@@ -126,7 +126,9 @@ def search_on_browser(n, mfr)
 		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
 		n_results            = @gsa_advantage[n].product_detail_elements.length
 		result = []
-
+			puts "#{@gsa_advantage[n].browser.url}"
+		
+		
           case n_results
                when 0
                     puts "No Results on #{@gsa_advantage[n].browser.url}"
@@ -161,7 +163,7 @@ end
 
 initialize_browsers()
 (0..25).each do |index|
-	puts "Companies Processed: #{index}"
+	puts "Companies Processed: #{index}".colorize(:red)
 	search_on_browser(1, get_mfr)
 end
 

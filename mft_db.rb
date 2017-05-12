@@ -23,21 +23,21 @@ require 'mysql2'
                insert_string += ',' if i > 0
                insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}')\n"
           end
-          puts insert_string
+          puts insert_string.colorize(:green)
           @client.query("#{insert_string}")
      end
 
      def mfr_time(name)
 	     escaped = @client.escape("#{name}")
 	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{escaped}'"
-          puts insert_string
+          puts insert_string.colorize(:green)
           @client.query("#{insert_string}")
      end
 
 	def check_out(name)
 		escaped = @client.escape("#{name}")
 	     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
-	     puts insert_string
+	     puts insert_string.colorize(:green)
 	      @client.query("#{insert_string}")
 	end
 
