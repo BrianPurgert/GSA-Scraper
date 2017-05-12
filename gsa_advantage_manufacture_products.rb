@@ -65,7 +65,6 @@ def initialize_browsers
 		end
 		puts @gsa_advantage[nt]
 	end
-
 end
 
 def scrape_manufactures(browser, gsa_advantage)
