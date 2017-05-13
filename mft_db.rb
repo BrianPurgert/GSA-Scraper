@@ -1,4 +1,6 @@
 require 'mysql2'
+require 'colorize'
+require 'colorized_string'
 
      @client = Mysql2::Client.new(
           host:     "70.61.131.180",
@@ -34,7 +36,23 @@ require 'mysql2'
           @client.query("#{insert_string}")
      end
 
+
+
+def safe_stop
+ @client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
+	 if row[:stop].to_i == 1
+		 puts "Safe Stop value from database = 1".colorize(:green)
+		 ColorizedString.colors.each {|c| print "(งツ)ว\t".colorize(c)}
+		 exit
+	 end
+ end
+ end
+
+safe_stop
+
 	def check_out(name)
+		safe_stop
+
 		escaped = @client.escape("#{name}")
 	     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
 	     puts insert_string.colorize(:green)
@@ -45,6 +63,7 @@ require 'mysql2'
 	     insert_string = "UPDATE mft_data.mfr SET check_out=0 WHERE check_out=1"
 	     puts insert_string
 	      @client.query("#{insert_string}")
+	     safe_stop
 	end
 
      def get_mfr

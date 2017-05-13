@@ -59,14 +59,14 @@ end
 
 
 def initialize_browser
-		r_proxy = Proxy_list.sample
+		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
-
-		move_to_screen(gsa_advantage.browser,-1)
-		split_screen(gsa_advantage.browser,0.5,0,1)
 		gsa_advantage.goto
-		if gsa_advantage.browser.text.include?('This site can’t be reached')
-			raise 'Site cannot be reached'
+		gsa_advantage.wait
+		puts "#{gsa_advantage.title}"
+		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
+			raise 'Welcome to GSA Advantage! not in title'
 		end
+
 end
