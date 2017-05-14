@@ -48,8 +48,6 @@ def safe_stop
  end
  end
 
-safe_stop
-
 	def check_out(name)
 		safe_stop
 

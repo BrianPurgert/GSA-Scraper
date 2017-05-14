@@ -162,11 +162,9 @@ def search_on_browser(n, mfr)
 end
 
 initialize_browsers()
-(0..25).each do |index|
+(0..10).each do |index|
 	puts "Companies Processed: #{index}".colorize(:red)
-	
 	search_on_browser(1, get_mfr)
-	#TODO add shutdown command from database
 end
 
 # @semaphore = Mutex.new
