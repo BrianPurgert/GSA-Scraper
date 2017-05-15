@@ -13,12 +13,12 @@ require 'colorized_string'
           cast: false
      )
 
-     def insert_mfr(name,href_name,item_count=1)
+	def insert_mfr(name,href_name,item_count=1)
           @insert_manufacture = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
           @insert_manufacture.execute("#{name}","#{href_name}",'1')
      end
 
-     def insert_mfr_parts(mfr_parts_data)
+	def insert_mfr_parts(mfr_parts_data)
           insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
 			         VALUES'
           mfr_parts_data.each_with_index do |mfr_part, i|
@@ -29,16 +29,14 @@ require 'colorized_string'
           @client.query("#{insert_string}")
      end
 
-     def mfr_time(name)
+      def mfr_time(name)
 	     escaped = @client.escape("#{name}")
 	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{escaped}'"
           puts insert_string.colorize(:green)
           @client.query("#{insert_string}")
      end
 
-
-
-def safe_stop
+	def safe_stop
  @client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
 	 if row[:stop].to_i == 1
 		 puts "Safe Stop value from database = 1".colorize(:green)
@@ -50,11 +48,28 @@ def safe_stop
 
 	def check_out(name)
 		safe_stop
-
 		escaped = @client.escape("#{name}")
-	     insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
-	     puts insert_string.colorize(:green)
+		insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
+		puts insert_string.colorize(:green)
 	      @client.query("#{insert_string}")
+	end
+
+	def check_out_parts(n)
+		# insert_string = "UPDATE mft_data.mfr_parts SET status_id=1, WHERE "
+		# href_name.each_with_index do |h, i|
+		# 	escaped = @client.escape("#{h}")
+		# 	insert_string += 'OR ' if i > 0
+          #      insert_string +=  "href_name='#{escaped}' "
+          # end
+	     #  puts "#{insert_string}".colorize(:color => :light_blue)
+		result = @client.query("UPDATE `mft_data`.`mfr_parts` as t,(
+    SELECT href_name
+    FROM `mft_data`.`mfr_parts`
+    WHERE status_id='0'
+	 ORDER BY last_updated
+	 LIMIT #{n}
+) as temp
+SET status_id = '1' WHERE temp.href_name = t.href_name")
 	end
 
 	def check_in
@@ -64,7 +79,7 @@ def safe_stop
 	     safe_stop
 	end
 
-     def get_mfr
+      def get_mfr
           row_list = []
           @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_updated LIMIT 1;", :symbolize_keys => true).each do |row|
                row_list << row
@@ -74,17 +89,19 @@ def safe_stop
           return mfr
      end
 
-def get_mfr_part
-	row_list = []
-	@client.query("SELECT * FROM `mft_data`.`mfr_parts` ORDER BY last_updated LIMIT 20;", :symbolize_keys => true).each do |row|
-		row_list << row
+	def get_mfr_part(amount = 1)
+		row_list = []
+	
+		result = @client.query("SELECT * FROM `mft_data`.`mfr_parts` WHERE status_id=0 ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true)
+		result.each do |row|
+			row_list << row
+		end
+		mfr_part_href = row_list.map!{|link| link[:href_name]}
+		check_out_parts(amount)
+		return mfr_part_href
 	end
-	mfr_part = row_list.map!{|link| link[:href_name]}
-	return mfr_part
-end
 
-
-     def move_empty_queue
+      def move_empty_queue
           @client.query('
                UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
                SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
@@ -96,7 +113,7 @@ end
           @client.query('TRUNCATE `mft_data`.`queue`;')
      end
 
-def load_table_mfr
+	def load_table_mfr
 	@mfr_table = []
 	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
 	result.each do |row|

@@ -9,5 +9,6 @@ gem 'colorize', '~> 0.8.1'
 gem 'mysql2', '~> 0.4.6'
 gem 'in_threads', '~> 1.3', '>= 1.3.1'
 gem 'htmlbeautifier'
-gem 'concurrent-ruby', require: 'concurrent'
+
+# gem 'concurrent-ruby', require: 'concurrent'
 # gem 'watir', github: 'watir'
