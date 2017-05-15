@@ -74,6 +74,15 @@ def safe_stop
           return mfr
      end
 
+def get_mfr_part
+	row_list = []
+	@client.query("SELECT * FROM `mft_data`.`mfr_parts` ORDER BY last_updated LIMIT 20;", :symbolize_keys => true).each do |row|
+		row_list << row
+	end
+	mfr_part = row_list.map!{|link| link[:href_name]}
+	return mfr_part
+end
+
 
      def move_empty_queue
           @client.query('

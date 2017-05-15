@@ -5,14 +5,24 @@ require 'page-object'
 require 'page-object/page_factory'
 require 'watir'
 require 'yaml'
+require 'benchmark'
+require 'htmlbeautifier'
+require 'concurrent'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
+
+
+
 gsa_advantage = []
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
 
 ARGV.each do|a|
 	puts "Argument: #{a}"
+end
+
+def color_p(str)
+	puts "#{str}".colorize(String.colors.sample)
 end
 
 
@@ -62,11 +72,22 @@ def initialize_browser
 		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
-		gsa_advantage.goto
+		puts "#{Benchmark.measure { gsa_advantage.goto }}".colorize(:blue)
 		gsa_advantage.wait
 		puts "#{gsa_advantage.title}"
 		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
+		return gsa_advantage
+end
 
+def save_page(html, myb, text)
+	html = HtmlBeautifier.beautify(html, indent: "\t")
+	split_url = "#{myb.browser.url}".chomp('&cview=true')
+	short_url = ''
+	split_url.each_line('=') { |s| short_url = s if s.include? '11' }
+	ph = __dir__+ "/catalog/"+"#{short_url}"+".html"
+	pt = __dir__+ "/catalog/"+"#{short_url}"+".txt"
+	open(ph, 'w') { |f| f.puts html }
+	open(pt, 'w') { |f| f.puts text }
 end
