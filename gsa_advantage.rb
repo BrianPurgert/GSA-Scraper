@@ -15,7 +15,7 @@ require_relative 'pages/gsa_advantage_page'
 
 
 gsa_advantage = []
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
+Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
 ARGV.each do|a|
 	puts "Argument: #{a}"
