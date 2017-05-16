@@ -29,6 +29,17 @@ require 'colorized_string'
           @client.query("#{insert_string}")
      end
 
+	def insert_result_block(mfr_parts_data)
+          insert_string = 'REPLACE INTO mft_data.mfr_part_blocks (href_search, result_block, href_name)
+			         VALUES'
+          mfr_parts_data.each_with_index do |mfr_part, i|
+               insert_string += ',' if i > 0
+               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}')\n"
+          end
+          puts insert_string.colorize(:green)
+          @client.query("#{insert_string}")
+     end
+
       def mfr_time(name)
 	     escaped = @client.escape("#{name}")
 	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{escaped}'"

@@ -10,8 +10,6 @@ require 'htmlbeautifier'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
-
-gsa_advantage = []
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 Catalog_hudson     = '//192.168.1.104/gsa_price/'
 
