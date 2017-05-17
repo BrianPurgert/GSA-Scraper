@@ -1,59 +1,15 @@
-require 'watir'
-require 'page-object/page_factory'
-require 'page-object'
-require 'spreadsheet'
-require_relative 'pages/gsa_advantage_page'
-require 'colorize'
-require 'colorized_string'
-require 'mysql2'
-require 'yaml'
-require 'in_threads'
-require_relative 'mft_db'
-require 'benchmark'
+require_relative 'gsa_advantage'
 
 N_threads = 1
 N_threads_plus_one = N_threads+1
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
-@browser       = []
-@gsa_advantage = []
-@speed         = 0
-@delta_time = [Time.now]
+@browser    = []
+@speed      = 0
 
-def search_url(mfr_href_name, current_lowest_price,page_number)
-	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
-	url = url + "q=28:5#{mfr_href_name}"
-	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
-	url = url + "&c=100"
-	url = url + "&s=9" # sort by price high to how
-	url = url + "&p=#{page_number}"
-	puts "#{url}".colorize(String.colors.sample)
-	return url
-end
+
 
 def initialize_browsers
-     down = 0
-	(1..N_threads).in_threads.each do |nt|
-		r_proxy = Proxy_list.sample
-		@browser[nt]       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
-		@gsa_advantage[nt] = GsaAdvantagePage.new(@browser[nt])
-		# @gsa_advantage[nt].@browser.goto 'https://ifconfig.co/ip'
-		print "\nBrowser #{nt}\t".colorize(:blue)
-		print "#{@gsa_advantage[nt].browser.text}\t#{r_proxy}"
-            @gsa_advantage[nt].browser.driver.manage.window.move_to(2000, 100)
-		@gsa_advantage[nt].browser.driver.manage.window.maximize
-            size = @gsa_advantage[nt].browser.driver.manage.window.size
-            pos = @gsa_advantage[nt].browser.driver.manage.window.position
-            @gsa_advantage[nt].browser.driver.manage.window.resize_to(size.width,size.height/2)
-            @gsa_advantage[nt].browser.driver.manage.window.move_to(pos.x, pos.y)
-		@gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov'
-		if @gsa_advantage[nt].browser.text.include?('This site can’t be reached')
-			puts 'down'
-			down = down + 1
-               exit if down > 3
-		end
-		puts @gsa_advantage[nt]
-	end
+
 end
 
 def scrape_manufactures(browser, gsa_advantage)
@@ -74,10 +30,10 @@ end
 
 def check_result_numbers(n)
      n_obj = []
-     n_obj[0]                          = @gsa_advantage[n].product_detail_elements.length
-     n_obj[1]                          = @gsa_advantage[n].ms_mpn_elements.length
-     n_obj[2]                          = @gsa_advantage[n].ms_low_price_elements.length
-     n_obj[3]                          = @gsa_advantage[n].ms_desc_elements.length
+     n_obj[0]                          = gsa_a[n].product_detail_elements.length
+     n_obj[1]                          = gsa_a[n].ms_mpn_elements.length
+     n_obj[2]                          = gsa_a[n].ms_low_price_elements.length
+     n_obj[3]                          = gsa_a[n].ms_desc_elements.length
      @data_consistent                  = n_obj[0] == n_obj[1] && n_obj[0] == n_obj[2] && n_obj[0] == n_obj[3]
      puts "Data Consistent?: #{@data_consistent} length: #{n_obj[0]}"
      if @data_consistent
@@ -100,83 +56,63 @@ def get_parent(mpn,mfr)
 	return [pr]
 end
 
-def timer(title='time')
-	@delta_time << Time.now
-	puts "#{title}:#{@delta_time[-1]-@delta_time[-2]}"
-end
+	n_url_thr = 3
+	n_thr = 6
+	n_total = n_thr*n_url_thr
+	page_urls = get_mfr(n_total)
+	mfr_set   = page_urls.each_slice(n_url_thr).to_a
+	gsa_a = []
 
-def search_on_browser(n, mfr)
-     # mfr = mfr[0]
-     timer(mfr)
+
+mfr_set.in_threads(n_thr).each_with_index do |mfrs, n|
+
+	gsa_a[n] = initialize_browser
+	mfrs.each do |mfr|
+		p mfr.inspect
      	# puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
-	@manufacture_name             = mfr[:name]
-	@manufacture_href             = mfr[:href_name]
-	@manufacture_item_count       = mfr[:item_count]
-      @n_low                        = 900000000
-
+	mfr_name       = mfr[:name]
+	mfr_href       = mfr[:href_name]
+	mfr_item_count = mfr[:item_count]
+		pg = 1
+      n_low                  = 900000000
 	begin
-		@gsa_advantage[n].browser.goto search_url(@manufacture_href, @n_low,1)
-		@gsa_advantage[n].browser.wait
-		url = @gsa_advantage[n].browser.url
-		timer('load page')
-		n_results = @gsa_advantage[n].product_link_elements.length
-		timer('count elements')
+		gsa_a[n].browser.goto search_url(mfr_href, n_low, 1)
+		gsa_a[n].browser.wait
+		title = gsa_a[n].browser.title
+		url = gsa_a[n].browser.url
+		n_results = gsa_a[n].product_link_elements.length
 		result = []
-
           case n_results
                when 0
-                    puts "No Results on #{@gsa_advantage[n].browser.url}"
+                    puts "No Results on #{gsa_a[n].browser.url}"
 	          when 1..100
-			    
-			    # @gsa_advantage[n].main_alt_element
-			     @gsa_advantage[n].product_link_elements.each_with_index do |link,i|
-				     result  << [url,link.parent.parent.parent.parent.html,link.href]
-			     end
-			   
-			    #
-			    # timer
-				# parents = @gsa_advantage[n].product_thumb_elements.map(&:parent)
-			    # timer('map first parent')
-				# href_names = parents.map { |selec| selec.attribute_value "href" }
-			    # timer('get links')
-			    #   block = parents.(&:parent).map(&:parent)
-			    # timer('parent parent')
-				# block.map!(&:html)
-				# timer('html')
-				# block.each_index do |i|
-				# 	result  << [url,block[i],href_names[i]]
-				# end
-				timer('to array')
-				
-                    # @gsa_advantage[n].product_thumb_elements.each_with_index do |thumb,i|
-				# block = get_parent(thumb,@manufacture_name)
-				# href_name = block[0]
-				# result_block = block[1]
-	                 
-                         # mpn       = @gsa_advantage[n].ms_mpn_elements[i]
-                         # name      = @gsa_advantage[n].product_detail_elements[i].text
-                         # link      = @gsa_advantage[n].product_link_elements[i].href
-                         # price     = @gsa_advantage[n].ms_low_price_elements[i].text
-	                  
-                         # desc      = @gsa_advantage[n].ms_desc_elements[i].text
-                           # pr = mpn.parent.parent.parent
-                           
-                    # end
-                        @n_low = @gsa_advantage[n].ms_low_price_elements[-1].text.scan(/\d+/).first
-                         insert_result_block(result)
+		          text = gsa_a[n].main_alt
+		          html = gsa_a[n].main_alt_element.html
+
+			     # gsa_a[n].product_link_elements.each_with_index do |link,i|
+				#      result  << [url, mfr_name, link.href]
+			     # end
+                        n_low = gsa_a[n].ms_low_price_elements[-1].text.scan(/\d+/).first
+		            f_name = "#{mfr_href}-#{pg}"
+		            save_page(html, gsa_a[n].browser.url, text,f_name)
+		            pg = pg + 1
+		            color_p "#{n}|#{f_name} | #{title}",n
+                         # insert_result_block(result)
+			    # puts n_low
 	          else
 				puts "error in number of results on page, n_results: #{n_results}"
 		end
 	end while n_results == 100
-	mfr_time(@manufacture_name)
-     sleep @speed
-end
+	mfr_time(mfr_name)
+		end
+	end
 
-initialize_browsers()
-(0..10).each do |index|
-	puts "Companies Processed: #{index}".colorize(:red)
-	search_on_browser(1, get_mfr)
-end
+
+# initialize_browsers()
+# (0..3).each do |index|
+# 	puts "Companies Processed: #{index}".colorize(:red)
+# 	search_on_browser(1, get_mfr)
+# end
 
 # @semaphore = Mutex.new
 #  @threads = []

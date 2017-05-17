@@ -14,8 +14,10 @@ require 'colorized_string'
      )
 
 	def insert_mfr(name,href_name,item_count=1)
-          @insert_manufacture = @client.prepare("INSERT IGNORE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-          @insert_manufacture.execute("#{name}","#{href_name}",'1')
+		insert_string = "REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)"
+          @insert_manufacture = @client.prepare(insert_string)
+		puts "#{name} | #{href_name} | #{item_count}"
+          @insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
      end
 
 	def insert_mfr_parts(mfr_parts_data)
@@ -51,7 +53,7 @@ require 'colorized_string'
  @client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
 	 if row[:stop].to_i == 1
 		 puts "Safe Stop value from database = 1".colorize(:green)
-		 ColorizedString.colors.each {|c| print "(งツ)ว\t".colorize(c)}
+		 ColorizedString.colors.each {|c| print "||".colorize(c)}
 		 exit
 	 end
  end
@@ -66,21 +68,14 @@ require 'colorized_string'
 	end
 
 	def check_out_parts(n)
-		# insert_string = "UPDATE mft_data.mfr_parts SET status_id=1, WHERE "
-		# href_name.each_with_index do |h, i|
-		# 	escaped = @client.escape("#{h}")
-		# 	insert_string += 'OR ' if i > 0
-          #      insert_string +=  "href_name='#{escaped}' "
-          # end
-	     #  puts "#{insert_string}".colorize(:color => :light_blue)
 		result = @client.query("UPDATE `mft_data`.`mfr_parts` as t,(
-    SELECT href_name
-    FROM `mft_data`.`mfr_parts`
-    WHERE status_id='0'
-	 ORDER BY last_updated
-	 LIMIT #{n}
-) as temp
-SET status_id = '1' WHERE temp.href_name = t.href_name")
+		      SELECT href_name
+		      FROM `mft_data`.`mfr_parts`
+		      WHERE status_id='0'
+	            ORDER BY last_updated
+	            LIMIT #{n}
+			) as temp
+			SET status_id = '1' WHERE temp.href_name = t.href_name")
 	end
 
 	def check_in
@@ -90,14 +85,17 @@ SET status_id = '1' WHERE temp.href_name = t.href_name")
 	     safe_stop
 	end
 
-      def get_mfr
-          row_list = []
-          @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_updated LIMIT 1;", :symbolize_keys => true).each do |row|
-               row_list << row
+      def get_mfr(amount = 1)
+          # row_list = []
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list.each do |row|
+               # row_list << row
+                check_out(row[:name])
           end
-          mfr = row_list[0]
-          check_out(mfr[:name])
-          return mfr
+
+
+          mfr_href = row_list.map{|mfr| mfr[:href_name]}
+          return row_list
      end
 
 	def get_mfr_part(amount = 1)
@@ -111,6 +109,23 @@ SET status_id = '1' WHERE temp.href_name = t.href_name")
 		check_out_parts(amount)
 		return mfr_part_href
 	end
+
+def get_mfr_list(amount = 1)
+	row_list = []
+
+	result = @client.query("SELECT list_for FROM `mft_data`.`page_mfr_list` ORDER BY last_update LIMIT #{amount};", :symbolize_keys => true)
+	result.each do |row|
+		insert_string = "UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for='#{row[:list_for]}'"
+		puts insert_string.colorize(:green)
+		@client.query("#{insert_string}")
+		row_list << row
+	end
+	mfr_list = row_list.map!{|link| link[:list_for]}
+	return mfr_list
+end
+
+
+
 
       def move_empty_queue
           @client.query('

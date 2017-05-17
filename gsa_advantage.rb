@@ -27,7 +27,7 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-def search_url(mfr_href_name, current_lowest_price,page_number)
+def search_url(mfr_href_name, current_lowest_price,page_number=1)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
 	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
@@ -52,7 +52,6 @@ def product_url()
 
 end
 
-
 def move_to_screen(browser,screen_n)
 	gsm=Fiddle::Function.new(Fiddle::dlopen("user32")["GetSystemMetrics"],[Fiddle::TYPE_LONG],Fiddle::TYPE_LONG)
 	x= gsm.call(0)
@@ -73,28 +72,37 @@ def initialize_browser
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
 		lt = Benchmark.measure {
-		gsa_advantage.goto
-		gsa_advantage.wait
+			gsa_advantage.goto
+			gsa_advantage.wait
 		}
 		puts "#{gsa_advantage.title} | #{r_proxy} | #{lt}".colorize(:blue)
-		
 		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
 		return gsa_advantage
 end
 
-def save_page(html, myb, text)
-	html = HtmlBeautifier.beautify(html, indent: "\t")
-	split_url = "#{myb.browser.url}".chomp('&cview=true')
+def save_page(html, url, text, file_name="")
+	html = HtmlBeautifier.beautify(html, indent: "")
 	short_url = ''
-	split_url.each_line('=') { |s| short_url = s if s.include? '11' }
-	
-	ph_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
-	pt_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
-	ph = __dir__+ "/catalog/"+"#{short_url}"+".html"
-	pt = __dir__+ "/catalog/"+"#{short_url}"+".txt"
-	open(ph_hudson, 'w') { |f| f.puts html }
-	open(pt_hudson, 'w') { |f| f.puts text }
+
+	if url.include? 'search.do'
+		ph_hudson = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
+		pt_hudson = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
+		ph = "R:/s/"+"#{file_name}"+".html"
+		pt = "R:/s/"+"#{file_name}"+".txt"
+		color_p ph,6
+	elsif url.include? 'product_detail.do'
+		split_url = "#{url}".chomp('&cview=true')
+		split_url.each_line('=') { |s| short_url = s if s.include? '11' }
+
+		ph_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
+		pt_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
+		ph = "R:/catalog/"+"#{short_url}"+".html"
+		pt = "R:/catalog/"+"#{short_url}"+".txt"
+	end
+
+	open(ph, 'w') { |f| f.puts html }
+	open(pt, 'w') { |f| f.puts text }
 	return short_url
 end

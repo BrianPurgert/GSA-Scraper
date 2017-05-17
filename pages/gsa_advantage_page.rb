@@ -5,7 +5,8 @@ class GsaAdvantagePage
      
      # /advantage/s/mfr.do?q=1:4*&listFor=
 		table(:mft_table, css: '#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3)')
-     
+		links(:mfr_link,  css: 'a[href*="refineSearch.do"]')
+
      # /advantage/s/search.do?
 		bs(:product_detail, css: 'a[href*="product_detail.do?gsin"] > :not(img)')
 		links(:product_link,  css: 'a.arial[href*="product_detail.do?gsin"]')

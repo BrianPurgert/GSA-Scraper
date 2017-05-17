@@ -20,10 +20,10 @@ url_set.in_threads(n_thr).each_with_index do |urls, i|
 		unless title.include? 'Product Detail'
 			raise 'Product Detail not in title'
 		end
-	
+
 		text = gsa_a[i].main
 		html = gsa_a[i].main_element.html
-		gsin = save_page(html, gsa_a[i], text)
+		gsin = save_page(html, gsa_a[i].browser.url, text)
 		color_p "#{i}|#{title} | #{gsin}",i
 		end
 end
