@@ -1,31 +1,33 @@
 require_relative 'gsa_advantage'
+RX_mfr      = /(?<=\q=28:5).*/
+threads     = []
+gsa_a       = []
+config      = [1]
+@queue      = Queue.new
+@reading    = 0
 
-N_threads = 10
-N_threads_plus_one = N_threads+1
-@browser_threads = (0..N_threads)
-browser       = []
-gsa_advantage = []
-RX_mfr = /(?<=\q=28:5).*/
-gsa_a = []
-mfr_list = ("A".."F").to_a << "0"
-mfr_list = ("A".."C").to_a
+ARGV.each_with_index { |a,i| config[i] = a }
+letters = get_mfr_list(config[0])
 
-threads = []
-@queue = Queue.new
-@reading = true
-letters = get_mfr_list(5)
-p letters.inspect
 
-threads << Thread.new do
-	while @reading do
-	until @queue.empty?
-		# This will remove the first object from @queue
-		next_object = @queue.shift
-		insert_mfr(next_object[0],next_object[1],next_object[2])
-	end
-		p '------------  queue empty'
+io_thread = Thread.new do
+	while @reading < 5 do
+		p "Queue Length: #{@queue.length}"
 		sleep 5
 	end
+end
+
+threads << Thread.new do
+	while @reading < 5 do
+	until @queue.empty?
+		next_object = @queue.shift
+		insert_mfr(next_object[0],next_object[1],next_object[2])
+		@reading = 0
+	end
+		@reading += 1
+		sleep 5
+	end
+	letters.each {|l| set_mfr_list_time(l)}
 end
 
 
@@ -42,14 +44,8 @@ letters.each_with_index do |letter, i|
 			n_products = link.parent.following_sibling.text
 			n_products = n_products.delete('()')
 			@queue << [name_mfr,href_mfr,n_products]
-			# insert_mfr(name_mfr,href_mfr,n_products)
-			# @href_mfrs << @href_mfr
-			# puts @href_mfr
 		end
-
 	}
-
-
 end
 
 threads.each { |thr| thr.join }

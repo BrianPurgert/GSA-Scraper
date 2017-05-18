@@ -13,12 +13,11 @@ require 'colorized_string'
           cast: false
      )
 
+	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 	def insert_mfr(name,href_name,item_count=1)
-		insert_string = "REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)"
-          @insert_manufacture = @client.prepare(insert_string)
-		puts "#{name} | #{href_name} | #{item_count}"
-          @insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
-     end
+		# puts "#{name} | #{href_name} | #{item_count}"
+		@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
+	end
 
 	def insert_mfr_parts(mfr_parts_data)
           insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
@@ -44,7 +43,7 @@ require 'colorized_string'
 
       def mfr_time(name)
 	     escaped = @client.escape("#{name}")
-	     insert_string = "UPDATE mft_data.mfr SET last_updated=NOW() WHERE name='#{escaped}'"
+	     insert_string = "UPDATE mft_data.mfr SET last_search=NOW() WHERE name='#{escaped}'"
           puts insert_string.colorize(:green)
           @client.query("#{insert_string}")
      end
@@ -87,12 +86,11 @@ require 'colorized_string'
 
       def get_mfr(amount = 1)
           # row_list = []
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
                # row_list << row
                 check_out(row[:name])
           end
-
 
           mfr_href = row_list.map{|mfr| mfr[:href_name]}
           return row_list
@@ -110,17 +108,22 @@ require 'colorized_string'
 		return mfr_part_href
 	end
 
+
+def set_mfr_list_time(letter)
+	insert_string = "UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for='#{letter}'"
+	puts insert_string.colorize(:green)
+	@client.query("#{insert_string}")
+end
+
+
 def get_mfr_list(amount = 1)
 	row_list = []
-
 	result = @client.query("SELECT list_for FROM `mft_data`.`page_mfr_list` ORDER BY last_update LIMIT #{amount};", :symbolize_keys => true)
 	result.each do |row|
-		insert_string = "UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for='#{row[:list_for]}'"
-		puts insert_string.colorize(:green)
-		@client.query("#{insert_string}")
 		row_list << row
 	end
 	mfr_list = row_list.map!{|link| link[:list_for]}
+	p mfr_list.inspect
 	return mfr_list
 end
 
