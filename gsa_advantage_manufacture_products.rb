@@ -1,67 +1,96 @@
 require_relative 'gsa_advantage'
 
-n_url_thr = 3
-n_thr = 6
-n_total = n_thr*n_url_thr
-page_urls = get_mfr(n_total)
-mfr_set   = page_urls.each_slice(n_url_thr).to_a
-gsa_a = []
+@reading    = 0
+@queue      = Queue.new
+@mfr_queue  = Queue.new
+threads     = []
 
-def get_parent(mpn,mfr)
+n_thr     = 12
+n_total   = 50
+
+
+get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
+gsa_a     = []
+
+def get_parent(mpn, mfr)
 	pr = mpn.parent
 	puts pr.element.text
-	c  = 0
+	c = 0
 	until pr.text.include? mfr || c == 4
-	     pr = pr.parent
+		pr = pr.parent
 	end
 	puts pr.html
 	pr.scroll_into_view
-     pr.flash
+	pr.flash
 	return [pr]
 end
 
-mfr_set.in_threads(n_thr).each_with_index do |mfrs, n|
-
+(0...n_thr).each_with_index do |n|
+	threads << Thread.new do
 	gsa_a[n] = initialize_browser
-	mfrs.each do |mfr|
+	until @mfr_queue.empty?
+		mfr = @mfr_queue.shift
 		p mfr.inspect
-     	# puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{@gsa_advantage[n]}"
-	mfr_name       = mfr[:name]
-	mfr_href       = mfr[:href_name]
-	mfr_item_count = mfr[:item_count]
-	pg = 1
-      n_low                  = 900000000
-	begin
-		gsa_a[n].browser.goto search_url(mfr_href, n_low, 1)
-		gsa_a[n].browser.wait
-		title = gsa_a[n].browser.title
-		url = gsa_a[n].browser.url
-		n_results = gsa_a[n].product_link_elements.length
-		result = []
-          case n_results
-               when 0
-                    puts "No Results on #{gsa_a[n].browser.url}"
-	          when 1..100
-		          text = gsa_a[n].main_alt
-		          html = gsa_a[n].main_alt_element.html
+		# puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{gsa_advantage[n]}"
+		mfr_name       = mfr[:name]
+		mfr_href       = mfr[:href_name]
+		mfr_item_count = mfr[:item_count]
+		pg             = 1
+		n_low          = 900000000
+		begin
+			gsa_a[n].browser.goto search_url(mfr_href, n_low, 1)
+			#TODO browser.wait stops script
+			# gsa_a[n].browser.wait
+			n_results = gsa_a[n].product_link_elements.length
+			if n_results == 0
+				gsa_a[n].browser.refresh
+				n_results = gsa_a[n].product_link_elements.length
+			end
+			title     = gsa_a[n].browser.title
+			url       = gsa_a[n].browser.url
 
-			     # gsa_a[n].product_link_elements.each_with_index do |link,i|
-				#      result  << [url, mfr_name, link.href]
-			     # end
-                        n_low = gsa_a[n].ms_low_price_elements[-1].text.scan(/\d+/).first
-		            f_name = "#{mfr_href}-#{pg}"
-		            save_page(html, gsa_a[n].browser.url, text,f_name)
-		            pg = pg + 1
-		            color_p "#{n}|#{f_name} | #{title}",n
-                         # insert_result_block(result)
-			    # puts n_low
-	          else
-				puts "error in number of results on page, n_results: #{n_results}"
-		end
-	end while n_results == 100
-	mfr_time(mfr_name)
-		end
+			result    = []
+			case n_results
+				when 0
+					puts "No Results on #{gsa_a[n].browser.url}"
+				when 1..100
+					text   = gsa_a[n].main_alt
+					html   = gsa_a[n].main_alt_element.html
+
+					# gsa_a[n].product_link_elements.each_with_index do |link,i|
+					#      result  << [url, mfr_name, link.href]
+					# end
+					last_price = gsa_a[n].ms_low_price_elements[-1].text
+					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
+					# $49,127,529.41
+					puts n_low
+					f_name = "#{mfr_href}-#{pg}"
+					save_page(html, gsa_a[n].browser.url, text, f_name)
+					pg = pg + 1
+					color_p "#{n}|#{f_name} | #{title}", n
+				# puts n_low
+				else
+					puts "error in number of results on page, n_results: #{n_results}"
+			end
+		end while n_results == 100
+		@queue << mfr_name
 	end
+		end
+end
+
+
+threads << Thread.new do
+	while @reading < 10 do
+		until @queue.empty?
+			mfr_time(@queue.shift)
+		end
+		@reading += 1
+		sleep 5
+	end
+	puts 'I guess it is done'
+end
+
+threads.each { |thr| thr.join }
 
 
 # initialize_browsers()

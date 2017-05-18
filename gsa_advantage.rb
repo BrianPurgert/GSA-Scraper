@@ -68,11 +68,11 @@ def initialize_browser
 		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
-		lt = Benchmark.measure {
+
 			gsa_advantage.goto
-			gsa_advantage.wait
-		}
-		puts "#{gsa_advantage.title} | #{r_proxy} | #{lt}".colorize(:blue)
+			# gsa_advantage.wait
+
+		puts "#{gsa_advantage.title} | #{r_proxy} | #{}".colorize(:blue)
 		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
