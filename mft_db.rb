@@ -12,7 +12,7 @@ require 'colorized_string'
           connect_timeout: 25,
           cast: false
      )
-
+#
 	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 	def insert_mfr(name,href_name,item_count=1)
 		# puts "#{name} | #{href_name} | #{item_count}"
