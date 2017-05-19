@@ -2,45 +2,31 @@ Data Scraper for GSA Advantage!
 ===================
 
 - - - - 
-## Overview
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+## Purpose
+- 33,784 Manufactures
+- 5,008,579 Manufacture Products
+- x
 
-## Code Example
+## Quick Start
+* [Hudson/Jenkins CI Server](hudson.govconsvcs.com:8080) 
+* todo add database connection info..
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
-
-## Motivation
-
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
-
-## Project Tasks
-
-- [ ] An uncompleted task
-- [x] A completed task
-
-## Scrapping Process Overview
-
+## Data Collection Process Overview
+...
 
 ## Database Reference
 
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell
+
 
 
 ## Reference & External Sources
-[general helper file/gsa page copies/Search_Results.html]()
+* [Watir](http://www.rubydoc.info/gems/watir/Watir/) 
 https://github.com/brianmario/mysql2
-http://www.rubydoc.info/gems/watir/Watir
-https://binarapps.com/blog/browser-automation-with-watir-guide
-http://data.govconsvcs.com/
-http://data.govconsvcs.com/phpmyadmin/
 
 
-## License
 
-A short snippet describing the license (MIT, Apache, etc.)
+
+
 
 **Data Scraper for GSA Advantage!**
 Manufactures search page,

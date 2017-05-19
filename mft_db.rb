@@ -12,6 +12,15 @@ require 'colorized_string'
           connect_timeout: 25,
           cast: false
      )
+
+	# Azure = Mysql2::Client.new(
+	# username: "BrianPurgert@gcs-data",
+	# password: {your_password},
+	# database: {your_database},
+	# host: "gcs-data.mysql.database.azure.com",
+	# port: 3306, sslca:{ca-cert filename}, sslverify:false, sslcipher:'AES256-SHA')
+
+
 #
 	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 	def insert_mfr(name,href_name,item_count=1)

@@ -5,7 +5,7 @@ require_relative 'gsa_advantage'
 @mfr_queue  = Queue.new
 threads     = []
 
-n_thr     = 12
+n_thr     = 16
 n_total   = 50
 
 
@@ -38,7 +38,8 @@ end
 		pg             = 1
 		n_low          = 900000000
 		begin
-			gsa_a[n].browser.goto search_url(mfr_href, n_low, 1)
+			url = search_url(mfr_href, n_low, 1)
+			gsa_a[n].browser.goto url
 			#TODO browser.wait stops script
 			# gsa_a[n].browser.wait
 			n_results = gsa_a[n].product_link_elements.length
@@ -63,11 +64,11 @@ end
 					last_price = gsa_a[n].ms_low_price_elements[-1].text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
 					# $49,127,529.41
-					puts n_low
+					# puts n_low
 					f_name = "#{mfr_href}-#{pg}"
 					save_page(html, gsa_a[n].browser.url, text, f_name)
 					pg = pg + 1
-					color_p "#{n}|#{f_name} | #{title}", n
+					color_p "#{n}\t|#{f_name} |\t #{title} |#{n_low}\n#{url[30..-10]}",n
 				# puts n_low
 				else
 					puts "error in number of results on page, n_results: #{n_results}"
@@ -82,6 +83,7 @@ end
 threads << Thread.new do
 	while @reading < 10 do
 		until @queue.empty?
+			print "\r #{@queue.size}"
 			mfr_time(@queue.shift)
 		end
 		@reading += 1

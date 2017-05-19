@@ -31,7 +31,7 @@ def search_url(mfr_href_name, current_lowest_price,page_number=1)
 	url = url + "&c=100"
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
-	puts "#{url}".colorize(String.colors.sample)
+	# puts "#{url}".colorize(String.colors.sample)
 	return url
 end
 
@@ -53,7 +53,7 @@ def move_to_screen(browser,screen_n)
 	gsm=Fiddle::Function.new(Fiddle::dlopen("user32")["GetSystemMetrics"],[Fiddle::TYPE_LONG],Fiddle::TYPE_LONG)
 	x= gsm.call(0)
 	y= gsm.call(1)
-	browser.driver.manage.window.move_to(x+screen_n, 0)
+	browser.driver.manage.window.move_to(x*screen_n, 0)
 end
 
 def split_screen(browser,split,pos_h,pos_v)
@@ -68,7 +68,7 @@ def initialize_browser
 		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
-
+		move_to_screen(gsa_advantage.browser,-1)
 			gsa_advantage.goto
 			# gsa_advantage.wait
 
@@ -88,7 +88,7 @@ def save_page(html, url, text, file_name="")
 		pt_hudson = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
 		ph = "R:/s/"+"#{file_name}"+".html"
 		pt = "R:/s/"+"#{file_name}"+".txt"
-		color_p ph,6
+
 	elsif url.include? 'product_detail.do'
 		split_url = "#{url}".chomp('&cview=true')
 		split_url.each_line('=') { |s| short_url = s if s.include? '11' }

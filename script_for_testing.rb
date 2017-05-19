@@ -4,7 +4,7 @@ require 'page-object/page_factory'
 require_relative 'pages/gsa_advantage_page'
 require 'mysql2'
 
-
+# http://169.254.0.0/
 require 'thread'
 queue = Queue.new
 
