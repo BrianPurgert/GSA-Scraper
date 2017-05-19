@@ -100,7 +100,7 @@ def save_page(html, url, text, file_name="")
 		pt = "R:/catalog/"+"#{short_url}"+".txt"
 	end
 
-	open(ph, 'w') { |f| f.puts html }
-	open(pt, 'w') { |f| f.puts text }
+	open(ph_h, 'w') { |f| f.puts html }
+	open(pt_h, 'w') { |f| f.puts text }
 	return short_url
 end
