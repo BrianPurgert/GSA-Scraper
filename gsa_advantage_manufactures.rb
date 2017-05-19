@@ -2,7 +2,7 @@ require_relative 'gsa_advantage'
 RX_mfr      = /(?<=\q=28:5).*/
 threads     = []
 gsa_a       = []
-config      = [1]
+config      = [12]
 @queue      = Queue.new
 @reading    = 0
 
