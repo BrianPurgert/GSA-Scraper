@@ -13,39 +13,49 @@ letters = get_mfr_list(config[0])
 io_thread = Thread.new do
 	while @reading < 5 do
 		p "Queue Length: #{@queue.length}"
-		sleep 5
+		sleep 10
 	end
 end
 
 threads << Thread.new do
-	while @reading < 5 do
+	while @reading < 10 do
 	until @queue.empty?
 		next_object = @queue.shift
 		insert_mfr(next_object[0],next_object[1],next_object[2])
 		@reading = 0
 	end
-		@reading += 1
-		sleep 5
+	if @queue.closed? == FALSE
+		@reading = 0
+	end
+	@reading += 1
+		sleep 8
 	end
 	letters.each {|l| set_mfr_list_time(l)}
 end
 
 
 letters.each_with_index do |letter, i|
-	threads << Thread.new {
+	
 	gsa_a[i] = initialize_browser
 	gsa_a[i].browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
-		mfrs = []
-		href_mfrs = []
 		Thread.current[:name] = []
+		@abc[i] = gsa_a[i].mft_table_element.links.to_a
+		p @abc[i].length
+		p @abc[i].length
 		gsa_a[i].mft_table_element.links.each do |link|
+			
+			threads << Thread.new {
+				
 			href_mfr = RX_mfr.match(link.href)
+			link.flash
 			name_mfr = link.text
 			n_products = link.parent.following_sibling.text
 			n_products = n_products.delete('()')
 			@queue << [name_mfr,href_mfr,n_products]
+			}
 		end
-	}
+		
+	
 end
 
 threads.each { |thr| thr.join }

@@ -12,6 +12,7 @@ require 'colorized_string'
           connect_timeout: 25,
           cast: false
      )
+	# mft_data2 uMm1ShoJIMeoVI2q
 
 	# Azure = Mysql2::Client.new(
 	# username: "BrianPurgert@gcs-data",
@@ -120,8 +121,8 @@ require 'colorized_string'
 
 def set_mfr_list_time(letter)
 	insert_string = "UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for='#{letter}'"
-	puts insert_string.colorize(:green)
 	@client.query("#{insert_string}")
+	puts insert_string.colorize(:green)
 end
 
 

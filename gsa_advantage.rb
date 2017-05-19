@@ -68,7 +68,7 @@ def initialize_browser
 		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
 		gsa_advantage = GsaAdvantagePage.new(browser)
-		move_to_screen(gsa_advantage.browser,-1)
+		# move_to_screen(gsa_advantage.browser,-1)
 			gsa_advantage.goto
 			# gsa_advantage.wait
 
@@ -83,9 +83,10 @@ def save_page(html, url, text, file_name="")
 	html = HtmlBeautifier.beautify(html, indent: "")
 	short_url = ''
 
+	#TODO change file saving to ftp
 	if url.include? 'search.do'
-		ph_hudson = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
-		pt_hudson = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
+		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
+		pt_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
 		ph = "R:/s/"+"#{file_name}"+".html"
 		pt = "R:/s/"+"#{file_name}"+".txt"
 
@@ -93,8 +94,8 @@ def save_page(html, url, text, file_name="")
 		split_url = "#{url}".chomp('&cview=true')
 		split_url.each_line('=') { |s| short_url = s if s.include? '11' }
 
-		ph_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
-		pt_hudson = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
+		ph_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
+		pt_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
 		ph = "R:/catalog/"+"#{short_url}"+".html"
 		pt = "R:/catalog/"+"#{short_url}"+".txt"
 	end
