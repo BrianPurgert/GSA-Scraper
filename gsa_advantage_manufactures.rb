@@ -20,11 +20,11 @@ end
 
 threads << Thread.new do
 	while @reading < 10 do
-	until @queue.empty?
-		next_object = @queue.shift
-		insert_mfr(next_object[0],next_object[1],next_object[2])
-		@reading = 0
-	end
+		until @queue.empty?
+			next_object = @queue.shift
+			insert_mfr(next_object[0],next_object[1],next_object[2])
+			@reading = 0
+		end
 		@reading += 1
 		sleep 10
 	end

@@ -1,16 +1,29 @@
 require_relative 'gsa_advantage'
 
 @reading    = 0
-@queue      = Queue.new
+@db_queue      = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
 
-n_thr     = 16
-n_total   = 50
-
-
+n_thr     = 6
+n_total   = 6
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
+
+threads << Thread.new do
+	while @reading < 10 do
+		until @db_queue.empty?
+			# mfr_parts_data = @db_queue.shift
+			# insert_mfr_parts(mfr_parts_data)
+			# mfr_time(@queue.shift)
+			@reading = 0
+		end
+		@reading += 1
+		sleep 10
+	end
+	# letters.each {|l| set_mfr_list_time(l)}
+end
+
 
 def get_parent(mpn, mfr)
 	pr = mpn.parent
@@ -21,11 +34,11 @@ def get_parent(mpn, mfr)
 	end
 	puts pr.html
 	pr.scroll_into_view
-	pr.flash
+	pr.highlight
 	return [pr]
 end
 
-(0...n_thr).each_with_index do |n|
+n_thr.times do |n|
 	threads << Thread.new do
 	gsa_a[n] = initialize_browser
 	until @mfr_queue.empty?
@@ -38,10 +51,9 @@ end
 		pg             = 1
 		n_low          = 900000000
 		begin
-			url = search_url(mfr_href, n_low, 1)
+			url = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
-			#TODO browser.wait stops script
-			# gsa_a[n].browser.wait
+
 			n_results = gsa_a[n].product_link_elements.length
 			if n_results == 0
 				gsa_a[n].browser.refresh
@@ -50,18 +62,22 @@ end
 			title     = gsa_a[n].browser.title
 			url       = gsa_a[n].browser.url
 
-			result    = []
 			case n_results
 				when 0
-					puts "No Results on #{gsa_a[n].browser.url}"
+					raise "Missing results #{gsa_a[n].browser.url}"
 				when 1..100
-					text   = gsa_a[n].main_alt
-					html   = gsa_a[n].main_alt_element.html
 
-					# gsa_a[n].product_link_elements.each_with_index do |link,i|
-					#      result  << [url, mfr_name, link.href]
-					# end
-					last_price = gsa_a[n].ms_low_price_elements[-1].text
+					gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)").each do |e|
+						e.link(css:"a.arial[href*='product_detail.do?gsin']").flash(color: "rgba(0, 255, 66, 0.6)",flashes: 1, persist: TRUE)
+						e.flash(color: "rgba(255, 255, 66, 0.6)",flashes: 1, persist: TRUE)
+					end
+
+					 gsa_a[n].product_link_elements.each_with_index do |link|
+						 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
+						      map_product
+						      @db_queue  << [url, mfr_name, link.href]
+					end
+					last_price = gsa_a[n].ms_low_price_elements.last.text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
 					# $49,127,529.41
 					# puts n_low
@@ -74,23 +90,12 @@ end
 					puts "error in number of results on page, n_results: #{n_results}"
 			end
 		end while n_results == 100
-		@queue << mfr_name
+
 	end
 		end
 end
 
 
-threads << Thread.new do
-	while @reading < 10 do
-		until @queue.empty?
-			print "\r #{@queue.size}"
-			mfr_time(@queue.shift)
-		end
-		@reading += 1
-		sleep 5
-	end
-	puts 'I guess it is done'
-end
 
 threads.each { |thr| thr.join }
 
