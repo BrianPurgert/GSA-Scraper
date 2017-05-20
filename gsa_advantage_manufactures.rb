@@ -26,7 +26,7 @@ threads << Thread.new do
 		@reading = 0
 	end
 		@reading += 1
-		sleep 5
+		sleep 10
 	end
 	letters.each {|l| set_mfr_list_time(l)}
 end
@@ -39,7 +39,7 @@ letters.each_with_index do |letter, i|
 		# Thread.current[:name] = []
 		gsa_a[i].mft_table_element.links.each do |link|
 			href_mfr = RX_mfr.match(link.href)
-			link.checkmark
+			# link.flash(color: "yellow",flashes: 1, persist: TRUE)
 			link.highlight
 			name_mfr = link.text
 			n_products = link.parent.following_sibling.text

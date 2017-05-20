@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/brianpurgert2/watir.git
+  revision: c30132eb46f570fb50d70c96de9e977ba9e4772c
+  specs:
+    watir (6.2.1)
+      selenium-webdriver (~> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -46,8 +53,6 @@ GEM
       websocket (~> 1.0)
     spreadsheet (1.1.4)
       ruby-ole (>= 1.0)
-    watir (6.2.1)
-      selenium-webdriver (~> 3.0)
     websocket (1.2.4)
     yml_reader (0.7)
 
@@ -64,7 +69,7 @@ DEPENDENCIES
   page-object (~> 2.1, >= 2.1.1)
   rake (~> 12.0)
   spreadsheet (~> 1.1, >= 1.1.4)
-  watir (~> 6.2, >= 6.2.1)
+  watir!
 
 BUNDLED WITH
    1.14.6

@@ -29,13 +29,23 @@ require 'colorized_string'
 		@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
 	end
 
+	def insert_mfrs(mfrs)
+		insert_string = 'REPLACE INTO mft_data.mfr (name, href_name, item_count)
+				         VALUES'
+		mfrs.each_with_index do |mfr, i|
+			insert_string += ',' if i > 0
+			insert_string +=   "('#{@client.escape(mfr[0])}','#{@client.escape(mfr[1])}','#{@client.escape(mfr[2])}')\n"
+		end
+		puts insert_string.colorize(:green)
+		@client.query("#{insert_string}")
+	end
+
 	@mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
 	def set_mfr_list_time(letter)
 		@mfr_list_time.execute(letter)
 		puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
 	end
 
-set_mfr_list_time('A')
 
 	def insert_mfr_parts(mfr_parts_data)
           insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
