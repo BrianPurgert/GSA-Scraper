@@ -19,4 +19,3 @@
       driver.execute_script("arguments[0].style.backgroundColor = '#{color}'", @element)
       self
     end
-    #
