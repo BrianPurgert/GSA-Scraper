@@ -22,12 +22,20 @@ require 'colorized_string'
 	# port: 3306, sslca:{ca-cert filename}, sslverify:false, sslcipher:'AES256-SHA')
 
 
-#
+	#TODO compare last item_count to current
 	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 	def insert_mfr(name,href_name,item_count=1)
 		# puts "#{name} | #{href_name} | #{item_count}"
 		@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
 	end
+
+	@mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
+	def set_mfr_list_time(letter)
+		@mfr_list_time.execute(letter)
+		puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
+	end
+
+set_mfr_list_time('A')
 
 	def insert_mfr_parts(mfr_parts_data)
           insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
@@ -118,12 +126,6 @@ require 'colorized_string'
 		return mfr_part_href
 	end
 
-
-def set_mfr_list_time(letter)
-	insert_string = "UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for='#{letter}'"
-	@client.query("#{insert_string}")
-	puts insert_string.colorize(:green)
-end
 
 
 def get_mfr_list(amount = 1)

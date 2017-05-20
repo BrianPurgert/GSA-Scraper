@@ -14,6 +14,7 @@ Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 Catalog_hudson     = '//192.168.1.104/gsa_price/'
 
 
+
 def color_p(str,i=-1)
 	case i
 		when -1

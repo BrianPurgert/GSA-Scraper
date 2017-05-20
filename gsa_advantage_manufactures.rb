@@ -2,18 +2,19 @@ require_relative 'gsa_advantage'
 RX_mfr      = /(?<=\q=28:5).*/
 threads     = []
 gsa_a       = []
-config      = [12]
+config      = [3]
 @queue      = Queue.new
 @reading    = 0
 
 ARGV.each_with_index { |a,i| config[i] = a }
 letters = get_mfr_list(config[0])
+# letters = ['X','Y']
 
 
 threads << Thread.new do
-	while @reading < 5 do
+	while @reading < 10 do
 		p "Queue Length: #{@queue.length}"
-		sleep 10
+		sleep 5
 	end
 end
 
@@ -24,7 +25,7 @@ threads << Thread.new do
 		insert_mfr(next_object[0],next_object[1],next_object[2])
 		@reading = 0
 	end
-	@reading += 1
+		@reading += 1
 		sleep 5
 	end
 	letters.each {|l| set_mfr_list_time(l)}
@@ -38,7 +39,8 @@ letters.each_with_index do |letter, i|
 		# Thread.current[:name] = []
 		gsa_a[i].mft_table_element.links.each do |link|
 			href_mfr = RX_mfr.match(link.href)
-			link.flash
+			link.checkmark
+			link.highlight
 			name_mfr = link.text
 			n_products = link.parent.following_sibling.text
 			n_products = n_products.delete('()')
