@@ -39,10 +39,12 @@ letters.each_with_index do |letter, i|
 		# Thread.current[:name] = []
 		gsa_a[i].mft_table_element.links.each do |link|
 			href_mfr = RX_mfr.match(link.href)
-			# link.flash(color: "yellow",flashes: 1, persist: TRUE)
-			link.highlight
+			link.flash(color: "yellow",flashes: 1)
+			# link.highlight
 			name_mfr = link.text
-			n_products = link.parent.following_sibling.text
+			e_products = link.parent.following_sibling
+			e_products.flash(color: "yellow",flashes: 1)
+			n_products = e_products.text
 			n_products = n_products.delete('()')
 			@queue << [name_mfr,href_mfr,n_products]
 		end

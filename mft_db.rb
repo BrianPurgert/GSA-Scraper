@@ -46,13 +46,18 @@ require 'colorized_string'
 		puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
 	end
 
+	@insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
+	def insert_mfr_part(part)
+            @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
+		puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
+     end
 
 	def insert_mfr_parts(mfr_parts_data)
-          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, low_price, `desc`)
+          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price)
 			         VALUES'
           mfr_parts_data.each_with_index do |mfr_part, i|
                insert_string += ',' if i > 0
-               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}')\n"
+               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}','#{@client.escape(mfr_part[6])}')\n"
           end
           puts insert_string.colorize(:green)
           @client.query("#{insert_string}")

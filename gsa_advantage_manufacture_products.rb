@@ -6,22 +6,20 @@ require_relative 'gsa_advantage'
 threads     = []
 
 n_thr     = 2
-n_total   = 6
+n_total   = 2
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
 
 threads << Thread.new do
 	while @reading < 10 do
 		until @db_queue.empty?
-			# mfr_parts_data = @db_queue.shift
-			# insert_mfr_parts(mfr_parts_data)
-			# mfr_time(@queue.shift)
+			 mfr_part = @db_queue.shift
+			 insert_mfr_part(mfr_part)
 			@reading = 0
 		end
 		@reading += 1
 		sleep 10
 	end
-	# letters.each {|l| set_mfr_list_time(l)}
 end
 
 
@@ -36,6 +34,42 @@ def get_parent(mpn, mfr)
 	pr.scroll_into_view
 	pr.highlight
 	return [pr]
+end
+
+def read_product(container)
+	container.flash
+	# Product
+		product = container.link(css:"a.arial[href*='product_detail.do?gsin']")
+		product.flash
+	# Product link
+		href_name = product.href
+	# Product name
+		name = product.text
+	# manufacture part number 70006459310
+		part = container.font(css: 'tbody tr > td font.black8pt')
+		part.flash
+		mpn = part.text
+	# short description
+		short_desc = container.td(css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td')
+		short_desc.flash
+		desc = short_desc.text
+	# feature price
+		price = container.strong(css: 'span.newOrange.black12pt.arial > strong')
+		price.flash
+		low_price = price.text[1..-1].tap { |s| s.delete!(',') }
+	# Mfr
+		mfr_span = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
+		mfr_span.flash
+		mfr = mfr_span.text
+	# Sources
+		n_source = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
+		n_source.flash
+		sources = n_source.text.gsub(/[^0-9]/, '')
+	# product image href
+		img = container.img(css: '[href*="product_detail.do?gsin"] img')
+		img.flash
+		  # mfr, mpn, name, href_name, desc, low_price, sources
+	return [mfr, mpn, name, href_name, desc, low_price, sources]
 end
 
 n_thr.times do |n|
@@ -58,50 +92,34 @@ n_thr.times do |n|
 			links       = gsa_a[n].product_link_elements
 			results     = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results   = links.length
+			result_set = []
 			# TODO trigger refresh if needed... gsa_a[n].browser.refresh
 
 			case n_results
 				when 0
 					raise "Missing results #{gsa_a[n].browser.url}"
 				when 1..100
-					results.each do |container|
-						result_set = []
-						# Product link
-						container.link(css:"a.arial[href*='product_detail.do?gsin']").href
-						# Product name
-						container.link(css:"a.arial[href*='product_detail.do?gsin']").text
-						# manufacture part number 70006459310
-
-						# short description
-
-						# Mfr
-
-						# product image href
-
-						#.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
-
-
-					end
-
-					 gsa_a[n].product_link_elements.each_with_index do |link|
-						 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
-						      map_product
-						      @db_queue  << [url, mfr_name, link.href]
-					end
+					 results.each do |container|
+						 @db_queue << read_product(container)
+					 end
+					
+					#  gsa_a[n].product_link_elements.each_with_index do |link|
+					# 	 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
+					# 	      @db_queue  << [mfr, mpn, name, href_name, `desc`, low_desc, low_price]
+					# end
+					
 					last_price = gsa_a[n].ms_low_price_elements.last.text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
-					# $49,127,529.41
-					# puts n_low
-					f_name = "#{mfr_href}-#{pg}"
-					save_page(html, gsa_a[n].browser.url, text, f_name)
+
+					 f_name = "#{mfr_href}-#{pg}"
+					 # save_page(html, gsa_a[n].browser.url, text, f_name)
 					pg = pg + 1
-					color_p "#{n}\t|#{f_name} |\t #{title} |#{n_low}\n#{url[30..-10]}",n
-				# puts n_low
+					 color_p "#{n}\t|#{f_name} |\t #{title} |#{n_low}\n#{url[30..-10]}",n
 				else
 					puts "error in number of results on page, n_results: #{n_results}"
 			end
 		end while n_results == 100
-
+		
 	end
 		end
 end
