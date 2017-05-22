@@ -5,7 +5,7 @@ require_relative 'gsa_advantage'
 @mfr_queue  = Queue.new
 threads     = []
 
-n_thr     = 6
+n_thr     = 2
 n_total   = 6
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
@@ -51,25 +51,36 @@ n_thr.times do |n|
 		pg             = 1
 		n_low          = 900000000
 		begin
-			url = search_url(mfr_href, n_low)
+			url         = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
-
-			n_results = gsa_a[n].product_link_elements.length
-			if n_results == 0
-				gsa_a[n].browser.refresh
-				n_results = gsa_a[n].product_link_elements.length
-			end
-			title     = gsa_a[n].browser.title
-			url       = gsa_a[n].browser.url
+			title       = gsa_a[n].browser.title
+			url         = gsa_a[n].browser.url
+			links       = gsa_a[n].product_link_elements
+			results     = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
+			n_results   = links.length
+			# TODO trigger refresh if needed... gsa_a[n].browser.refresh
 
 			case n_results
 				when 0
 					raise "Missing results #{gsa_a[n].browser.url}"
 				when 1..100
+					results.each do |container|
+						result_set = []
+						# Product link
+						container.link(css:"a.arial[href*='product_detail.do?gsin']").href
+						# Product name
+						container.link(css:"a.arial[href*='product_detail.do?gsin']").text
+						# manufacture part number 70006459310
 
-					gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)").each do |e|
-						e.link(css:"a.arial[href*='product_detail.do?gsin']").flash(color: "rgba(0, 255, 66, 0.6)",flashes: 1, persist: TRUE)
-						e.flash(color: "rgba(255, 255, 66, 0.6)",flashes: 1, persist: TRUE)
+						# short description
+
+						# Mfr
+
+						# product image href
+
+						#.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
+
+
 					end
 
 					 gsa_a[n].product_link_elements.each_with_index do |link|
