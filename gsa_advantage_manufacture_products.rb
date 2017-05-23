@@ -4,9 +4,9 @@ require_relative 'gsa_advantage'
 @db_queue      = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-
 n_thr     = 2
-n_total   = 2
+n_each    = 1
+n_total   = n_thr * n_each
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
 
@@ -62,9 +62,13 @@ def read_product(container)
 		mfr_span.flash
 		mfr = mfr_span.text
 	# Sources
-		n_source = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
-		n_source.flash
-		sources = n_source.text.gsub(/[^0-9]/, '')
+		if mfr.include? 'N/A' # GSA Global Supply
+			sources = 1
+		else
+			n_source = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
+			n_source.flash
+			sources = n_source.text.gsub(/[^0-9]/, '')
+		end
 	# product image href
 		img = container.img(css: '[href*="product_detail.do?gsin"] img')
 		img.flash
@@ -74,7 +78,7 @@ end
 
 n_thr.times do |n|
 	threads << Thread.new do
-	gsa_a[n] = initialize_browser
+	gsa_a[n] = initialize_browser(n,n_thr)
 	until @mfr_queue.empty?
 		mfr = @mfr_queue.shift
 		p mfr.inspect

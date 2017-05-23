@@ -121,7 +121,7 @@ require 'colorized_string'
           # row_list = []
           row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
-               # row_list << row
+               print row
                 check_out(row[:name])
           end
 

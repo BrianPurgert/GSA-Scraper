@@ -46,8 +46,14 @@ def product_url()
 	url = url + "&cview=true"
 	puts "#{url}".colorize(String.colors.sample)
 	return url
+end
 
-
+def split(b,n,total)
+	p avail_height = b.execute_script("return screen.availHeight")
+	p avail_width = b.execute_script("return screen.availWidth")
+	x_part_size = avail_width/total
+	b.window.move_to(x_part_size*n, 0)
+	b.window.resize_to(x_part_size, avail_height)
 end
 
 def move_to_screen(browser,screen_n)
@@ -65,9 +71,11 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
-def initialize_browser
+def initialize_browser(n = 0,total=1)
 		r_proxy       = Proxy_list.sample
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		split(browser,n,total)
+		# "--user-data-dir=#{profile[:directory]}"
 		gsa_advantage = GsaAdvantagePage.new(browser)
 		# move_to_screen(gsa_advantage.browser,-1)
 			gsa_advantage.goto
@@ -79,6 +87,8 @@ def initialize_browser
 		end
 		return gsa_advantage
 end
+
+
 
 def save_page(html, url, text, file_name="")
 	html = HtmlBeautifier.beautify(html, indent: "")
