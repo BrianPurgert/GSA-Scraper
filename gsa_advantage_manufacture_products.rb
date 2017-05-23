@@ -1,11 +1,12 @@
 require_relative 'gsa_advantage'
 
 @reading    = 0
-@db_queue      = Queue.new
+@db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
 n_thr     = 2
 n_each    = 1
+
 n_total   = n_thr * n_each
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []

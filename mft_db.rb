@@ -12,8 +12,8 @@ require 'colorized_string'
           connect_timeout: 25,
           cast: false
      )
-	# mft_data2 uMm1ShoJIMeoVI2q
 
+	# mft_data2 uMm1ShoJIMeoVI2q
 	# Azure = Mysql2::Client.new(
 	# username: "BrianPurgert@gcs-data",
 	# password: {your_password},

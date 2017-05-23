@@ -6,7 +6,6 @@ require_relative 'pages/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
-require 'monetize'
 require 'yaml'
 require 'in_threads'
 
@@ -151,7 +150,7 @@ end
 
 # "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
 
-move_empty_queue
+# move_empty_queue
 
 def use_database_items
 	result = @client.query('
