@@ -134,10 +134,9 @@ n_thr.times do |n|
 					# 	 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
 					# 	      @db_queue  << [mfr, mpn, name, href_name, `desc`, low_desc, low_price]
 					# end
-					
 					last_price = gsa_a[n].ms_low_price_elements.last.text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
-					n_low += 0.01 # this is to account for the items on the next page being the same price.
+					n_low.to_f = 0.01 # this is to account for the items on the next page being the same price.
 					 f_name = "#{mfr_href}-#{pg}"
 					  # save_page(html, gsa_a[n].browser.url, f_name)
 					pg = pg + 1
