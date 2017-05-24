@@ -40,6 +40,8 @@ def get_parent(mpn, mfr)
 	return [pr]
 end
 
+# TODO
+# The Nokigura
 def parse_results(html)
 	html = HtmlBeautifier.beautify(html,"\t\t")
 	# p html
@@ -51,6 +53,7 @@ def parse_results(html)
 	 end
 end
 
+# The Watir way
 def read_product(container)
 	 container.flash
 	# Product
