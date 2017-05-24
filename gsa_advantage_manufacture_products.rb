@@ -46,7 +46,7 @@ def parse_results(html)
 	doc = Nokogiri::HTML(html)
 	puts "### Search for nodes by css"
 	 doc.css('#pagination~ table:not(#pagination2)').each do |container|
-	 	print container.html
+	 	# print container.
 
 	 end
 end
