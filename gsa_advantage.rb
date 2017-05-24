@@ -57,7 +57,15 @@ def split(browser, n, total_browsers)
 	p avail_width = browser.execute_script("return screen.availWidth")
 	x_part_size = avail_width/total_browsers
 	browser.window.move_to(x_part_size*n, 0)
-	browser.window.resize_to(x_part_size, avail_height/2)
+	browser.window.resize_to(x_part_size, avail_height*0.75)
+end
+
+def split_h(browser, n, total_browsers)
+	p avail_height = browser.execute_script("return screen.availHeight")
+	p avail_width = browser.execute_script("return screen.availWidth")
+	y_part_size = avail_height/total_browsers
+	browser.window.move_to(0, y_part_size*n)
+	browser.window.resize_to(avail_width, y_part_size)
 end
 
 def move_to_screen(browser,screen_n)
@@ -120,6 +128,5 @@ def save_page(html, url, file_name="")
 	end
 
 	open(ph_h, 'w') { |f| f.puts html }
-	open(pt_h, 'w') { |f| f.puts text }
 	return short_url
 end

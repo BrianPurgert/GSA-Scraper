@@ -7,7 +7,7 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 4 #4 browsers
+n_thr     = 2 #4 browsers
 n_each    = 2
 
 n_total   = n_thr * n_each
@@ -85,12 +85,12 @@ def read_product(container)
 	# 	img = container.img(css: '[href*="product_detail.do?gsin"] img')
 	#     img.flash
 
-		# product.flash
-		# part.flash
-		# short_desc.flash
-		# price.flash
-		# mfr_span.flash
-		# n_source.flash
+		product.flash
+		part.flash
+		short_desc.flash
+		price.flash
+		mfr_span.flash
+		n_source.flash
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 end
 
@@ -125,7 +125,6 @@ n_thr.times do |n|
 				# result_section = gsa_a[n].browser.div(id: 'main-alt')
 				# parse_results(result_section.html)
 				# p 'test done'
-				# Current scraper, fast for a human but slow for 5+ million results..
 					results.each do |container|
 						  read_product(container)
 					end
@@ -136,7 +135,7 @@ n_thr.times do |n|
 					# end
 					last_price = gsa_a[n].ms_low_price_elements.last.text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
-					n_low.to_f = 0.01 # this is to account for the items on the next page being the same price.
+					n_low = 0.01 + n_low.to_f # this is to account for the items on the next page being the same price.
 					 f_name = "#{mfr_href}-#{pg}"
 					  # save_page(html, gsa_a[n].browser.url, f_name)
 					pg = pg + 1

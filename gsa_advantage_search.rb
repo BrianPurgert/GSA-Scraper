@@ -65,7 +65,7 @@ def initialize_browsers(browser, gsa_advantage)
      print "#{r_proxy}"
      gsa_advantage[nt].browser.driver.manage.window.resize_to(300, 950)
      gsa_advantage[nt].browser.driver.manage.window.move_to(((nt % 8)*200), 0)
-     gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:1USB-BT400'
+     gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov/'
      unless gsa_advantage[nt].first_result_element.exist?
           puts 'redo'
           redo
