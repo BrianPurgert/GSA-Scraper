@@ -1,11 +1,14 @@
 require_relative 'gsa_advantage'
+require 'rubygems'
+require 'nokogiri'
+require 'open-uri'
 
 @reading    = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 2
-n_each    = 1
+n_thr     = 4 #4 browsers
+n_each    = 2
 
 n_total   = n_thr * n_each
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
@@ -37,44 +40,55 @@ def get_parent(mpn, mfr)
 	return [pr]
 end
 
+def parse_results(html)
+	html = HtmlBeautifier.beautify(html,"\t\t")
+	# p html
+	doc = Nokogiri::HTML(html)
+	puts "### Search for nodes by css"
+	 doc.css('#pagination~ table:not(#pagination2)').each do |container|
+	 	print container.html
+
+	 end
+end
+
 def read_product(container)
-	container.flash
+	 container.flash
 	# Product
 		product = container.link(css:"a.arial[href*='product_detail.do?gsin']")
-		product.flash
 	# Product link
 		href_name = product.href
 	# Product name
 		name = product.text
 	# manufacture part number 70006459310
 		part = container.font(css: 'tbody tr > td font.black8pt')
-		part.flash
 		mpn = part.text
 	# short description
 		short_desc = container.td(css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td')
-		short_desc.flash
 		desc = short_desc.text
 	# feature price
 		price = container.strong(css: 'span.newOrange.black12pt.arial > strong')
-		price.flash
 		low_price = price.text[1..-1].tap { |s| s.delete!(',') }
 	# Mfr
 		mfr_span = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
-		mfr_span.flash
 		mfr = mfr_span.text
 	# Sources
 		if mfr.include? 'N/A' # GSA Global Supply
 			sources = 1
 		else
 			n_source = container.span(css: 'tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
-			n_source.flash
 			sources = n_source.text.gsub(/[^0-9]/, '')
 		end
 	# product image href
-		img = container.img(css: '[href*="product_detail.do?gsin"] img')
-		img.flash
-		  # mfr, mpn, name, href_name, desc, low_price, sources
-	return [mfr, mpn, name, href_name, desc, low_price, sources]
+	# 	img = container.img(css: '[href*="product_detail.do?gsin"] img')
+	#     img.flash
+
+		# product.flash
+		# part.flash
+		# short_desc.flash
+		# price.flash
+		# mfr_span.flash
+		# n_source.flash
+		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 end
 
 n_thr.times do |n|
@@ -94,9 +108,9 @@ n_thr.times do |n|
 			gsa_a[n].browser.goto url
 			title       = gsa_a[n].browser.title
 			url         = gsa_a[n].browser.url
-			links       = gsa_a[n].product_link_elements
+			# links       = gsa_a[n].product_link_elements
 			results     = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
-			n_results   = links.length
+			n_results   = results.length
 			result_set = []
 			# TODO trigger refresh if needed... gsa_a[n].browser.refresh
 
@@ -104,9 +118,14 @@ n_thr.times do |n|
 				when 0
 					raise "Missing results #{gsa_a[n].browser.url}"
 				when 1..100
-					 results.each do |container|
-						 @db_queue << read_product(container)
-					 end
+				#main-alt > table > tbody > tr > td:nth-child(3)
+				# result_section = gsa_a[n].browser.div(id: 'main-alt')
+				# parse_results(result_section.html)
+				# p 'test done'
+				# Current scraper, fast for a human but slow for 5+ million results..
+					results.each do |container|
+						  read_product(container)
+					end
 					
 					#  gsa_a[n].product_link_elements.each_with_index do |link|
 					# 	 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
@@ -115,9 +134,9 @@ n_thr.times do |n|
 					
 					last_price = gsa_a[n].ms_low_price_elements.last.text
 					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
-
+					n_low += 0.01 # this is to account for the items on the next page being the same price.
 					 f_name = "#{mfr_href}-#{pg}"
-					 # save_page(html, gsa_a[n].browser.url, text, f_name)
+					  # save_page(html, gsa_a[n].browser.url, f_name)
 					pg = pg + 1
 					 color_p "#{n}\t|#{f_name} |\t #{title} |#{n_low}\n#{url[30..-10]}",n
 				else

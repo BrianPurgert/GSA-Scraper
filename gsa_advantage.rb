@@ -10,7 +10,11 @@ require 'htmlbeautifier'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
+IS_PROD = TRUE
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Socks_list = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
+Socks_port = 61336;
+
 Catalog_hudson     = '//192.168.1.104/gsa_price/'
 
 
@@ -48,12 +52,12 @@ def product_url()
 	return url
 end
 
-def split(b,n,total)
-	p avail_height = b.execute_script("return screen.availHeight")
-	p avail_width = b.execute_script("return screen.availWidth")
-	x_part_size = avail_width/total
-	b.window.move_to(x_part_size*n, 0)
-	b.window.resize_to(x_part_size, avail_height)
+def split(browser, n, total_browsers)
+	p avail_height = browser.execute_script("return screen.availHeight")
+	p avail_width = browser.execute_script("return screen.availWidth")
+	x_part_size = avail_width/total_browsers
+	browser.window.move_to(x_part_size*n, 0)
+	browser.window.resize_to(x_part_size, avail_height/2)
 end
 
 def move_to_screen(browser,screen_n)
@@ -73,7 +77,12 @@ end
 
 def initialize_browser(n = 0,total=1)
 		r_proxy       = Proxy_list.sample
-		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+		r_socks       = Socks_list.sample
+		socks         = "socks5://#{r_socks}:#{Socks_port}"
+		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
+		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
+		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
+
 		split(browser,n,total)
 		# "--user-data-dir=#{profile[:directory]}"
 		gsa_advantage = GsaAdvantagePage.new(browser)
@@ -90,10 +99,9 @@ end
 
 
 
-def save_page(html, url, text, file_name="")
-	html = HtmlBeautifier.beautify(html, indent: "")
+def save_page(html, url, file_name="")
+	html = HtmlBeautifier.beautify(html)
 	short_url = ''
-
 	#TODO change file saving to ftp
 	if url.include? 'search.do'
 		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"

@@ -121,8 +121,8 @@ require 'colorized_string'
           # row_list = []
           row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
-               print row
-                check_out(row[:name])
+	          print row
+	          check_out(row[:name]) if IS_PROD
           end
 
           mfr_href = row_list.map{|mfr| mfr[:href_name]}
@@ -137,7 +137,9 @@ require 'colorized_string'
 			row_list << row
 		end
 		mfr_part_href = row_list.map!{|link| link[:href_name]}
-		check_out_parts(amount)
+		if IS_PROD
+			check_out_parts(amount)
+		end
 		return mfr_part_href
 	end
 
@@ -146,9 +148,7 @@ require 'colorized_string'
 def get_mfr_list(amount = 1)
 	row_list = []
 	result = @client.query("SELECT list_for FROM `mft_data`.`page_mfr_list` ORDER BY last_update LIMIT #{amount};", :symbolize_keys => true)
-	result.each do |row|
-		row_list << row
-	end
+	result.each { |row| row_list << row }
 	mfr_list = row_list.map!{|link| link[:list_for]}
 	p mfr_list.inspect
 	return mfr_list
