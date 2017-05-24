@@ -3,16 +3,38 @@ Data Scraper for GSA Advantage!
 
 - - - - 
 ## Purpose
-- 33,784 Manufactures
-- 5,008,579 Manufacture Products
-- x
+1. Scrape Pricing Data on GSA Advantage!
+2. Provide Contractor Price Comparisons
+
 
 ## Quick Start
+To access the database you can use phpMyAdmin
+data.govconsvcs.com/phpmyadmin
+... this stuff will probbably change soon so.
+
+#### LAN
+    host:     "192.168.1.104"
+    host:     "hudson.govcon.local"
+#### External
+    host:     "70.61.131.180"
+    host:     "70.61.131.182"
+    host:     "hudson.govconsvcs.com"
+ username: "mft_data",
+
+ The Tables in use are
+
+|
+
+
+
+
 * [Hudson/Jenkins CI Server](hudson.govconsvcs.com:8080) 
 * todo add database connection info..
 
 ## Data Collection Process Overview
 ...
+https://govconsvcs-my.sharepoint.com/personal/brianpurgert_govconsvcs_com/_layouts/15/guestaccess.aspx?docid=01c33540ab0d74ba5b40cf2b65e0d6359&authkey=ASaNqecJBoQaOplGgifQhm0
+
 
 ## Database Reference
 
@@ -20,30 +42,8 @@ Data Scraper for GSA Advantage!
 
 
 ## Reference & External Sources
+> [Watir](https://github.com/watir/watir) is An open source Ruby library for automating tests. Watir interacts with a browser the same way people do: clicking links, filling out forms and validating text.
 * [Watir](http://www.rubydoc.info/gems/watir/Watir/) 
 https://github.com/brianmario/mysql2
 
 
-
-
-
-
-**Data Scraper for GSA Advantage!**
-Manufactures search page,
-only show products < 90000000,
-sort the product list from high to low,
-using consolidated view,
-show 100 results per page.
-Repeat that excepting changing the price filter until the last page. An example of the first 3 pages for 3M
-https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:790000000&searchType=0&s=9&c=100
-https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:73800470&searchType=0&s=9&c=100
-https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:71714588&searchType=0&s=9&c=100
-...`
-Some coding I got done today was just parsing the database from step 1 for step 2  Ie.
-A & E                                                     A+%26+E                                                             2017-04-21 23:11:06       1             
-A & A HYDRAULIC                            A+%26+A+HYDRAULIC                                   2017-04-21 23:11:06       1             
-A BROADER VIEW, INC                   A+BROADER+VIEW%2C+INC                       2017-04-21 23:11:06       1             
-A & E HAND TOOLS INC.                 A+%26+E+HAND+TOOLS+INC.                    2017-04-21 23:11:06       1             
-A & M CLEANING PRODUCTS      A+%26+M+CLEANING+PRODUCTS           2017-04-21 23:11:06       1             
-A&A                                                       A%26A                                                                  2017-04-21 23:11:07       1             
-A D WEIGHING                                  A+D+WEIGHING                                               2017-04-21 23:11:07       1
