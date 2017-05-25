@@ -2,10 +2,9 @@ Data Scraper for GSA Advantage!
 ===================
 
 - - - - 
-## Purpose
+## Purpose 🤷
 1. Scrape Pricing Data on GSA Advantage!
 2. Provide Contractor Price Comparisons
-
 
 ## Quick Start
 To access the database you can use phpMyAdmin
@@ -23,7 +22,6 @@ data.govconsvcs.com/phpmyadmin
 
  The Tables in use are
 
-|
 
 
 
