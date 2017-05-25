@@ -7,8 +7,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 2 #4 browsers
-n_each    = 2
+n_thr     = 14 # Number of browsers to run
+n_each    = 3 # Number of Manufactures to search per browsers
 
 n_total   = n_thr * n_each
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
@@ -40,20 +40,19 @@ def get_parent(mpn, mfr)
 	return [pr]
 end
 
-# TODO
-# The Nokigura
+
+# Nokogiri Product Parser
 def parse_results(html)
-	html = HtmlBeautifier.beautify(html,"\t\t")
 	# p html
 	doc = Nokogiri::HTML(html)
 	puts "### Search for nodes by css"
 	 doc.css('#pagination~ table:not(#pagination2)').each do |container|
-	 	# print container.
+	 	p container
 
 	 end
 end
 
-# The Watir way
+# Watir Product Parser
 def read_product(container)
 	 container.flash
 	# Product

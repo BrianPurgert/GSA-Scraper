@@ -83,7 +83,7 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
-def initialize_browser(n = 0,total=1)
+def initialize_browser(n = 0,total=3)
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
