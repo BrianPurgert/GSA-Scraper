@@ -3,10 +3,33 @@ require 'watir'
 require 'page-object/page_factory'
 require_relative 'pages/gsa_advantage_page'
 require 'mysql2'
+require_relative 'gsa_advantage'
 
 # http://169.254.0.0/
 require 'thread'
-# queue = Queue.new
+
+browser1 = initialize_browser(0,1)
+# --headless --disable-gpu --remote-debugging-port=9222
+      browser = Watir::Browser.start 'https://developer.mozilla.org/en-US/docs/Web/API/Element'
+	# browser.div(id: "wiki-content").javascript("scrollIntoView()")
+	browser.divs.each do |element|
+		element.flash(color: "green")
+	end
+
+
+
+
+#wikiArticle > dl:nth-child(n) > dt:nth-child(1) > a
+
+sleep 10
+exit
+
+
+
+
+
+
+
 
 # mfr_list_pages = ("A".."Z").to_a << "0"
 # producer = Thread.new do
@@ -53,7 +76,7 @@ end
 	browsers[1] = Watir::Browser.new :chrome
 	browsers[2] = Watir::Browser.new :chrome
 browsers[3] = Watir::Browser.new :chrome
-	split(browsers)
+
 	browsers[0].goto 'https://govconsvcs.com/'
 	browsers[1].goto 'https://govconsvcs.com/'
 browsers[2].goto 'https://reddit.com/'

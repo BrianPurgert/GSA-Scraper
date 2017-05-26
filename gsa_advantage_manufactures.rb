@@ -2,7 +2,7 @@ require_relative 'gsa_advantage'
 RX_mfr      = /(?<=\q=28:5).*/
 threads     = []
 gsa_a       = []
-config      = [3]
+config      = [2]
 @queue      = Queue.new
 @reading    = 0
 
@@ -34,16 +34,16 @@ end
 
 letters.each_with_index do |letter, i|
 	threads << Thread.new {
-	gsa_a[i] = initialize_browser
+	gsa_a[i] = initialize_browser(i,2)
 	gsa_a[i].browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
 		# Thread.current[:name] = []
 		gsa_a[i].mft_table_element.links.each do |link|
 			href_mfr = RX_mfr.match(link.href)
-			link.flash(color: "yellow",flashes: 1)
-			# link.highlight
+			# link.flash
+			link.flash(color: "rgba(255, 255, 66, 0.6)")
 			name_mfr = link.text
 			e_products = link.parent.following_sibling
-			e_products.flash(color: "yellow",flashes: 1)
+			e_products.flash(color: "green")
 			n_products = e_products.text
 			n_products = n_products.delete('()')
 			@queue << [name_mfr,href_mfr,n_products]

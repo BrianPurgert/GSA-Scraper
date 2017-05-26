@@ -4,11 +4,13 @@ require 'nokogiri'
 require 'open-uri'
 
 @reading    = 0
+@items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 14 # Number of browsers to run
-n_each    = 3 # Number of Manufactures to search per browsers
+n_thr     = 10 # Number of browsers to run
+n_each    = 10 # Number of Manufactures to search per browsers
+test_search = FALSE
 
 n_total   = n_thr * n_each
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
@@ -42,13 +44,36 @@ end
 
 
 # Nokogiri Product Parser
-def parse_results(html)
-	# p html
-	doc = Nokogiri::HTML(html)
-	puts "### Search for nodes by css"
-	 doc.css('#pagination~ table:not(#pagination2)').each do |container|
-	 	p container
+def parse_results(html)                                                             # input html from #main-alt
+	 main_alt = Nokogiri::HTML.fragment(html)
+	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
+	 color_p "number of product_tables: #{product_tables.size}"
+	 product_tables.each_with_index do |product_table, i|
+		product = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
+		name = product.text.strip
+		href_name = product['href']
 
+		# manufacture part number 70006459310
+		mpn = product_table.css("tbody tr > td font.black8pt").text.strip
+
+		# short description
+		desc = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td').text.strip
+		# feature price
+		price = product_table.css('span.newOrange.black12pt.arial > strong').text.strip
+		low_price = price[1..-1].tap { |s| s.delete!(',') }
+		# Mfr
+		mfr_span = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
+		mfr = mfr_span.text.strip
+		# Sources
+		if mfr.include? 'N/A' # GSA Global Supply
+			sources = 1
+		else
+			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
+			sources = n_source.text.gsub(/[^0-9]/, '')
+		end
+
+		color_p "MFR: #{mfr} PN: #{mpn} | #{name} | Price: #{low_price} | #{href_name} | PN: #{mpn} | #{sources} #{i}"
+		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
 
@@ -98,13 +123,12 @@ n_thr.times do |n|
 	gsa_a[n] = initialize_browser(n,n_thr)
 	until @mfr_queue.empty?
 		mfr = @mfr_queue.shift
-		p mfr.inspect
-		# puts "Search Start:\t#{mfr['name']}    gsa_advantage:\t#{gsa_advantage[n]}"
 		mfr_name       = mfr[:name]
 		mfr_href       = mfr[:href_name]
 		mfr_item_count = mfr[:item_count]
 		pg             = 1
 		n_low          = 900000000
+		color_p "Begin Search -- #{mfr_name} | Items: #{mfr_item_count}",n
 		begin
 			url         = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
@@ -113,20 +137,20 @@ n_thr.times do |n|
 			# links       = gsa_a[n].product_link_elements
 			results     = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results   = results.length
-			result_set = []
-			# TODO trigger refresh if needed... gsa_a[n].browser.refresh
-
 			case n_results
 				when 0
 					raise "Missing results #{gsa_a[n].browser.url}"
 				when 1..100
-				#main-alt > table > tbody > tr > td:nth-child(3)
-				# result_section = gsa_a[n].browser.div(id: 'main-alt')
-				# parse_results(result_section.html)
-				# p 'test done'
-					results.each do |container|
+				 result_section = gsa_a[n].browser.div(id: 'main-alt')
+
+				 result_section.flash color: 'red'
+				 parse_results(result_section.html)
+				 result_section.flash color: 'green'
+				if test_search
+						results.each do |container|
 						  read_product(container)
-					end
+						end
+						end
 					
 					#  gsa_a[n].product_link_elements.each_with_index do |link|
 					# 	 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
