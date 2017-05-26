@@ -49,7 +49,7 @@ require 'colorized_string'
 	@insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
 	def insert_mfr_part(part)
             @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
-		puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
+		# puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
      end
 
 	def insert_mfr_parts(mfr_parts_data)

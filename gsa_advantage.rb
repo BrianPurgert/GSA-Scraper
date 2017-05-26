@@ -29,6 +29,14 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
+def bp(arr_str)
+	out_str = ""
+	length = 200/arr_str.size
+	arr_str.each_with_index { |str,i | out_str += "║#{(str + ' ' * length)[0,length]}║".colorize(String.colors[i]) }
+
+	puts out_str
+end
+
 def search_url(mfr_href_name, current_lowest_price,page_number=1)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
@@ -36,7 +44,7 @@ def search_url(mfr_href_name, current_lowest_price,page_number=1)
 	url = url + "&c=100"
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
-	# puts "#{url}".colorize(String.colors.sample)
+	puts "#{url}".colorize(String.colors.sample)
 	return url
 end
 

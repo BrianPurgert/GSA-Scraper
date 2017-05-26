@@ -8,8 +8,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 10 # Number of browsers to run
-n_each    = 10 # Number of Manufactures to search per browsers
+n_thr     = 1 # Number of browsers to run
+n_each    = 2 # Number of Manufactures to search per browsers
 test_search = FALSE
 
 n_total   = n_thr * n_each
@@ -24,7 +24,8 @@ threads << Thread.new do
 			@reading = 0
 		end
 		@reading += 1
-		sleep 10
+		color_p "Queue empty: #{@reading}/10", 7
+		sleep 5
 	end
 end
 
@@ -52,10 +53,8 @@ def parse_results(html)                                                         
 		product = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
 		name = product.text.strip
 		href_name = product['href']
-
 		# manufacture part number 70006459310
 		mpn = product_table.css("tbody tr > td font.black8pt").text.strip
-
 		# short description
 		desc = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td').text.strip
 		# feature price
@@ -71,8 +70,8 @@ def parse_results(html)                                                         
 			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
 			sources = n_source.text.gsub(/[^0-9]/, '')
 		end
-
-		color_p "MFR: #{mfr} PN: #{mpn} | #{name} | Price: #{low_price} | #{href_name} | PN: #{mpn} | #{sources} #{i}"
+		# color_p "MFR: #{mfr} PN: #{mpn} | #{name} | Price: #{low_price} | #{href_name} | PN: #{mpn} | #{sources} #{i}"
+		bp ["MFR: #{mfr}"," PN: #{mpn}"," #{name}"," Price: #{low_price} ","#{href_name}"," #{sources} #{i}"]
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -118,6 +117,13 @@ def read_product(container)
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 end
 
+
+def normalize_price(last_price)
+	n_low = last_price[1..-1].tap { |s| s.delete!(',') }
+	n_low = n_low.to_f.round(2)
+end
+
+
 n_thr.times do |n|
 	threads << Thread.new do
 	gsa_a[n] = initialize_browser(n,n_thr)
@@ -128,45 +134,36 @@ n_thr.times do |n|
 		mfr_item_count = mfr[:item_count]
 		pg             = 1
 		n_low          = 900000000
+		o_low          = 990000000
+		combined_html  = ''
 		color_p "Begin Search -- #{mfr_name} | Items: #{mfr_item_count}",n
+		p @db_queue.size
 		begin
-			url         = search_url(mfr_href, n_low)
+			url             = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
+			pagin     = gsa_a[n].browser.table(css: "#pagination")
+			next_page = pagin.text.include? "Next Page >"
+			results         = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
+			n_results       = results.length
+	
 			title       = gsa_a[n].browser.title
 			url         = gsa_a[n].browser.url
-			# links       = gsa_a[n].product_link_elements
-			results     = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
-			n_results   = results.length
-			case n_results
-				when 0
-					raise "Missing results #{gsa_a[n].browser.url}"
-				when 1..100
-				 result_section = gsa_a[n].browser.div(id: 'main-alt')
-
-				 result_section.flash color: 'red'
-				 parse_results(result_section.html)
-				 result_section.flash color: 'green'
-				if test_search
-						results.each do |container|
-						  read_product(container)
-						end
-						end
+			
+				if n_results > 0
+					n_low      = normalize_price(gsa_a[n].ms_low_price_elements.last.text)
+					result_section = gsa_a[n].browser.div(id: 'main-alt')
+					parse_results(result_section.html)
 					
-					#  gsa_a[n].product_link_elements.each_with_index do |link|
-					# 	 link.flash(color: "rgba(255, 0, 0, 0.6)",flashes: 1, persist: TRUE)
-					# 	      @db_queue  << [mfr, mpn, name, href_name, `desc`, low_desc, low_price]
-					# end
-					last_price = gsa_a[n].ms_low_price_elements.last.text
-					n_low  = last_price[1..-1].tap { |s| s.delete!(',') }
-					n_low = 0.01 + n_low.to_f # this is to account for the items on the next page being the same price.
-					 f_name = "#{mfr_href}-#{pg}"
-					  # save_page(html, gsa_a[n].browser.url, f_name)
-					pg = pg + 1
-					 color_p "#{n}\t|#{f_name} |\t #{title} |#{n_low}\n#{url[30..-10]}",n
-				else
-					puts "error in number of results on page, n_results: #{n_results}"
-			end
-		end while n_results == 100
+					if test_search
+						results.each { |c| read_product(c) }
+					end
+					pg         = pg + 1
+					color_p "#{n}\t | #{title} |#{n_low}\n#{url}", n
+					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
+				end
+			
+			
+		end while n_results > 99
 		
 	end
 		end
