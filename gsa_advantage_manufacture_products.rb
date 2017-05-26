@@ -145,15 +145,15 @@ n_thr.times do |n|
 			next_page = pagin.text.include? "Next Page >"
 			results         = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results       = results.length
-	
+
 			title       = gsa_a[n].browser.title
 			url         = gsa_a[n].browser.url
-			
+
 				if n_results > 0
 					n_low      = normalize_price(gsa_a[n].ms_low_price_elements.last.text)
 					result_section = gsa_a[n].browser.div(id: 'main-alt')
 					parse_results(result_section.html)
-					
+
 					if test_search
 						results.each { |c| read_product(c) }
 					end
@@ -161,8 +161,8 @@ n_thr.times do |n|
 					color_p "#{n}\t | #{title} |#{n_low}\n#{url}", n
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
-			
-			
+
+
 		end while n_results > 99
 		
 	end
