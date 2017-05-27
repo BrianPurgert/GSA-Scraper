@@ -8,19 +8,32 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr     = 1 # Number of browsers to run
-n_each    = 2 # Number of Manufactures to search per browsers
+n_thr          = 10 # Number of browsers to run
+n_total        = 300 # Number of Manufactures to search per browsers
 test_search = FALSE
 
-n_total   = n_thr * n_each
+
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
+
+
+threads << Thread.new do
+	while @reading < 10 do
+		puts "=================   Items Queued for database: #{@db_queue.length}   ================="
+		sleep 5
+	end
+end
+
+def take(queue)
+	[].tap { |array| array << queue.pop until queue.empty? }
+end
 
 threads << Thread.new do
 	while @reading < 10 do
 		until @db_queue.empty?
-			 mfr_part = @db_queue.shift
-			 insert_mfr_part(mfr_part)
+			insert_mfr_parts(take(@db_queue))
+			 # mfr_part = @db_queue.shift
+			 # insert_mfr_part(mfr_part)
 			@reading = 0
 		end
 		@reading += 1
@@ -64,14 +77,16 @@ def parse_results(html)                                                         
 		mfr_span = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
 		mfr = mfr_span.text.strip
 		# Sources
-		if mfr.include? 'N/A' # GSA Global Supply
-			sources = 1
+
+		# product_table.include? "GSA Global"
+		if mfr.include? 'N/A'
+			sources = '1'
 		else
 			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
 			sources = n_source.text.gsub(/[^0-9]/, '')
 		end
 		# color_p "MFR: #{mfr} PN: #{mpn} | #{name} | Price: #{low_price} | #{href_name} | PN: #{mpn} | #{sources} #{i}"
-		bp ["MFR: #{mfr}"," PN: #{mpn}"," #{name}"," Price: #{low_price} ","#{href_name}"," #{sources} #{i}"]
+		bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -137,12 +152,12 @@ n_thr.times do |n|
 		o_low          = 990000000
 		combined_html  = ''
 		color_p "Begin Search -- #{mfr_name} | Items: #{mfr_item_count}",n
-		p @db_queue.size
 		begin
 			url             = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
-			pagin     = gsa_a[n].browser.table(css: "#pagination")
-			next_page = pagin.text.include? "Next Page >"
+			# TODO: check to make sure we're on the right page
+			# pagin     = gsa_a[n].browser.table(css: "#pagination")
+			# next_page = pagin.text.include? "Next Page >"
 			results         = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results       = results.length
 

@@ -53,13 +53,13 @@ require 'colorized_string'
      end
 
 	def insert_mfr_parts(mfr_parts_data)
-          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price)
+          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources)
 			         VALUES'
           mfr_parts_data.each_with_index do |mfr_part, i|
                insert_string += ',' if i > 0
                insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}','#{@client.escape(mfr_part[6])}')\n"
           end
-          puts insert_string.colorize(:green)
+          # puts insert_string.colorize(:green)
           @client.query("#{insert_string}")
      end
 

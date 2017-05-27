@@ -4,9 +4,36 @@ require 'page-object/page_factory'
 require_relative 'pages/gsa_advantage_page'
 require 'mysql2'
 require_relative 'gsa_advantage'
-
-# http://169.254.0.0/
 require 'thread'
+
+require 'rubygems'
+require 'nokogiri'
+# require 'httparty'
+require_relative 'gsa_advantage_selectors'
+
+	 p Select::FSSI
+	Select.css
+
+exit
+
+dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+require File.join(dir, 'httparty')
+require 'pp'
+
+class HtmlParserIncluded < HTTParty::Parser
+	def html
+		Nokogiri::HTML(body)
+	end
+end
+
+class Page
+	include HTTParty
+	parser HtmlParserIncluded
+end
+
+pp Page.get('http://www.google.com')
+
+exit
 
 browser1 = initialize_browser(0,1)
 # --headless --disable-gpu --remote-debugging-port=9222

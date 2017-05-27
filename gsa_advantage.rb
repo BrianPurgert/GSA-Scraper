@@ -1,14 +1,15 @@
+require 'benchmark'
 require 'colorize'
 require 'colorized_string'
+require 'htmlbeautifier'
 require 'in_threads'
 require 'page-object'
 require 'page-object/page_factory'
 require 'watir'
 require 'yaml'
-require 'benchmark'
-require 'htmlbeautifier'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
+require_relative 'gsa_advantage_selectors'
 
 IS_PROD = TRUE
 Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
@@ -31,8 +32,8 @@ end
 
 def bp(arr_str)
 	out_str = ""
-	length = 200/arr_str.size
-	arr_str.each_with_index { |str,i | out_str += "║#{(str + ' ' * length)[0,length]}║".colorize(String.colors[i]) }
+	length = 230/arr_str.size
+	arr_str.each_with_index { |str,i | out_str += "|\t#{(str + ' ' * length)[0,length]} |".colorize(String.colors[i]) }
 
 	puts out_str
 end
@@ -91,20 +92,19 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
-def initialize_browser(n = 0,total=3)
+def initialize_browser(n = 0,total=1)
+	# TODO: Chrome Headless!
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
 		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
 		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
-
-		split(browser,n,total)
+		move_to_screen(browser,-1)
+		# split(browser,n,3)
 		# "--user-data-dir=#{profile[:directory]}"
 		gsa_advantage = GsaAdvantagePage.new(browser)
-		# move_to_screen(gsa_advantage.browser,-1)
 			gsa_advantage.goto
-			# gsa_advantage.wait
 
 		puts "#{gsa_advantage.title} | #{r_proxy} | #{}".colorize(:blue)
 		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
