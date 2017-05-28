@@ -3,14 +3,14 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
-2.times do
+1.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
 n_thr          = 16 # Number of browsers to run
-n_total        = 800 # Number of Manufactures to search
+n_total        = 1000 # Number of Manufactures to search
 test_search = FALSE
 
 
