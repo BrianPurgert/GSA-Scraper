@@ -8,8 +8,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 10 # Number of browsers to run
-n_total        = 300 # Number of Manufactures to search per browsers
+n_thr          = 8 # Number of browsers to run
+n_total        = 600 # Number of Manufactures to search
 test_search = FALSE
 
 
@@ -188,29 +188,6 @@ end
 
 threads.each { |thr| thr.join }
 
-
-# initialize_browsers()
-# (0..3).each do |index|
-# 	puts "Companies Processed: #{index}".colorize(:red)
-# 	search_on_browser(1, get_mfr)
-# end
-
-# @semaphore = Mutex.new
-#  @threads = []
-#  t_count = 0;
-# (0..2000).each do |index|
-#      thr_n = index % N_threads_plus_one
-#       puts "thr_n #{thr_n}"
-#  	    t_count = t_count+1
-#  	    @threads << Thread.new do
-#  		    search_on_browser(thr_n, get_mfr)
-#  	    end
-#      if t_count >= N_threads
-#  	    @threads.each { |t| t.join if t != Thread.current }
-#  	    t_count = 0
-#      end
-#  end
-#  Thread.list.each { |t| t.join if t != Thread.current }
 
 
 
