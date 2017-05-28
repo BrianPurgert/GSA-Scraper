@@ -3,14 +3,16 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
+2.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 8 # Number of browsers to run
-n_total        = 600 # Number of Manufactures to search
+n_thr          = 16 # Number of browsers to run
+n_total        = 800 # Number of Manufactures to search
 test_search = FALSE
+
 
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
@@ -19,26 +21,30 @@ gsa_a     = []
 
 threads << Thread.new do
 	while @reading < 10 do
-		puts "=================   Items Queued for database: #{@db_queue.length}   ================="
+		color_p "\t\t\t\tQueue empty: #{30-@reading}\tt Queued: #{@db_queue.length} ", 7
 		sleep 5
 	end
 end
 
 def take(queue)
-	[].tap { |array| array << queue.pop until queue.empty? }
+	[].tap do |array|
+		i = 0
+		until queue.empty? || i == 300
+			array << queue.pop
+			i += 1
+		end
+	end
 end
 
 threads << Thread.new do
 	while @reading < 10 do
 		until @db_queue.empty?
 			insert_mfr_parts(take(@db_queue))
-			 # mfr_part = @db_queue.shift
-			 # insert_mfr_part(mfr_part)
+			sleep 1
 			@reading = 0
 		end
 		@reading += 1
-		color_p "Queue empty: #{@reading}/10", 7
-		sleep 5
+		sleep 3
 	end
 end
 
@@ -79,14 +85,18 @@ def parse_results(html)                                                         
 		# Sources
 
 		# product_table.include? "GSA Global"
-		if mfr.include? 'N/A'
+		if product_table.text.include? "GSA Global Supply"
 			sources = '1'
+			puts "GSA Global\nGSA Global\nGSA Global\nGSA Global\nGSA Global\nGSA Global"
 		else
 			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
 			sources = n_source.text.gsub(/[^0-9]/, '')
 		end
-		# color_p "MFR: #{mfr} PN: #{mpn} | #{name} | Price: #{low_price} | #{href_name} | PN: #{mpn} | #{sources} #{i}"
-		bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
+		# TODO remove this later
+		sources = '1' if sources.empty?
+
+		# puts "#{mfr} #{mpn} #{name} #{low_price} #{href_name}  PN: #{mpn} | #{sources} #{i}"
+		#  bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -141,7 +151,7 @@ end
 
 n_thr.times do |n|
 	threads << Thread.new do
-	gsa_a[n] = initialize_browser(n,n_thr)
+	gsa_a[n] = initialize_browser
 	until @mfr_queue.empty?
 		mfr = @mfr_queue.shift
 		mfr_name       = mfr[:name]
@@ -173,7 +183,7 @@ n_thr.times do |n|
 						results.each { |c| read_product(c) }
 					end
 					pg         = pg + 1
-					color_p "#{n}\t | #{title} |#{n_low}\n#{url}", n
+					color_p "#{n}\t | #{title} | Low: #{n_low}\n#{url}", n
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
 
@@ -181,7 +191,9 @@ n_thr.times do |n|
 		end while n_results > 99
 		
 	end
-		end
+	gsa_a[n].browser.close
+			end
+
 end
 
 
@@ -189,9 +201,7 @@ end
 threads.each { |thr| thr.join }
 
 
-
-
-
+end
 
 
 

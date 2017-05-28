@@ -98,9 +98,9 @@ def initialize_browser(n = 0,total=1)
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
-		browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
-		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{r_proxy}"]
-		move_to_screen(browser,-1)
+		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
+		browser       = Watir::Browser.new :chrome, switches: ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		# move_to_screen(browser,-1)
 		# split(browser,n,3)
 		# "--user-data-dir=#{profile[:directory]}"
 		gsa_advantage = GsaAdvantagePage.new(browser)

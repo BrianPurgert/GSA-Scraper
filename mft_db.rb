@@ -3,16 +3,18 @@ require 'colorize'
 require 'colorized_string'
 
      @client = Mysql2::Client.new(
-          host:     "70.61.131.180",
+          host:     "70.61.131.182",
           username: "mft_data",
           password: "GoV321CoN",
-          reconnect: true,
-          read_timeout: 20,
-          write_timeout: 25,
-          connect_timeout: 25,
-          cast: false
-     )
+          # reconnect: true,
+          # read_timeout: 20,
+          # write_timeout: 25,
+          # flags: Mysql2::Client::REMEMBER_OPTIONS | Mysql2::Client::MULTI_STATEMENTS,
+          encoding: 'utf8',
+          # connect_timeout: 25,
 
+     )
+# cast: false
 	# mft_data2 uMm1ShoJIMeoVI2q
 	# Azure = Mysql2::Client.new(
 	# username: "BrianPurgert@gcs-data",
@@ -60,7 +62,7 @@ require 'colorized_string'
                insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}','#{@client.escape(mfr_part[6])}')\n"
           end
           # puts insert_string.colorize(:green)
-          @client.query("#{insert_string}")
+          @client.query("#{insert_string}", cast: false)
      end
 
 	def insert_result_block(mfr_parts_data)
@@ -119,7 +121,7 @@ require 'colorized_string'
 
       def get_mfr(amount = 1)
           # row_list = []
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY item_count LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          print row
 	          check_out(row[:name]) if IS_PROD
