@@ -9,8 +9,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 16 # Number of browsers to run
-n_total        = 1000 # Number of Manufactures to search
+n_thr          = 6 # Number of browsers to run
+n_total        = 100 # Number of Manufactures to search
 test_search = FALSE
 
 
@@ -66,7 +66,6 @@ end
 def parse_results(html)
 	 main_alt = Nokogiri::HTML.fragment(html)
 	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
-	 color_p "number of product_tables: #{product_tables.size}"
 	 product_tables.each_with_index do |product_table, i|
 		product = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
 		name = product.text.strip
@@ -182,7 +181,7 @@ n_thr.times do |n|
 						results.each { |c| read_product(c) }
 					end
 					pg         = pg + 1
-					bp ["#{n_results}/#{total_found} | $#{n_low} | #{mfr_name}","#{url}"]
+					bp ["on page:#{n_results} | #{total_found}/#{mfr_item_count} | $#{n_low} | #{mfr_name}","#{url}"]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
 
