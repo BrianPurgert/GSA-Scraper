@@ -9,8 +9,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 1 # Number of browsers to run
-n_total        = 1 # Number of Manufactures to search
+n_thr          = 16 # Number of browsers to run
+n_total        = 1000 # Number of Manufactures to search
 test_search = FALSE
 
 
