@@ -92,25 +92,31 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
+def safety_first(browser)
+	# TODO check for infinite loop
+	# TODO check other stuff
+	browser.after_hooks.add do |browser|
+		browser.text.include?("Server Error") and puts "Application exception or 500 error!"
+	end
+	browser.goto "watir.github.io/404"
+	"Application exception or 500 error!"
+end
+
 def initialize_browser(n = 0,total=1)
-	# TODO: Chrome Headless!
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
 		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
 		browser       = Watir::Browser.new :chrome, switches: ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
-		# move_to_screen(browser,-1)
-		# split(browser,n,3)
-		# "--user-data-dir=#{profile[:directory]}"
-		gsa_advantage = GsaAdvantagePage.new(browser)
-			gsa_advantage.goto
+		gsa_a = GsaAdvantagePage.new(browser)
+		gsa_a.goto
 
-		puts "#{gsa_advantage.title} | #{r_proxy} | #{}".colorize(:blue)
-		unless gsa_advantage.title.include? 'Welcome to GSA Advantage!'
+		puts "#{gsa_a.title} | #{r_proxy} | #{}".colorize(:blue)
+		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
-		return gsa_advantage
+		return gsa_a
 end
 
 

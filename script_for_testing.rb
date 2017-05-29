@@ -2,21 +2,28 @@
 # require 'nokogiri'
 # require 'rubygems'
 # require 'thread'
-require 'watir'
+
 # require_relative 'gsa_advantage'
 # require_relative 'gsa_advantage_selectors'
 # require_relative 'pages/gsa_advantage_page'
 
 	 # p Select::FSSI
-caps = Selenium::WebDriver::Remote::Capabilities.chrome("chromeOptions" => {"binary" => [ "C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe" ]})
-# capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(opts = {binary: 'C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe'})
+# caps = Selenium::WebDriver::Remote::Capabilities.chrome("chromeOptions" => {"binary" => [ "C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe" ]})
+
+ # Selenium::WebDriver::Chrome.binary = chromedriver_path
+# C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
+
+require 'watir'
+caps = Selenium::WebDriver::Remote::Capabilities.chrome(opts = {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
 driver = Selenium::WebDriver.for :chrome, desired_capabilities: caps
 
-# Selenium::WebDriver::Chrome.binary = chromedriver_path
-
-browser = Watir::Browser.new driver #,switches:%w(headless disable-gpu)
+browser = Watir::Browser.new driver
 browser.goto 'chrome://version/'
 puts browser.text
+
+
+#,switches:%w(headless disable-gpu)
+
 
 sleep 10
 exit

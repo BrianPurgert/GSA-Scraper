@@ -9,8 +9,8 @@ require 'open-uri'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 16 # Number of browsers to run
-n_total        = 1000 # Number of Manufactures to search
+n_thr          = 1 # Number of browsers to run
+n_total        = 1 # Number of Manufactures to search
 test_search = FALSE
 
 
@@ -22,14 +22,14 @@ gsa_a     = []
 threads << Thread.new do
 	while @reading < 10 do
 		color_p "\t\t\t\tQueue empty: #{30-@reading}\tt Queued: #{@db_queue.length} ", 7
-		sleep 5
+		sleep 10
 	end
 end
 
 def take(queue)
 	[].tap do |array|
 		i = 0
-		until queue.empty? || i == 300
+		until queue.empty? || i == 500
 			array << queue.pop
 			i += 1
 		end
@@ -40,7 +40,6 @@ threads << Thread.new do
 	while @reading < 10 do
 		until @db_queue.empty?
 			insert_mfr_parts(take(@db_queue))
-			sleep 1
 			@reading = 0
 		end
 		@reading += 1
@@ -48,7 +47,7 @@ threads << Thread.new do
 	end
 end
 
-
+# Not using this function anymore
 def get_parent(mpn, mfr)
 	pr = mpn.parent
 	puts pr.element.text
@@ -64,7 +63,7 @@ end
 
 
 # Nokogiri Product Parser
-def parse_results(html)                                                             # input html from #main-alt
+def parse_results(html)
 	 main_alt = Nokogiri::HTML.fragment(html)
 	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
 	 color_p "number of product_tables: #{product_tables.size}"
@@ -84,10 +83,10 @@ def parse_results(html)                                                         
 		mfr = mfr_span.text.strip
 		# Sources
 
-		# product_table.include? "GSA Global"
-		if product_table.text.include? "GSA Global Supply"
+		# TODO separate function for GSA Global Supply
+		if product_table.text.include? "GSA Global"
 			sources = '1'
-			puts "GSA Global\nGSA Global\nGSA Global\nGSA Global\nGSA Global\nGSA Global"
+			puts "\nGSA Global\n"
 		else
 			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
 			sources = n_source.text.gsub(/[^0-9]/, '')
@@ -159,9 +158,9 @@ n_thr.times do |n|
 		mfr_item_count = mfr[:item_count]
 		pg             = 1
 		n_low          = 900000000
-		o_low          = 990000000
-		combined_html  = ''
-		color_p "Begin Search -- #{mfr_name} | Items: #{mfr_item_count}",n
+		total_found  = 0
+
+		# bp ["Begin Search -- #{mfr_name}" , "Items: #{mfr_item_count}"]
 		begin
 			url             = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
@@ -170,7 +169,7 @@ n_thr.times do |n|
 			# next_page = pagin.text.include? "Next Page >"
 			results         = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results       = results.length
-
+			total_found     += n_results
 			title       = gsa_a[n].browser.title
 			url         = gsa_a[n].browser.url
 
@@ -183,7 +182,7 @@ n_thr.times do |n|
 						results.each { |c| read_product(c) }
 					end
 					pg         = pg + 1
-					color_p "#{n}\t | #{title} | Low: #{n_low}\n#{url}", n
+					bp ["#{n_results}/#{total_found} | $#{n_low} | #{mfr_name}","#{url}"]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
 
