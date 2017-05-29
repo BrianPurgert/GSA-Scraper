@@ -3,7 +3,7 @@ require 'colorize'
 require 'colorized_string'
 
      @client = Mysql2::Client.new(
-          host:     "70.61.131.182",
+          host:     "localhost",
           username: "mft_data",
           password: "GoV321CoN",
           # reconnect: true,
