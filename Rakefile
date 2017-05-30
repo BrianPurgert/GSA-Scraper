@@ -10,7 +10,9 @@ desc 'Default Tasks'
 task default: [:install,:get_products]
 
 desc "Install Gems"
-task(:install) { exec("cd #{Dir.getwd} && bundle install") }
+task(:install) do
+	exec("cd #{Dir.getwd} && bundle update && bundle install")
+end
 
 desc "Generate Manufacture Product Search  Page"
 task(:gsa_advantage_manufacture_products) do
