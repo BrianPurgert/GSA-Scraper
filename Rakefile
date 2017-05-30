@@ -11,12 +11,11 @@ task default: [:install,:get_products]
 
 desc "Install Gems"
 task(:install) do
-	exec("cd #{Dir.getwd} && bundle update && bundle install")
+	exec("cd #{Dir.getwd} && bundle clean && bundle update && bundle install")
 end
 
 desc "Generate Manufacture Product Search  Page"
 task(:gsa_advantage_manufacture_products) do
-	:install
 	ruby 'gsa_advantage_manufacture_products.rb'
 end
 
