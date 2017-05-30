@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/brianpurgert2/watir.git
-  revision: c30132eb46f570fb50d70c96de9e977ba9e4772c
+  revision: 41d6d951c77570ef0d66aff35abdbd36767515ce
   specs:
     watir (6.2.1)
       selenium-webdriver (~> 3.0)

@@ -4,7 +4,7 @@ require 'nokogiri'
 require 'open-uri'
 
 
-Dev_mode = true
+
 1.times do
 @reading    = 0
 @items      = 0
@@ -14,9 +14,6 @@ threads     = []
 
 Dev_mode ? n_total = 5 : n_total = 100    # Number of Manufactures to search
 Dev_mode ? n_thr = 2 : n_thr = 6          # Number of browsers to run
-
-Watir.relaxed_locate = false
-
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
@@ -176,9 +173,7 @@ n_thr.times do |n|
 					result_section = gsa_a[n].browser.div(id: 'main-alt')
 					parse_results(result_section.html)
 
-					if Dev_mode
-						results.each { |c| read_product(c) }
-					end
+					results.each { |c| read_product(c) } if Dev_mode
 					pg         = pg + 1
 					bp ["on page:#{n_results} | #{total_found}/#{mfr_item_count} | $#{n_low} | #{mfr_name}","#{url}"]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")

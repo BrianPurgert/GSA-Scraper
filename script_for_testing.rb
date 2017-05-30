@@ -16,16 +16,30 @@
 # disable-infobars argument from ChromeOptions
 
 require 'watir'
-# Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
-caps = Selenium::WebDriver::Remote::Capabilities.chrome(chrome_options: {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
+Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
 
-# caps = Selenium::WebDriver::Remote::Capabilities.chrome(opts = {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
-driver = Selenium::WebDriver.for :chrome, desired_capabilities: caps
 
-browser = Watir::Browser.new driver
+ browser = Watir::Browser.new :chrome
 browser.goto 'chrome://version/'
-puts browser.text
+# puts browser.text
+browser.goto 'https://brianpurgert.com/'
+#main > article > div > ul:nth-child(2) > li
 
+
+
+
+ 	browser.divs(css: '*').each do |element|
+ 		p "#{element.inspect}:\t#{element.text}"
+	      # element.flash(color: "green",  outline: TRUE )
+	      element.flash color:'red'
+	      browser.execute_script "arguments[0].style.borderRadius = '25px';
+							arguments[0].style.margin = '10px 10px 10px 10px';
+							arguments[0].style.padding = '10px 10px 10px 10px';
+							arguments[0].style.outline = '5px dotted green';
+							arguments[0].appendChild(document.createTextNode(arguments[0]));", element,element.inspect
+ 	end
+
+sleep 100
 
 #,switches:%w(headless disable-gpu)
 
