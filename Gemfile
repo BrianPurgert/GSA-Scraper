@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-
 gem 'watir', github: 'brianpurgert2/watir'
 gem 'rake', '~> 12.0'
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'

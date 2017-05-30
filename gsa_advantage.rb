@@ -31,10 +31,12 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-def bp(arr_str)
+def bp(arr_str,length = [80,80,80,80,80,80,80])
 	out_str = ""
-	length = 230/arr_str.size
-	arr_str.each_with_index { |str,i | out_str += "|\t#{(str + ' ' * length)[0,length]} |".colorize(String.colors[i]) }
+	# length = 230/arr_str.size
+	arr_str.each_with_index do |str, i|
+		out_str += "|\t#{(str + ' ' * length[i])[0, length[i]]} |".colorize(String.colors[i])
+	end
 
 	puts out_str
 end

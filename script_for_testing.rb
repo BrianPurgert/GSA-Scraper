@@ -25,9 +25,6 @@ browser.goto 'chrome://version/'
 browser.goto 'https://brianpurgert.com/'
 #main > article > div > ul:nth-child(2) > li
 
-
-
-
  	browser.divs(css: '*').each do |element|
  		p "#{element.inspect}:\t#{element.text}"
 	      # element.flash(color: "green",  outline: TRUE )

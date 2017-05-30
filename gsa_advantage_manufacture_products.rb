@@ -13,18 +13,10 @@ require 'open-uri'
 threads     = []
 
 Dev_mode ? n_total = 5 : n_total = 100    # Number of Manufactures to search
-Dev_mode ? n_thr = 2 : n_thr = 6          # Number of browsers to run
+Dev_mode ? n_thr = 2 : n_thr = 8          # Number of browsers to run
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
-
-
-threads << Thread.new do
-	while @reading < 10 do
-		color_p "\t\t\t\tQueue empty: #{30-@reading}\tt Queued: #{@db_queue.length} ", 7
-		sleep 10
-	end
-end
 
 def take(queue)
 	[].tap do |array|
@@ -43,6 +35,7 @@ threads << Thread.new do
 			@reading = 0
 		end
 		@reading += 1
+		color_p "End in: #{30-@reading}\t Queued: #{@db_queue.length} ", 7 if @reading > 5
 		sleep 3
 	end
 end
@@ -67,6 +60,16 @@ def parse_results(html)
 	 main_alt = Nokogiri::HTML.fragment(html)
 	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
 	 product_tables.each_with_index do |product_table, i|
+		fssi = product_table.text.include? "GSA Global"
+		 # Sources
+		 # TODO separate function for GSA Global Supply
+		 if fssi
+			 sources = '1'
+		 else
+			 n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
+			 sources = n_source.text.gsub(/[^0-9]/, '')
+		 end
+
 		product = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
 		name = product.text.strip
 		href_name = product['href']
@@ -80,21 +83,11 @@ def parse_results(html)
 		# Mfr
 		mfr_span = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
 		mfr = mfr_span.text.strip
-		# Sources
 
-		# TODO separate function for GSA Global Supply
-		if product_table.text.include? "GSA Global"
-			sources = '1'
-			puts "\nGSA Global\n"
-		else
-			n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
-			sources = n_source.text.gsub(/[^0-9]/, '')
+		if fssi
+			puts " -- GSA Global - #{mfr} #{mpn} #{name} #{href_name} #{desc} #{low_price} #{sources}"
 		end
-		# TODO remove this later
-		sources = '1' if sources.empty?
 
-		# puts "#{mfr} #{mpn} #{name} #{low_price} #{href_name}  PN: #{mpn} | #{sources} #{i}"
-		# bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -154,8 +147,6 @@ n_thr.times do |n|
 		pg             = 1
 		n_low          = 900000000
 		total_found  = 0
-
-		# bp ["Begin Search -- #{mfr_name}" , "Items: #{mfr_item_count}"]
 		begin
 			url             = search_url(mfr_href, n_low)
 			gsa_a[n].browser.goto url
@@ -165,6 +156,7 @@ n_thr.times do |n|
 			results         = gsa_a[n].browser.tables(css: "#pagination~ table:not(#pagination2)")
 			n_results       = results.length
 			total_found     += n_results
+			@items          += n_results
 			title       = gsa_a[n].browser.title
 			url         = gsa_a[n].browser.url
 
@@ -175,7 +167,7 @@ n_thr.times do |n|
 
 					results.each { |c| read_product(c) } if Dev_mode
 					pg         = pg + 1
-					bp ["on page:#{n_results} | #{total_found}/#{mfr_item_count} | $#{n_low} | #{mfr_name}","#{url}"]
+					bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
 
