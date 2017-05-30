@@ -3,16 +3,19 @@ require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
 
+
+Dev_mode = true
 1.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
-n_thr          = 6 # Number of browsers to run
-n_total        = 100 # Number of Manufactures to search
-test_search = FALSE
 
+Dev_mode ? n_total = 5 : n_total = 100    # Number of Manufactures to search
+Dev_mode ? n_thr = 2 : n_thr = 6          # Number of browsers to run
+
+Watir.relaxed_locate = false
 
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
@@ -29,7 +32,7 @@ end
 def take(queue)
 	[].tap do |array|
 		i = 0
-		until queue.empty? || i == 500
+		until queue.empty? || i == 1000
 			array << queue.pop
 			i += 1
 		end
@@ -94,7 +97,7 @@ def parse_results(html)
 		sources = '1' if sources.empty?
 
 		# puts "#{mfr} #{mpn} #{name} #{low_price} #{href_name}  PN: #{mpn} | #{sources} #{i}"
-		#  bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
+		# bp ["MFR: #{mfr}  PN: #{mpn}"," $#{low_price} S#{sources} C#{i}","NAME: #{name}","#{href_name}"]
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -102,18 +105,14 @@ end
 # Watir Product Parser
 def read_product(container)
 	 container.flash
-	# Product
-		product = container.link(css:"a.arial[href*='product_detail.do?gsin']")
-	# Product link
-		href_name = product.href
-	# Product name
-		name = product.text
-	# manufacture part number 70006459310
-		part = container.font(css: 'tbody tr > td font.black8pt')
-		mpn = part.text
-	# short description
+		product = container.link(css:"a.arial[href*='product_detail.do?gsin']") # Product Element
+		href_name = product.href                                                # Product link
+		name = product.text                                                     # Product name
+		part = container.font(css: 'tbody tr > td font.black8pt')               # Manufacture Part Number Element
+		mpn = part.text                                                         # Manufacture Part Number
+		# Short Description Element
 		short_desc = container.td(css: 'tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td')
-		desc = short_desc.text
+		desc = short_desc.text  # Short Description
 	# feature price
 		price = container.strong(css: 'span.newOrange.black12pt.arial > strong')
 		low_price = price.text[1..-1].tap { |s| s.delete!(',') }
@@ -177,7 +176,7 @@ n_thr.times do |n|
 					result_section = gsa_a[n].browser.div(id: 'main-alt')
 					parse_results(result_section.html)
 
-					if test_search
+					if Dev_mode
 						results.each { |c| read_product(c) }
 					end
 					pg         = pg + 1

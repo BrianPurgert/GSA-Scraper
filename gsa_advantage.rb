@@ -45,7 +45,6 @@ def search_url(mfr_href_name, current_lowest_price,page_number=1)
 	url = url + "&c=100"
 	url = url + "&s=9" # sort by price high to how
 	url = url + "&p=#{page_number}"
-	puts "#{url}".colorize(String.colors.sample)
 	return url
 end
 
@@ -103,12 +102,14 @@ def safety_first(browser)
 end
 
 def initialize_browser(n = 0,total=1)
+	p Dev_mode
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
 		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
-		browser       = Watir::Browser.new :chrome, switches: ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		Dev_mode ? switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		browser       = Watir::Browser.new :chrome, switches: switch
 		gsa_a = GsaAdvantagePage.new(browser)
 		gsa_a.goto
 

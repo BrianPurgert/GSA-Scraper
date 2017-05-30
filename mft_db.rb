@@ -6,10 +6,6 @@ require 'colorized_string'
           host:     "localhost",
           username: "mft_data",
           password: "GoV321CoN",
-          # reconnect: true,
-          # read_timeout: 20,
-          # write_timeout: 25,
-          # flags: Mysql2::Client::REMEMBER_OPTIONS | Mysql2::Client::MULTI_STATEMENTS,
           encoding: 'utf8',
           # connect_timeout: 25,
 

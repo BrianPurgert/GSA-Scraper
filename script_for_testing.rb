@@ -13,8 +13,13 @@
  # Selenium::WebDriver::Chrome.binary = chromedriver_path
 # C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
 
+# disable-infobars argument from ChromeOptions
+
 require 'watir'
-caps = Selenium::WebDriver::Remote::Capabilities.chrome(opts = {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
+# Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
+caps = Selenium::WebDriver::Remote::Capabilities.chrome(chrome_options: {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
+
+# caps = Selenium::WebDriver::Remote::Capabilities.chrome(opts = {binary: 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'})
 driver = Selenium::WebDriver.for :chrome, desired_capabilities: caps
 
 browser = Watir::Browser.new driver
