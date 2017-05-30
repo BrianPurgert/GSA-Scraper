@@ -1,0 +1,6 @@
+[ODBC]
+DRIVER=MySQL ODBC 5.3 Unicode Driver
+UID=mft_data
+PORT=3306
+DATABASE=mft_data
+SERVER=70.61.131.180
