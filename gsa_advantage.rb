@@ -16,7 +16,7 @@ IS_PROD           = TRUE
 Proxy_list        = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 Proxy_list1       = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
 Socks_list        = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
-Socks_port        = 61336;
+Socks_port        = 61336
 Catalog_hudson     = '//192.168.1.104/gsa_price/'
 
 
