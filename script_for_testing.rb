@@ -16,13 +16,20 @@
 # disable-infobars argument from ChromeOptions
 
 require 'watir'
+require 'socket'
+# p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
+# p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
+#   Socket.ip_address_list.each {|add| p add}
+
+
+
+
+exit
 Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
-
-
  browser = Watir::Browser.new :chrome
 browser.goto 'chrome://version/'
 # puts browser.text
-browser.goto 'https://brianpurgert.com/'
+browser.goto 'https://www.govconsvcs.com/'
 #main > article > div > ul:nth-child(2) > li
 
  	browser.divs(css: '*').each do |element|

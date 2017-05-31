@@ -1,17 +1,16 @@
-Execute statement: SET FOREIGN_KEY_CHECKS = 0
-- Creating schema mft_data...
-Execute statement: DROP SCHEMA IF EXISTS `mft_data`
-Execute statement:
+SET FOREIGN_KEY_CHECKS = 0;
+; DROP SCHEMA IF EXISTS `mft_data`;
 
-CREATE SCHEMA IF NOT EXISTS `mft_data`
-  - Creating table mft_data.control
-Execute statement:
+
+CREATE SCHEMA IF NOT EXISTS `mft_data`;
+
+
 CREATE TABLE IF NOT EXISTS `mft_data`.`control` (
   `stop` INT(11) NOT NULL)
   ENGINE = InnoDB
-  DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.lowest_price_contractor
-Execute statement:
+  DEFAULT CHARACTER SET = utf8;
+
+
 CREATE TABLE IF NOT EXISTS `mft_data`.`lowest_price_contractor` (
   `mpn` VARCHAR(255) NOT NULL,
   `manufacturer_name` VARCHAR(70) NULL DEFAULT NULL,
@@ -24,8 +23,7 @@ CREATE TABLE IF NOT EXISTS `mft_data`.`lowest_price_contractor` (
   UNIQUE INDEX `lowest_price_contractor_mpn_uindex` (`mpn` ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.mfr
-Execute statement:
+  - Creating table mft_data.mfr;
 CREATE TABLE IF NOT EXISTS `mft_data`.`mfr` (
   `name` VARCHAR(255) NOT NULL,
   `href_name` VARCHAR(255) NULL DEFAULT NULL,
@@ -38,8 +36,7 @@ CREATE TABLE IF NOT EXISTS `mft_data`.`mfr` (
   UNIQUE INDEX `manufacture_name_uindex` (`name` ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.mfr_part_blocks
-Execute statement:
+  - Creating table mft_data.mfr_part_blocks;
 CREATE TABLE IF NOT EXISTS `mft_data`.`mfr_part_blocks` (
   `href_search` VARCHAR(255) NOT NULL,
   `result_block` TEXT NOT NULL,
@@ -51,8 +48,7 @@ CREATE TABLE IF NOT EXISTS `mft_data`.`mfr_part_blocks` (
   UNIQUE INDEX `href_name` (`href_name` ASC))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.mfr_parts
-Execute statement:
+  - Creating table mft_data.mfr_parts;
 CREATE TABLE IF NOT EXISTS `mft_data`.`mfr_parts` (
   `mfr` VARCHAR(255) NOT NULL,
   `mpn` VARCHAR(40) NOT NULL,
@@ -66,8 +62,7 @@ CREATE TABLE IF NOT EXISTS `mft_data`.`mfr_parts` (
   PRIMARY KEY (`mfr`, `mpn`))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.page_mfr_list
-Execute statement:
+  - Creating table mft_data.page_mfr_list;
 CREATE TABLE IF NOT EXISTS `mft_data`.`page_mfr_list` (
   `list_for` CHAR(50) NOT NULL COMMENT 'letter or 0 for manufacturer list',
   `last_update` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -75,27 +70,23 @@ CREATE TABLE IF NOT EXISTS `mft_data`.`page_mfr_list` (
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
   COMMENT = 'table to save time stamps for updates on the manufacture lis' /* comment truncated */ /*t https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=A*/
-  - Creating table mft_data.queue
-Execute statement:
+  - Creating table mft_data.queue;
 CREATE TABLE IF NOT EXISTS `mft_data`.`queue` (
   `data` LONGTEXT NOT NULL,
   `type` INT(10) UNSIGNED NULL DEFAULT NULL,
   `created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
-  - Creating table mft_data.testuser
-Execute statement:
+  - Creating table mft_data.testuser;
 CREATE TABLE IF NOT EXISTS `mft_data`.`testuser` (
   `GCS_Lookup_Key` VARCHAR(255) NOT NULL,
   PRIMARY KEY (`GCS_Lookup_Key`))
   ENGINE = InnoDB
   DEFAULT CHARACTER SET = utf8
   Scripts for 8 tables, 0 views and 0 routines were executed for schema mft_data
-  - Executing postamble script...
-Execute statement: SET FOREIGN_KEY_CHECKS = 1
+  - Executing postamble script...; SET FOREIGN_KEY_CHECKS = 1
   - Schema created
   Creating target schema finished
-  Selecting tables to copy...
   Selecting tables to copy done
   Counting table rows to copy....
   wbcopytables.exe --count-only --passwords-from-stdin --mysql-source="mft_data@70.61.131.180:3306" --table-file=c:\users\brian\appdata\local\temp\tmpbj_bnn

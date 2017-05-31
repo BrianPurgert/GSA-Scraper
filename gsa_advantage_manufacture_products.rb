@@ -12,8 +12,8 @@ require 'open-uri'
 @mfr_queue  = Queue.new
 threads     = []
 
-Dev_mode ? n_total = 5 : n_total = 200    # Number of Manufactures to search
-Dev_mode ? n_thr = 2 : n_thr = 10          # Number of browsers to run
+Dev_mode ? n_total = 5 : n_total = 1200    # Number of Manufactures to search
+Dev_mode ? n_thr = 2 : n_thr = 15          # Number of browsers to run
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
@@ -85,7 +85,7 @@ def parse_results(html)
 		mfr = mfr_span.text.strip
 
 		if fssi
-			puts " -- GSA Global - #{mfr} #{mpn} #{name} #{href_name} #{desc} #{low_price} #{sources}"
+			# puts " -- GSA Global - #{mfr} #{mpn} #{name} #{href_name} #{desc} #{low_price} #{sources}"
 		end
 
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
@@ -165,7 +165,7 @@ n_thr.times do |n|
 					result_section = gsa_a[n].browser.div(id: 'main-alt')
 					parse_results(result_section.html)
 
-					results.each { |c| read_product(c) } if Dev_mode
+					# results.each { |c| read_product(c) } if Dev_mode
 					pg         = pg + 1
 					bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")

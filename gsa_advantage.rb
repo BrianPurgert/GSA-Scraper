@@ -11,12 +11,12 @@ require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 require_relative 'gsa_advantage_selectors'
 
-Dev_mode = false
-IS_PROD = TRUE
-Proxy_list = YAML::load_file(File.join(__dir__, 'proxy.yml'))
-Socks_list = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
-Socks_port = 61336;
-
+Dev_mode          = false
+IS_PROD           = TRUE
+Proxy_list        = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list1       = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
+Socks_list        = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
+Socks_port        = 61336;
 Catalog_hudson     = '//192.168.1.104/gsa_price/'
 
 
