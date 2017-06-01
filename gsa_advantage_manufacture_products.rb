@@ -12,7 +12,7 @@ require 'open-uri'
 @mfr_queue  = Queue.new
 threads     = []
 
-Dev_mode ? n_total = 5 : n_total = 1200    # Number of Manufactures to search
+Dev_mode ? n_total = 5 : n_total = 15    # Number of Manufactures to search
 Dev_mode ? n_thr = 2 : n_thr = 15          # Number of browsers to run
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}

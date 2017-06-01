@@ -20,8 +20,8 @@ N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
 # Basedir_input  = 'a:/input/'
-Basedir_input      = '//192.168.1.104/gsa_price/input/'
-Basedir_output     = '//192.168.1.104/gsa_price/output/'
+Basedir_input      = './general helper file/Input-Files/'
+Basedir_output     = './general helper file/Input-Files/'
 Files_input        = Dir.glob(Basedir_input+"*.xls")
 Files_output       = Dir.glob(Basedir_output+"*.xls")
 Current_time       = Time.new
@@ -45,12 +45,12 @@ def skip(search_item) @data_out[search_item] = ['SKIPPED', 'SKIPPED', 'SKIPPED',
 puts "skipping MFT PN: #{search_item}".colorize(:red)
 end
 
-def benchmark
-     Bench_time << Time.now
-     elapsed       = Bench_time[-1] - Bench_time[-2]
-     total_elapsed = Bench_time[-1] - Bench_time[0]
-     print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
-end
+# def benchmark
+#      Bench_time << Time.now
+#      elapsed       = Bench_time[-1] - Bench_time[-2]
+#      total_elapsed = Bench_time[-1] - Bench_time[0]
+#      print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
+# end
 
 def search_url(mpn, mft) return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
 end

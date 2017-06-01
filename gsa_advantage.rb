@@ -95,13 +95,8 @@ def split_screen(browser,split,pos_h,pos_v)
 end
 
 def safety_first(browser)
-	# TODO check for infinite loop
-	# TODO check other stuff
-	browser.after_hooks.add do |browser|
-		browser.text.include?("Server Error") and puts "Application exception or 500 error!"
-	end
-	browser.goto "watir.github.io/404"
-	"Application exception or 500 error!"
+
+
 end
 
 def initialize_browser(n = 0,total=1)
@@ -128,7 +123,7 @@ end
 def save_page(html, url, file_name="")
 	html = HtmlBeautifier.beautify(html)
 	short_url = ''
-	#TODO change file saving to ftp
+
 	if url.include? 'search.do'
 		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
 		pt_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"

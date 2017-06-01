@@ -20,7 +20,7 @@ require 'colorized_string'
 	# port: 3306, sslca:{ca-cert filename}, sslverify:false, sslcipher:'AES256-SHA')
 
 
-	#TODO compare last item_count to current
+	#TODO Save searched urls to database
 	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
 	def insert_mfr(name,href_name,item_count=1)
 		# puts "#{name} | #{href_name} | #{item_count}"
