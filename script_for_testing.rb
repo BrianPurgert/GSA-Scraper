@@ -21,17 +21,27 @@ require 'socket'
 # p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
 #   Socket.ip_address_list.each {|add| p add}
 
+# Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
+
+require 'watir'
+browser = Watir::Browser.start 'chrome://version/',:chrome
+browser.goto 'https://www.gsaadvantage.gov/'
+puts browser.cookies.to_a.inspect
+browser.cookies.save                            # '.cookies' is default
+browser.close
+browser = Watir::Browser.start 'https://www.gsaadvantage.gov/',:chrome
+puts "\n----\n#{browser.cookies.to_a.inspect}\n----\n"
+browser.cookies.clear
+browser.cookies.load
+puts browser.cookies.to_a.inspect
+
+
+browser.goto 'https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1'
 
 
 
+sleep 5
 exit
-Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
- browser = Watir::Browser.new :chrome
-browser.goto 'chrome://version/'
-# puts browser.text
-browser.goto 'https://www.govconsvcs.com/'
-#main > article > div > ul:nth-child(2) > li
-
  	browser.divs(css: '*').each do |element|
  		p "#{element.inspect}:\t#{element.text}"
 	      # element.flash(color: "green",  outline: TRUE )
