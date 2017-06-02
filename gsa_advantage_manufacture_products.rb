@@ -12,8 +12,8 @@ require 'open-uri'
 @mfr_queue  = Queue.new
 threads     = []
 
-Dev_mode ? n_total = 5 : n_total = 15    # Number of Manufactures to search
-Dev_mode ? n_thr = 2 : n_thr = 15          # Number of browsers to run
+Dev_mode ? n_total = 10 : n_total = 10    # Number of Manufactures to search
+Dev_mode ? n_thr = 10 : n_thr = 10          # Number of browsers to run
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
