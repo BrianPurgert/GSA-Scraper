@@ -21,7 +21,6 @@ require 'socket'
 # p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
 #   Socket.ip_address_list.each {|add| p add}
 
-# Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
 
 require 'watir'
 browser = Watir::Browser.start 'chrome://version/',:chrome
@@ -36,12 +35,25 @@ browser.cookies.load
 puts browser.cookies.to_a.inspect
 
 
-browser.goto 'https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1'
+# Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
+#  browser = Watir::Browser.new :chrome
+browser = Watir::Browser.new :chrome
+browser.goto 'chrome://version/'
+# puts browser.text
+
+tab1 = browser.driver.execute_script("window.open('www');")
+tab2 = browser.driver.execute_script("window.open('');")
+tab3 = browser.driver.execute_script("window.open('');")
+tab4 = browser.driver.execute_script("window.open('');")
+		browser.driver.switchTo.window(tab3)
+		browser.driver.switchTo.window(tab1)
+browser.driver.execute_script("window.open('https://www.google.com');")
 
 
+sleep 10
+browser.goto 'https://www.govconsvcs.com/'
+#main > article > div > ul:nth-child(2) > li
 
-sleep 5
-exit
  	browser.divs(css: '*').each do |element|
  		p "#{element.inspect}:\t#{element.text}"
 	      # element.flash(color: "green",  outline: TRUE )
@@ -55,26 +67,9 @@ exit
 
 sleep 100
 
-#,switches:%w(headless disable-gpu)
-
-
-sleep 10
 exit
 
-# chrome_canary = Selenium::WebDriver::Remote::Capabilities.chrome(chromeOptions: {binary: 'C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe'})
-
-# driver = Selenium::WebDriver.for desired_capabilities: caps
-
- # Watir::Selenium::Driver.new( :browser => :chrome,  :desired_capabilities => caps)
-
-
-
-
-# --headless --disable-gpu --remote-debugging-port=9222
-#           Canary Location
-# ,binary: [canary]
-
-
+#
 
 # mycanary = "C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe"
 # browser = Watir::Browser.start('https://www.reddit.com/',:chrome , switches:%w(headless disable-gpu))
@@ -84,14 +79,6 @@ exit
 # 	end
 
 
-
-# prefs = {
-# download: {
-# prompt_for_download: false,
-# default_directory: '/path/to/dir'
-# }
-# }
-# b = Watir::Browser.new :chrome, prefs: prefs
 #
 # ChromeOptions options = new ChromeOptions();
 # options.addArguments("user-data-dir=/path/to/your/custom/profile");
@@ -100,19 +87,6 @@ exit
 # options.setBinary("/path/to/other/chrome/binary");
 
 # options.setBinary("C:\\Users\\u0125202\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe")
-
-
-
-
-
-#wikiArticle > dl:nth-child(n) > dt:nth-child(1) > a
-
-
-
-
-
-
-
 
 #
 # def split(b,n,total)

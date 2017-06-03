@@ -130,7 +130,7 @@ require 'colorized_string'
 	def get_mfr_part(amount = 1)
 		row_list = []
 	
-		result = @client.query("SELECT * FROM `mft_data`.`mfr_parts` WHERE status_id=0 ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true)
+		result = @client.query("SELECT * FROM `mft_data`.`mfr_parts` ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true)
 		result.each do |row|
 			row_list << row
 		end

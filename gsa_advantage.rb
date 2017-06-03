@@ -3,21 +3,25 @@ require 'colorize'
 require 'colorized_string'
 require 'htmlbeautifier'
 require 'in_threads'
+require 'nokogiri'
+require 'open-uri'
 require 'page-object'
 require 'page-object/page_factory'
+require 'rubygems'
 require 'watir'
 require 'yaml'
+require_relative 'gsa_advantage_selectors'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
-require_relative 'gsa_advantage_selectors'
 
-Dev_mode          = false
-IS_PROD           = TRUE
+Dev_mode          = FALSE
+IS_PROD           = TRUE  # Check out items if true
 Proxy_list        = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 Proxy_list1       = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
 Socks_list        = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
 Socks_port        = 61336
-Catalog_hudson     = '//192.168.1.104/gsa_price/'
+Catalog_hudson    = '//192.168.1.104/gsa_price/'
+RX_mfr            = /(?<=\q=28:5).*/                                          # Regex selects manufacture name after link
 
 
 
@@ -33,20 +37,18 @@ end
 
 def bp(arr_str,length = [80,80,80,80,80,80,80])
 	out_str = ""
-	# length = 230/arr_str.size
 	arr_str.each_with_index do |str, i|
 		out_str += "|\t#{(str + ' ' * length[i])[0, length[i]]} |".colorize(String.colors[i])
 	end
-
 	puts out_str
 end
 
-def search_url(mfr_href_name, current_lowest_price,page_number=1)
+def search_url(mfr_href_name, current_lowest_price,page_number=1,high_low=true)
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
 	url = url + "q=28:5#{mfr_href_name}"
-	url = url + "&q=14:7#{current_lowest_price}"# show price lower than current_lowest_price
+	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
 	url = url + "&c=100"
-	url = url + "&s=9" # sort by price high to how
+	url = url + (high_low ? "&s=9" : "&s=6")                      # if true sorts by price high to how
 	url = url + "&p=#{page_number}"
 	return url
 end
@@ -71,14 +73,6 @@ def split(browser, n, total_browsers)
 	browser.window.resize_to(x_part_size, avail_height*0.75)
 end
 
-def split_h(browser, n, total_browsers)
-	p avail_height = browser.execute_script("return screen.availHeight")
-	p avail_width = browser.execute_script("return screen.availWidth")
-	y_part_size = avail_height/total_browsers
-	browser.window.move_to(0, y_part_size*n)
-	browser.window.resize_to(avail_width, y_part_size)
-end
-
 def move_to_screen(browser,screen_n)
 	gsm=Fiddle::Function.new(Fiddle::dlopen("user32")["GetSystemMetrics"],[Fiddle::TYPE_LONG],Fiddle::TYPE_LONG)
 	x= gsm.call(0)
@@ -94,13 +88,9 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
-def safety_first(browser)
 
-
-end
-
-def initialize_browser(n = 0,total=1)
-	p Dev_mode
+def initialize_browser
+		p Dev_mode ? "Running in dev mode" : "Running in production mode"
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
@@ -117,7 +107,6 @@ def initialize_browser(n = 0,total=1)
 		end
 		return gsa_a
 end
-
 
 
 def save_page(html, url, file_name="")

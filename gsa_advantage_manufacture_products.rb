@@ -1,19 +1,17 @@
 require_relative 'gsa_advantage'
-require 'rubygems'
-require 'nokogiri'
-require 'open-uri'
 
 
 
-1.times do
+
+3.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
 
-Dev_mode ? n_total = 10 : n_total = 10    # Number of Manufactures to search
-Dev_mode ? n_thr = 10 : n_thr = 10          # Number of browsers to run
+Dev_mode ? n_total = 1 : n_total = 5      # Number of Manufactures to search
+Dev_mode ? n_thr = 1 : n_thr = 5          # Number of browsers to run
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []

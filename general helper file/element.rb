@@ -7,6 +7,7 @@
     def checkmark
           driver.execute_script("arguments[0].before('-')", @element)
           driver.execute_script("arguments[0].after('-')", @element)
+
           driver.execute_script("arguments[0].append('-')", @element)
           driver.execute_script("arguments[0].prepend('-')", @element)
             self
