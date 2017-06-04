@@ -7,8 +7,6 @@ require 'colorized_string'
           username: "mft_data",
           password: "GoV321CoN",
           encoding: 'utf8',
-          # connect_timeout: 25,
-
      )
 # cast: false
 	# mft_data2 uMm1ShoJIMeoVI2q
@@ -20,22 +18,14 @@ require 'colorized_string'
 	# port: 3306, sslca:{ca-cert filename}, sslverify:false, sslcipher:'AES256-SHA')
 
 
-	#TODO Save searched urls to database
-	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-	def insert_mfr(name,href_name,item_count=1)
-		# puts "#{name} | #{href_name} | #{item_count}"
-		@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
-	end
-
-	def insert_mfrs(mfrs)
-		insert_string = 'REPLACE INTO mft_data.mfr (name, href_name, item_count)
-				         VALUES'
-		mfrs.each_with_index do |mfr, i|
-			insert_string += ',' if i > 0
-			insert_string +=   "('#{@client.escape(mfr[0])}','#{@client.escape(mfr[1])}','#{@client.escape(mfr[2])}')\n"
+	def take(queue)
+		[].tap do |array|
+			i = 0
+			until queue.empty? || i == 1000
+				array << queue.pop
+				i += 1
+			end
 		end
-		puts insert_string.colorize(:green)
-		@client.query("#{insert_string}")
 	end
 
 	@mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
@@ -44,11 +34,30 @@ require 'colorized_string'
 		puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
 	end
 
+
+	#TODO Save searched urls to database
+	@insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
+	def insert_mfr(name,href_name,item_count=1)
+		# puts "#{name} | #{href_name} | #{item_count}"
+		@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
+	end
+
+	def insert_manufactures(mfrs)
+		insert_string = 'REPLACE INTO mft_data.mfr(name, href_name, item_count)
+				         VALUES'
+		mfrs.each_with_index do |mfr, i|
+			insert_string += ',' if i > 0
+			insert_string +=   "('#{@client.escape(mfr[0])}','#{@client.escape(mfr[1])}','#{mfr[2]}')\n"
+		end
+		# puts insert_string.colorize(:green)
+		@client.query("#{insert_string}", cast: false)
+	end
+
 	@insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
 	def insert_mfr_part(part)
             @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
 		# puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
-     end
+            end
 
 	def insert_mfr_parts(mfr_parts_data)
           insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources)

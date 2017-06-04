@@ -2,9 +2,9 @@
 # require 'nokogiri'
 # require 'rubygems'
 # require 'thread'
-
+require 'socket'
 # require_relative 'gsa_advantage'
-# require_relative 'gsa_advantage_selectors'
+require_relative 'adv_constants'
 # require_relative 'pages/gsa_advantage_page'
 
 	 # p Select::FSSI
@@ -14,9 +14,19 @@
 # C:\Program Files (x86)\Google\Chrome\Application\chrome.exe
 
 # disable-infobars argument from ChromeOptions
+ADV::Pages.each_value do |page|
+	p page
+end
+letters = ("A".."Z").to_a << '0'
+p letters
+letters.each do |letter|
+	ADV::Categories.each do |category|
+		"https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4#{category}*&listFor=#{letter}"
+	end
+end
 
-require 'watir'
-require 'socket'
+
+p
 # p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
 # p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
 #   Socket.ip_address_list.each {|add| p add}
@@ -40,24 +50,30 @@ puts browser.cookies.to_a.inspect
 browser = Watir::Browser.new :chrome
 browser.goto 'chrome://version/'
 # puts browser.text
+window = []
 
-tab1 = browser.driver.execute_script("window.open('www');")
-tab2 = browser.driver.execute_script("window.open('');")
-tab3 = browser.driver.execute_script("window.open('');")
-tab4 = browser.driver.execute_script("window.open('');")
-		browser.driver.switchTo.window(tab3)
-		browser.driver.switchTo.window(tab1)
+window[0] = new browser.window(browser.driver,index: 0)
+
+p browser.driver.execute_script("window.open('https://govconsvcs.com/');")
+p browser.driver.execute_script("window.open('https://www.reddit.com/r/HighQualityGifs/');")
+browser.driver.execute_script("window.open('https://govconsvcs.com/gsa-schedule/what-is-a-gsa-schedule/');")
+browser.driver.execute_script("window.open('https://govconsvcs.com/');")
+
+
+
+
+p browser.windows.inspect
+		# browser.driver.switchTo.window(tab1)
 browser.driver.execute_script("window.open('https://www.google.com');")
 
 
-sleep 10
 browser.goto 'https://www.govconsvcs.com/'
 #main > article > div > ul:nth-child(2) > li
 
  	browser.divs(css: '*').each do |element|
  		p "#{element.inspect}:\t#{element.text}"
 	      # element.flash(color: "green",  outline: TRUE )
-	      element.flash color:'red'
+	      element.flash
 	      browser.execute_script "arguments[0].style.borderRadius = '25px';
 							arguments[0].style.margin = '10px 10px 10px 10px';
 							arguments[0].style.padding = '10px 10px 10px 10px';
@@ -65,7 +81,6 @@ browser.goto 'https://www.govconsvcs.com/'
 							arguments[0].appendChild(document.createTextNode(arguments[0]));", element,element.inspect
  	end
 
-sleep 100
 
 exit
 

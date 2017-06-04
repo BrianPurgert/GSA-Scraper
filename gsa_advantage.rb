@@ -10,7 +10,7 @@ require 'page-object/page_factory'
 require 'rubygems'
 require 'watir'
 require 'yaml'
-require_relative 'gsa_advantage_selectors'
+require_relative 'adv_constants'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
@@ -128,7 +128,6 @@ def save_page(html, url, file_name="")
 		ph = "R:/catalog/"+"#{short_url}"+".html"
 		pt = "R:/catalog/"+"#{short_url}"+".txt"
 	end
-
 	open(ph_h, 'w') { |f| f.puts html }
 	return short_url
 end

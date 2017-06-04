@@ -1,8 +1,6 @@
 require_relative 'gsa_advantage'
 
 
-
-
 3.times do
 @reading    = 0
 @items      = 0
@@ -16,15 +14,7 @@ Dev_mode ? n_thr = 1 : n_thr = 5          # Number of browsers to run
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 gsa_a     = []
 
-def take(queue)
-	[].tap do |array|
-		i = 0
-		until queue.empty? || i == 1000
-			array << queue.pop
-			i += 1
-		end
-	end
-end
+
 
 threads << Thread.new do
 	while @reading < 10 do

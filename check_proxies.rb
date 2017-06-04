@@ -6,7 +6,6 @@ require_relative 'pages/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
-require 'monetize'
 require 'yaml'
 require 'in_threads'
 

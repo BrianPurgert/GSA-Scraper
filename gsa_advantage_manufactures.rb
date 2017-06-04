@@ -3,7 +3,7 @@ require_relative 'gsa_advantage'
 
 threads     = []
 gsa_a       = []
-config      = [27]
+config      = [6]
 @queue      = Queue.new
 @reading    = 0
 
@@ -14,21 +14,15 @@ letters = get_mfr_list(config[0])
 threads << Thread.new do
 	while @reading < 10 do
 		until @queue.empty?
-			next_object = @queue.shift
-			insert_mfr(next_object[0],next_object[1],next_object[2])
+			insert_manufactures(take(@queue))
 			@reading = 0
 		end
 		@reading += 1
-		sleep 10
+		color_p "End in: #{10-@reading}\t Queued: #{@queue.length} ", 7 if @reading > 5
+		sleep 3
 	end
-	letters.each {|l| set_mfr_list_time(l)}
+
 end
-
-#	gsa_a[n].browser.driver.execute_script("window.open(arguments[0]);",search_url(mfr_href, n_low,2))
-#	p gsa_a[n].browser.window(index: 0) == browser.window(index: 1)
-#inspect ⇒ Object
-#use(&blk) ⇒ Object
-
 
 def parse_mfr_list(html)
 	list = Nokogiri::HTML.fragment(html)
@@ -39,8 +33,8 @@ def parse_mfr_list(html)
 		href_mfr = RX_mfr.match(mfr_link['href'])
 		n_products = item.css(".gray8pt").text.strip.delete('()')
 
-		bp ["#{name_mfr}","#{href_mfr}","#{n_products}"]
-		@queue << [name_mfr,href_mfr,n_products]
+		# bp ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],[40,40,5,6]
+		@queue << [name_mfr.to_s,href_mfr.to_s,n_products.to_i]
 	end
 end
 
@@ -54,7 +48,6 @@ def test_mfr_list(gsa_a)
 		e_products.flash
 		n_products = e_products.text
 		n_products = n_products.delete('()')
-		bp ["#{name_mfr}","#{href_mfr}","#{n_products}"]
 		@queue << [name_mfr,href_mfr,n_products]
 	end
 end
@@ -73,20 +66,25 @@ def use_tab(browser,i)
 end
 
 
+# letters = ("A".."Z").to_a << '0'
+# p letters
+# letters.each do |letter|
+#
+# end
+
 
 letters.each_with_index do |letter, i|
-	threads << Thread.new {
-	gsa_a[i] = initialize_browser
-	#contractors_list = "https://www.gsaadvantage.gov/advantage/s/vnd.do?q=1:4*&q=28:5KUBOTA&listFor=All"
-	                  #    "https://www.gsaadvantage.gov/advantage/s/vnd.do?q=1:4*&listFor=#{letter}"
-	gsa_a[i].browser.goto "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4*&listFor=#{letter}"
-	parse_mfr_list(gsa_a[i].mft_table_element.html)
-	# test_mfr_list(gsa_a[i])
-
-
-
-	}
+	threads << Thread.new do
+		gsa_a[i] = initialize_browser
+		ADV::Categories.each do |category|
+			url = "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4#{category}*&listFor=#{letter}"
+			gsa_a[i].browser.goto url
+			p "#{gsa_a[i].browser.title} | #{gsa_a[i].browser.url}"
+			parse_mfr_list(gsa_a[i].mft_table_element.html)
+		end
+	end
 end
+
 # gsa_a.browser.driver.window_handles.each { |handle| gsa_a.browser.driver.switch_to.window(handle) }
 #gsa_a.browser.driver.window_handles.each_index  do |i|
 #	p i
@@ -96,7 +94,7 @@ end
 # parse_mfr_list(gsa_a.mft_table_element.html)
 #end
 threads.each { |thr| thr.join }
-#  next step load the parts
+letters.each {|l| set_mfr_list_time(l)}
 # "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
 
 
