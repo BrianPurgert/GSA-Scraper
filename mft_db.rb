@@ -183,7 +183,7 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 	end
 
       def get_mfr(amount = 1)
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY item_count DESC LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          print row
 	          check_out(row[:name]) if IS_PROD

@@ -1,7 +1,7 @@
 require_relative 'gsa_advantage'
 
 
-1.times do
+5.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
@@ -9,7 +9,7 @@ require_relative 'gsa_advantage'
 threads     = []
 
 #----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 1        : n_total = 500          # Number of Manufactures to search
+Dev_mode ? n_total = 1        : n_total = 100          # Number of Manufactures to search
 Dev_mode ? n_thr = 1          : n_thr = 10             # Number of browsers to run
 gsa_a     = []
 
@@ -74,7 +74,7 @@ def parse_results(html)
 	 end
 end
 
-# Watir Product Parser
+# Slow Product Parser
 def read_product(container)
 	 container.flash
 		product = container.link(css:"a.arial[href*='product_detail.do?gsin']") # Product Element
