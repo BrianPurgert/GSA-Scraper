@@ -1,7 +1,7 @@
 require_relative 'gsa_advantage'
 
 
-5.times do
+1.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new

@@ -4,9 +4,9 @@ require 'colorized_string'
 require 'sequel'
 
 
-@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
+@client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 
-DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
+DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
@@ -40,7 +40,7 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 		primary key (mfr, mpn)
 	);"
 
-	DB.run "CREATE TABLE IF NOT EXISTS manufactures
+	DB.run "CREATE TABLE IF NOT EXISTS mfr
 	(
 		name varchar(255) not null
 			primary key,
@@ -50,6 +50,7 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 		item_count int(10) unsigned null,
 		`change` int(10) default '0' not null,
 		check_out bit default b'0' not null,
+		last_low_price float default '90000000' null,
 		constraint manufacture_name_uindex
 			unique (name)
 	);"
