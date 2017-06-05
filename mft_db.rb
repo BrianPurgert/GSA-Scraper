@@ -4,9 +4,9 @@ require 'colorized_string'
 require 'sequel'
 
 
-@client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
+@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 
-DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
+DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
