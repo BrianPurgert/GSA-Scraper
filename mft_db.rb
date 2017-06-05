@@ -4,37 +4,70 @@ require 'colorized_string'
 require 'sequel'
 
 
+@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 
-@client = Mysql2::Client.new(
-host:     "localhost",
-username: "mft_data",
-password: "GoV321CoN",
-encoding: 'utf8',
-)
+DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 
-DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
+	# ------------------------------------------------------------------ #
+	#     Create Tables if they need to be
+	# ------------------------------------------------------------------ #
 
-middle_east = DB[:mfr].where(:region => 'Middle East')
-middle_east.order(:name).each{|r| puts r[:name]}
+	DB.run "CREATE TABLE IF NOT EXISTS vendors
+	(
+		name varchar(255) not null
+			primary key,
+		href_name varchar(255) null,
+		last_updated datetime default CURRENT_TIMESTAMP not null,
+		last_search datetime default CURRENT_TIMESTAMP not null,
+		item_count int(10) unsigned null,
+		`change` int(10) default '0' not null,
+		check_out bit default b'0' not null,
+		constraint manufacture_name_uindex
+			unique (name)
+	);"
 
-DB.fetch("SELECT name FROM users") do |row|
-	p row[:name]
-end
+	DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
+	(
+		mfr varchar(255) not null,
+		mpn varchar(40) not null,
+		name varchar(255) null,
+		href_name varchar(255) null,
+		low_price varchar(255) null,
+		`desc` text null,
+		last_updated datetime default CURRENT_TIMESTAMP not null,
+		status_id tinyint default '0' not null,
+		sources int(10) null,
+		primary key (mfr, mpn)
+	);"
 
-dataset = DB[:items]
-dataset = DB.from(:items)
+	DB.run "CREATE TABLE IF NOT EXISTS manufactures
+	(
+		name varchar(255) not null
+			primary key,
+		href_name varchar(255) null,
+		last_updated datetime default CURRENT_TIMESTAMP not null,
+		last_search datetime default CURRENT_TIMESTAMP not null,
+		item_count int(10) unsigned null,
+		`change` int(10) default '0' not null,
+		check_out bit default b'0' not null,
+		constraint manufacture_name_uindex
+			unique (name)
+	);"
+	
+	DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
+	(
+		list_for char(50) not null
+			primary key,
+		last_update timestamp default CURRENT_TIMESTAMP not null
+	);"
 
 
-# cast: false
-	# mft_data2 uMm1ShoJIMeoVI2q
-	# Azure = Mysql2::Client.new(
-	# username: "BrianPurgert@gcs-data",
-	# password: {your_password},
-	# database: {your_database},
-	# host: "gcs-data.mysql.database.azure.com",
-	# port: 3306, sslca:{ca-cert filename}, sslverify:false, sslcipher:'AES256-SHA')
-
-
+	# puts DB.schema(:mfr_parts)
+	manufacture_parts = DB[:mfr_parts]
+	manufacture       = DB[:mfr]
+	puts "Manufacture Parts count: #{manufacture_parts.count} Average Price: #{manufacture_parts.avg(:low_price)}"
+	puts "Manufacture count: #{manufacture.count}"
+	
 	def take(queue)
 		[].tap do |array|
 			i = 0
@@ -44,6 +77,10 @@ dataset = DB.from(:items)
 			end
 		end
 	end
+
+	# --------------------------------------------------------------------------------------------------------------- #
+	# Everything below this line needs to be converted to use the Sequel Gem
+	# ---------------------------------------------------------------------------------------------------------------#
 
 	@mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
 	def set_mfr_list_time(letter)
@@ -87,33 +124,37 @@ dataset = DB.from(:items)
           @client.query("#{insert_string}", cast: false)
      end
 
+	
 	def insert_result_block(mfr_parts_data)
-          insert_string = 'REPLACE INTO mft_data.mfr_part_blocks (href_search, result_block, href_name)
-			         VALUES'
-          mfr_parts_data.each_with_index do |mfr_part, i|
-               insert_string += ',' if i > 0
-               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}')\n"
-          end
-          puts insert_string.colorize(:green)
-          @client.query("#{insert_string}")
-     end
-
-      def mfr_time(name)
-	     escaped = @client.escape("#{name}")
-	     insert_string = "UPDATE mft_data.mfr SET last_search=NOW() WHERE name='#{escaped}'"
-          puts insert_string.colorize(:green)
-          @client.query("#{insert_string}")
-     end
-
+		insert_string = 'REPLACE INTO mft_data.mfr_part_blocks (href_search, result_block, href_name)
+				         VALUES'
+		mfr_parts_data.each_with_index do |mfr_part, i|
+			insert_string += ',' if i > 0
+			insert_string += "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}')\n"
+		end
+		puts insert_string.colorize(:green)
+		@client.query("#{insert_string}")
+	end
+	
+	
+	def mfr_time(name)
+		escaped       = @client.escape("#{name}")
+		insert_string = "UPDATE mft_data.mfr SET last_search=NOW() WHERE name='#{escaped}'"
+		puts insert_string.colorize(:green)
+		@client.query("#{insert_string}")
+	end
+	
+	
 	def safe_stop
- @client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
-	 if row[:stop].to_i == 1
-		 puts "Safe Stop value from database = 1".colorize(:green)
-		 ColorizedString.colors.each {|c| print "||".colorize(c)}
-		 exit
-	 end
- end
- end
+		@client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
+			if row[:stop].to_i == 1
+				puts "Safe Stop value from database = 1".colorize(:green)
+				ColorizedString.colors.each { |c| print "||".colorize(c) }
+				exit
+			end
+		end
+	end
+
 
 	def check_out(name)
 		safe_stop
@@ -142,8 +183,7 @@ dataset = DB.from(:items)
 	end
 
       def get_mfr(amount = 1)
-          # row_list = []
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY item_count LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY last_search LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          print row
 	          check_out(row[:name]) if IS_PROD

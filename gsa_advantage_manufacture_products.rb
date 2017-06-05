@@ -1,18 +1,20 @@
 require_relative 'gsa_advantage'
 
 
-3.times do
+1.times do
 @reading    = 0
 @items      = 0
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
 
-Dev_mode ? n_total = 1 : n_total = 5      # Number of Manufactures to search
-Dev_mode ? n_thr = 1 : n_thr = 5          # Number of browsers to run
+#----------Normal-----------------Headless-------------#
+Dev_mode ? n_total = 1        : n_total = 500          # Number of Manufactures to search
+Dev_mode ? n_thr = 1          : n_thr = 10             # Number of browsers to run
+gsa_a     = []
+
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
-gsa_a     = []
 
 
 
@@ -43,25 +45,22 @@ def get_parent(mpn, mfr)
 end
 
 
-# Nokogiri Product Parser
+# Fast Product Parser
 def parse_results(html)
 	 main_alt = Nokogiri::HTML.fragment(html)
 	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
 	 product_tables.each_with_index do |product_table, i|
 		fssi = product_table.text.include? "GSA Global"
-		 # Sources
-		 # TODO separate function for GSA Global Supply
 		 if fssi
 			 sources = '1'
 		 else
 			 n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
 			 sources = n_source.text.gsub(/[^0-9]/, '')
 		 end
-
 		product = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
 		name = product.text.strip
 		href_name = product['href']
-		# manufacture part number 70006459310
+		# manufacture part number
 		mpn = product_table.css("tbody tr > td font.black8pt").text.strip
 		# short description
 		desc = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td').text.strip
@@ -71,11 +70,6 @@ def parse_results(html)
 		# Mfr
 		mfr_span = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
 		mfr = mfr_span.text.strip
-
-		if fssi
-			# puts " -- GSA Global - #{mfr} #{mpn} #{name} #{href_name} #{desc} #{low_price} #{sources}"
-		end
-
 		@db_queue << [mfr, mpn, name, href_name, desc, low_price, sources]
 	 end
 end
@@ -158,8 +152,6 @@ n_thr.times do |n|
 					bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
 					# save_page(html, gsa_a[n].browser.url, "#{mfr_href}-#{pg}")
 				end
-
-
 		end while n_results > 99
 		
 	end

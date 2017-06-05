@@ -1,7 +1,4 @@
-# require 'mysql2'
-# require 'nokogiri'
-# require 'rubygems'
-# require 'thread'
+
 require 'socket'
 # require_relative 'gsa_advantage'
 require_relative 'adv_constants'
