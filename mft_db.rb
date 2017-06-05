@@ -1,13 +1,30 @@
 require 'mysql2'
 require 'colorize'
 require 'colorized_string'
+require 'sequel'
 
-     @client = Mysql2::Client.new(
-          host:     "localhost",
-          username: "mft_data",
-          password: "GoV321CoN",
-          encoding: 'utf8',
-     )
+
+
+@client = Mysql2::Client.new(
+host:     "localhost",
+username: "mft_data",
+password: "GoV321CoN",
+encoding: 'utf8',
+)
+
+DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
+
+middle_east = DB[:mfr].where(:region => 'Middle East')
+middle_east.order(:name).each{|r| puts r[:name]}
+
+DB.fetch("SELECT name FROM users") do |row|
+	p row[:name]
+end
+
+dataset = DB[:items]
+dataset = DB.from(:items)
+
+
 # cast: false
 	# mft_data2 uMm1ShoJIMeoVI2q
 	# Azure = Mysql2::Client.new(

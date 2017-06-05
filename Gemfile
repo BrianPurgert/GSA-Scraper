@@ -10,5 +10,5 @@ gem 'page-object', '~> 2.1', '>= 2.1.1'
 gem 'rake', '~> 12.0'
 gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
 gem 'watir', '~> 6.2', '>= 6.2.1'
-
+gem 'sequel'
 # gem 'watir', github: 'brianpurgert2/watir'
