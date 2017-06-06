@@ -9,8 +9,8 @@ require_relative 'gsa_advantage'
 threads     = []
 
 #----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 1        : n_total = 100          # Number of Manufactures to search
-Dev_mode ? n_thr = 1          : n_thr = 10             # Number of browsers to run
+Dev_mode ? n_total = 1        : n_total = 5          # Number of Manufactures to search
+Dev_mode ? n_thr = 1          : n_thr = 5             # Number of browsers to run
 gsa_a     = []
 
 

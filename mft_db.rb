@@ -4,15 +4,15 @@ require 'colorized_string'
 require 'sequel'
 
 
-@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
+@client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 
-DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
+@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
 
-	DB.run "CREATE TABLE IF NOT EXISTS vendors
+	@DB.run "CREATE TABLE IF NOT EXISTS vendors
 	(
 		name varchar(255) not null
 			primary key,
@@ -26,7 +26,7 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 			unique (name)
 	);"
 
-	DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
+	@DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
 	(
 		mfr varchar(255) not null,
 		mpn varchar(40) not null,
@@ -40,7 +40,7 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 		primary key (mfr, mpn)
 	);"
 
-	DB.run "CREATE TABLE IF NOT EXISTS mfr
+	@DB.run "CREATE TABLE IF NOT EXISTS mfr
 	(
 		name varchar(255) not null
 			primary key,
@@ -55,28 +55,41 @@ DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 			unique (name)
 	);"
 	
-	DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
+	@DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
 	(
 		list_for char(50) not null
 			primary key,
 		last_update timestamp default CURRENT_TIMESTAMP not null
 	);"
 
+	@DB.create_table? :searches do
+		primary_key :id
+		String      :title
+		String      :url
+		Integer     :found
+	end
+
+	def searched(title,url,found)
+		items = @DB[:searches]
+		items.insert(title: title,url: url,found: found)
+	end
+
 
 	# puts DB.schema(:mfr_parts)
-	manufacture_parts = DB[:mfr_parts]
-	manufacture       = DB[:mfr]
-	puts "Manufacture Parts count: #{manufacture_parts.count} Average Price: #{manufacture_parts.avg(:low_price)}"
-	puts "Manufacture count: #{manufacture.count}"
-	
+	def display_statistics
+		@manufacture_parts = @DB[:mfr_parts]
+		@manufacture       = @DB[:mfr]
+		puts "Manufacture Parts count: #{@manufacture_parts.count} Average Price: #{@manufacture_parts.avg(:low_price)}"
+		puts "Manufacture count: #{@manufacture.count}"
+	end
+
 	def take(queue)
-		[].tap do |array|
-			i = 0
+		[].tap { |array| i = 0
 			until queue.empty? || i == 1000
 				array << queue.pop
 				i += 1
 			end
-		end
+		}
 	end
 
 	# --------------------------------------------------------------------------------------------------------------- #

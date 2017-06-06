@@ -1,3 +1,4 @@
+4.times do
 require_relative 'gsa_advantage'
 
 
@@ -36,6 +37,7 @@ def parse_mfr_list(html)
 		# bp ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],[40,40,5,6]
 		@queue << [name_mfr.to_s,href_mfr.to_s,n_products.to_i]
 	end
+	return items.size
 end
 
 def test_mfr_list(gsa_a)
@@ -52,52 +54,24 @@ def test_mfr_list(gsa_a)
 	end
 end
 
-def new_tab(browser,url)
-	# window = Watir::Window.new browser.driver,
-	# p browser.window.inspect, browser.window.title, browser.window.url
-	 browser.driver.execute_script("window.open(arguments[0]);",url)
-	# browser.driver.switch_to.window(browser.driver.window_handles.last)
-	# p browser.window.inspect, browser.window.title, browser.window.url
-end
-
-def use_tab(browser,i)
-	browser.driver.switch_to.window(browser.driver.window_handles[i])
-	p browser.url
-end
-
-
-# letters = ("A".."Z").to_a << '0'
-# p letters
-# letters.each do |letter|
-#
-# end
-
-
 letters.each_with_index do |letter, i|
 	threads << Thread.new do
 		gsa_a[i] = initialize_browser
 		ADV::Categories.each do |category|
 			url = "https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4#{category}*&listFor=#{letter}"
 			gsa_a[i].browser.goto url
-			p "#{gsa_a[i].browser.title} | #{gsa_a[i].browser.url}"
-			parse_mfr_list(gsa_a[i].mft_table_element.html)
+			found = parse_mfr_list(gsa_a[i].mft_table_element.html)
+			searched gsa_a[i].browser.title,gsa_a[i].browser.url, found
 		end
+		gsa_a[i].browser.close
 	end
 end
 
-# gsa_a.browser.driver.window_handles.each { |handle| gsa_a.browser.driver.switch_to.window(handle) }
-#gsa_a.browser.driver.window_handles.each_index  do |i|
-#	p i
-# use_tab(gsa_a.browser,i)
-# gsa_a.browser.windows.each_index do |i|
-# gsa_a.browser.window(index: i).use do
-# parse_mfr_list(gsa_a.mft_table_element.html)
-#end
+
 threads.each { |thr| thr.join }
 letters.each {|l| set_mfr_list_time(l)}
 # "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
-
-
+end
 
 
 

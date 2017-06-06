@@ -14,6 +14,7 @@ require_relative 'adv_constants'
 require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
+Mechanized        = FALSE
 Dev_mode          = FALSE
 IS_PROD           = TRUE  # Check out items if true
 Proxy_list        = YAML::load_file(File.join(__dir__, 'proxy.yml'))
@@ -23,6 +24,7 @@ Socks_port        = 61336
 Catalog_hudson    = '//192.168.1.104/gsa_price/'
 RX_mfr            = /(?<=\q=28:5).*/                                          # Regex selects manufacture name after link
 
+p Dev_mode ? "Running in dev mode" : "Running in production mode"
 
 
 def color_p(str,i=-1)
@@ -88,19 +90,25 @@ def split_screen(browser,split,pos_h,pos_v)
 	browser.driver.manage.window.resize_to(x*split,y*split)
 end
 
-
+Mechanized
 def initialize_browser
-		p Dev_mode ? "Running in dev mode" : "Running in production mode"
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
+		unless Mechanized
 		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
 		Dev_mode ? switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
 		browser       = Watir::Browser.new :chrome, switches: switch
 		gsa_a = GsaAdvantagePage.new(browser)
 		gsa_a.goto
-
+		else
+			@agent[pg] =  Mechanize.new do |a|
+				a.set_proxy P_list.sample, 45623
+				a.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.82 Safari/537.36"
+				a.follow_meta_refresh = true
+			end
+		end
 		puts "#{gsa_a.title} | #{r_proxy} | #{}".colorize(:blue)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'

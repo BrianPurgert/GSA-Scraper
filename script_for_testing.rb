@@ -1,8 +1,147 @@
 
-require 'socket'
-# require_relative 'gsa_advantage'
-require_relative 'adv_constants'
+I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
+
+
+# require 'socket'
+require_relative 'gsa_advantage'
+# require_relative 'adv_constants'
 # require_relative 'pages/gsa_advantage_page'
+# require 'watir'
+# require 'rubygems'
+require 'mechanize'
+require 'logger'
+logger = Logger.new $stdout
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+threads     = []
+@agent      = []
+P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
+
+(1..5).each do |pg|
+	threads << Thread.new do
+		@agent[pg] =  Mechanize.new do |a|
+			a.set_proxy P_list.sample, 45623
+			a.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.82 Safari/537.36"
+			a.follow_meta_refresh = true
+		end
+
+	 @agent[pg].log = logger
+
+	@agent[pg].cookie_jar.to_a.inspect
+	@agent[pg].get("https://www.gsaadvantage.gov/")
+	@agent[pg].cookie_jar
+
+
+#Do whatever you need an use the cookies again in a new session after that
+# "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?gsin=11000004518225"
+
+
+		html = @agent[pg].get_file("https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:760000&c=100&s=9&p=#{pg}")
+		uri = URI "search.do-#{pg}.html"
+		   file = Mechanize::File.new uri, nil, html
+		   filename = file.save!  # saves to test.html
+		p filename
+
+		p @agent[pg].cookie_jar.to_a.inspect
+	end
+
+end
+
+threads.each { |thr| thr.join }
+
+exit
+
+agent[] = Mechanize.new
+agent.set_proxy '69.162.164.78', 45623
+page = agent.get('https://www.gsaadvantage.gov/advantage/main/start_page.do')
+puts page.body
+[1..5].to_a.each do |page_number|
+	p page_number
+end
+page = agent.get('https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1')
+page.links.each do |link|
+	puts link.text
+
+end
+sleep 5
+exit
+
+def open(url ,name='new_tab' , specs='specs' , replace='replace')
+	# window = Watir::Window.new browser.driver,
+	# p browser.window.inspect, browser.window.title, browser.window.url
+	expected = @browser.windows.size + 1
+	@browser.driver.execute_script("window.open(arguments[0]);",url)
+	Watir::Wait.until { @browser.windows.size == expected }
+	p "Opens: #{@browser.windows.size}"
+	# browser.driver.switch_to.window(browser.driver.window_handles.last)
+	# p browser.window.inspect, browser.window.title, browser.window.url
+end
+
+def open_message(message)
+	@browser.driver.execute_script("window.open('', 'MsgWindow', 'width=400,height=300').document.write('<p>#{message}</p>');",message)
+end
+
+def use_tab(i)
+	@browser.driver.switch_to.window(@browser.driver.window_handles[i])
+	p @browser.url
+end
+
+def close_window
+	window.open("closeable.html")
+	window.close()
+end
+
+
+
+
+@threads     = []
+
+
+
+
+@browser = Watir::Browser.start 'http://www.deelay.me/0',:chrome
+@browser.alert
+	open_message "errrroooo"
+
+
+
+5.times do
+	open("http://www.deelay.me")
+end
+
+open_message "reeerrrrrrrrrrrrrreee"
+sleep 10
+
+@browser.goto 'http://www.deelay.me/100'
+p "Number of windows#{@browser.windows.size}"
+
+@browser.window(title: 'closeable window')
+@browser.window(title: 'closeable window')
+@browser.switch
+
+exit
+
+
+
+
+
+
+# letters = ("A".."Z").to_a << '0'
+# p letters
+# letters.each do |letter|
+#
+# end
+
+# gsa_a.browser.driver.window_handles.each { |handle| gsa_a.browser.driver.switch_to.window(handle) }
+#gsa_a.browser.driver.window_handles.each_index  do |i|
+#	p i
+# use_tab(gsa_a.browser,i)
+# gsa_a.browser.windows.each_index do |i|
+# gsa_a.browser.window(index: i).use do
+# parse_mfr_list(gsa_a.mft_table_element.html)
+#end
+
+
+	 # --------------------------------------------
 
 	 # p Select::FSSI
 # caps = Selenium::WebDriver::Remote::Capabilities.chrome("chromeOptions" => {"binary" => [ "C:\\Users\\Brian\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe" ]})
@@ -14,6 +153,8 @@ require_relative 'adv_constants'
 ADV::Pages.each_value do |page|
 	p page
 end
+
+
 letters = ("A".."Z").to_a << '0'
 p letters
 letters.each do |letter|
