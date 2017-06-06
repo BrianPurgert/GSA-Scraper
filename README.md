@@ -2,7 +2,7 @@ Data Scraper for GSA Advantage!
 ===================
 
 - - - - 
-## Purpose 🤷
+## Purpose
 1. Scrape Pricing Data on GSA Advantage!
 2. Provide Contractor Price Comparisons
 
@@ -19,6 +19,12 @@ data.govconsvcs.com/phpmyadmin
     host:     "70.61.131.182"
     host:     "hudson.govconsvcs.com"
  username: "mft_data",
+
+#### Local MySQL 8
+user: root
+pass: *BBFF1CF7BD22065F769A9C25AB82B0EB566A9A1C
+
+
 
  The Tables in use are
 
