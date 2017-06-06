@@ -5,8 +5,8 @@ def xls_read
      puts "\nInput file number & press enter"
      Files_input.each_with_index do |file, num| puts "#{num}\t#{file}\t".colorize(:green)
      end
-     # pick_num   = gets.to_i
-     pick_num             = 0
+	pick_num   = gets.to_i
+     # pick_num             = 0
      user_excel_file_name = Dir.entries(Basedir_input)
      user_excel_file_name = user_excel_file_name[2]
      puts user_excel_file_name
@@ -27,7 +27,7 @@ def xls_read
           @mfr_found = true
           puts "\nManufacture Part Number Found at:\t#{@mfr_col} #{@mfr_row}\n"
      end
-     if cell.include?('mfr name') || cell.include?('mfgname') || cell.include?('manufacturer name') || (cell.include?('mfr') && !cell.include?('part')) || (cell.include?('manufacture') && !cell.include?('part'))
+     if cell.include?('mfr name') || cell.include?('mfg number') || cell.include?('manufacturer name') || (cell.include?('mfr') && !cell.include?('part')) || (cell.include?('manufacture') && !cell.include?('part'))
           @mfrn_col   = c_index
           @mfrn_row   = r_index
           @mfrn_found = true

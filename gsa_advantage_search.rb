@@ -15,7 +15,7 @@ browser            = []
 gsa_advantage      = []
 @href_name         = []
 @mfr_name          = []
-N_threads          = 3
+N_threads          = 5
 N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
@@ -52,14 +52,15 @@ end
 #      print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 # end
 
-def search_url(mpn, mft) return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
+def search_url(mpn, mft)
+	return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=5&searchType=0"
 end
 
 
 def initialize_browsers(browser, gsa_advantage)
      (0..N_threads).in_threads.each do |nt|
      r_proxy           = Proxy_list.sample
-     browser[nt]       = Watir::Browser.start 'https://www.gsaadvantage.gov/', :chrome, switches: ["proxy-server=#{r_proxy}"]
+     browser[nt]       = Watir::Browser.start 'https://www.gsaadvantage.gov/', :chrome, switches: ["proxy-server=#{r_proxy}"]#"headless", "disable-gpu",
      gsa_advantage[nt] = GsaAdvantagePage.new(browser[nt])
      print "\nBrowser #{nt}\t".colorize(:blue)
      print "#{r_proxy}"

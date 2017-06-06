@@ -17,8 +17,6 @@ gsa_a     = []
 
 get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
 
-
-
 threads << Thread.new do
 	while @reading < 10 do
 		until @db_queue.empty?
