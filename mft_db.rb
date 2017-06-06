@@ -4,9 +4,9 @@ require 'colorized_string'
 require 'sequel'
 
 
-@client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
+@client = Mysql2::Client.new(host: "hudson.govcon.local", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 
-@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
+@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@hudson.govcon.local/mft_data')
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
@@ -74,7 +74,7 @@ require 'sequel'
 		items.insert(title: title,url: url,found: found)
 	end
 
-
+	
 	# puts DB.schema(:mfr_parts)
 	def display_statistics
 		@manufacture_parts = @DB[:mfr_parts]

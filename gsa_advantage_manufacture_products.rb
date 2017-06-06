@@ -7,6 +7,7 @@ require_relative 'gsa_advantage'
 @db_queue   = Queue.new
 @mfr_queue  = Queue.new
 threads     = []
+display_statistics
 
 #----------Normal-----------------Headless-------------#
 Dev_mode ? n_total = 1        : n_total = 5          # Number of Manufactures to search

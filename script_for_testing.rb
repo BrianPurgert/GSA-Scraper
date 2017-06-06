@@ -14,8 +14,11 @@ logger = Logger.new $stdout
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 threads     = []
 @agent      = []
-P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
 
+
+display_statistics
+
+P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
 (1..5).each do |pg|
 	threads << Thread.new do
 		@agent[pg] =  Mechanize.new do |a|

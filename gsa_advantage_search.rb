@@ -15,7 +15,7 @@ browser            = []
 gsa_advantage      = []
 @href_name         = []
 @mfr_name          = []
-N_threads          = 5
+N_threads          = 3
 N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 
@@ -68,7 +68,7 @@ def initialize_browsers(browser, gsa_advantage)
      gsa_advantage[nt].browser.goto 'https://www.gsaadvantage.gov/'
      unless gsa_advantage[nt].first_result_element.exist?
           puts 'redo'
-          redo
+          # redo
      end
 
      end
