@@ -12,6 +12,7 @@ require 'sequel'
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
 
+	# TODO: Convert
 	@DB.run "CREATE TABLE IF NOT EXISTS vendors
 	(
 		name varchar(255) not null
@@ -26,8 +27,10 @@ require 'sequel'
 			unique (name)
 	);"
 
+	# TODO: Convert
 	@DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
 	(
+		id INT(11) NOT NULL AUTO_INCREMENT,
 		mfr varchar(255) not null,
 		mpn varchar(40) not null,
 		name varchar(255) null,
@@ -37,24 +40,26 @@ require 'sequel'
 		last_updated datetime default CURRENT_TIMESTAMP not null,
 		status_id tinyint default '0' not null,
 		sources int(10) null,
-		primary key (mfr, mpn)
+		primary key (id)
 	);"
 
-	@DB.run "CREATE TABLE IF NOT EXISTS mfr
-	(
-		name varchar(255) not null
-			primary key,
-		href_name varchar(255) null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		last_search datetime default CURRENT_TIMESTAMP not null,
-		item_count int(10) unsigned null,
-		`change` int(10) default '0' not null,
-		check_out bit default b'0' not null,
-		last_low_price float default '90000000' null,
-		constraint manufacture_name_uindex
-			unique (name)
-	);"
-	
+	# TODO: Convert
+	# @DB.run "CREATE TABLE IF NOT EXISTS manufactures
+	# (
+	# 	id INT(11) NOT NULL AUTO_INCREMENT,
+	# 	mfr varchar(255) not null,
+	# 	href_name varchar(255) null,
+	# 	last_updated datetime default CURRENT_TIMESTAMP not null,
+	# 	last_search datetime default CURRENT_TIMESTAMP not null,
+	# 	item_count int(10) unsigned null,
+	# 	`change` int(10) default '0' not null,
+	# 	check_out bit default b'0' not null,
+	# 	last_low_price float default '90000000' null,
+	# 	constraint manufacture_name_uindex
+	# 		unique (name)
+	# );"
+
+	# TODO: Convert
 	@DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
 	(
 		list_for char(50) not null
@@ -64,10 +69,18 @@ require 'sequel'
 
 	@DB.create_table? :searches do
 		primary_key :id
+		String      :name
+		String      :url
+		Integer     :found
+	end
+
+	@DB.create_table? :searches do
+		primary_key :id
 		String      :title
 		String      :url
 		Integer     :found
 	end
+
 
 	def searched(title,url,found)
 		items = @DB[:searches]
@@ -128,15 +141,8 @@ require 'sequel'
             end
 
 	def insert_mfr_parts(mfr_parts_data)
-          insert_string = 'REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources)
-			         VALUES'
-          mfr_parts_data.each_with_index do |mfr_part, i|
-               insert_string += ',' if i > 0
-               insert_string +=   "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}','#{@client.escape(mfr_part[3])}','#{@client.escape(mfr_part[4])}','#{@client.escape(mfr_part[5])}','#{@client.escape(mfr_part[6])}')\n"
-          end
-          # puts insert_string.colorize(:green)
-          @client.query("#{insert_string}", cast: false)
-     end
+		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
+	end
 
 	
 	def insert_result_block(mfr_parts_data)

@@ -15,8 +15,8 @@ require_relative 'mft_db'
 require_relative 'pages/gsa_advantage_page'
 
 Mechanized        = FALSE
-Dev_mode          = FALSE
-IS_PROD           = TRUE  # Check out items if true
+Dev_mode          = TRUE
+IS_PROD           = FALSE  # Check out items if true
 Proxy_list        = YAML::load_file(File.join(__dir__, 'proxy.yml'))
 Proxy_list1       = YAML::load_file(File.join(__dir__, 'proxy1.yml'))
 Socks_list        = YAML::load_file(File.join(__dir__, 'socks5_proxy.yml'))
