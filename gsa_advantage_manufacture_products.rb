@@ -10,8 +10,8 @@ threads     = []
 display_statistics
 
 #----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 1        : n_total = 8          # Number of Manufactures to search
-Dev_mode ? n_thr = 1          : n_thr = 8             # Number of browsers to run
+Dev_mode ? n_total = 1        : n_total = 25          # Number of Manufactures to search
+Dev_mode ? n_thr = 1          : n_thr = 25             # Number of browsers to run
 gsa_a     = []
 
 
@@ -25,7 +25,7 @@ threads << Thread.new do
 		end
 		@reading += 1
 		color_p "End in: #{30-@reading}\t Queued: #{@db_queue.length} ", 7 if @reading > 5
-		sleep 3
+		sleep 5
 	end
 end
 
