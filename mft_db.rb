@@ -45,16 +45,18 @@ require 'sequel'
 
 	@DB.run "CREATE TABLE IF NOT EXISTS  mfr
 	(
-		id INT(11) NOT NULL AUTO_INCREMENT,
-		name varchar(255) not null,
-		href_name varchar(255) null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		last_search datetime default CURRENT_TIMESTAMP not null,
-		item_count int(10) unsigned null,
-		check_out bit default b'0' not null,
-		last_low_price float default '90000000' null,
-		priority int(10) default '0' not null,
-		primary key (id)
+	id int not null auto_increment
+		primary key,
+	name varchar(255) not null,
+	href_name varchar(255) null,
+	last_updated datetime default CURRENT_TIMESTAMP not null,
+	last_search datetime default CURRENT_TIMESTAMP not null,
+	item_count int(10) unsigned null,
+	check_out bit default b'0' not null,
+	last_low_price float default '90000000' null,
+	priority int(10) default '0' not null,
+	constraint mfr_href_name_uindex
+		unique (href_name)
 	);"
 
 	# TODO: Convert
