@@ -107,7 +107,7 @@ require 'sequel'
 	# puts DB.schema(:mfr_parts)
 	def display_statistics
 		@manufacture_parts = @DB[:manufacture_parts]
-		@manufacture       = @DB[:manufacture]
+		@manufacture       = @DB[:mfr]
 		puts "Manufacture Parts count: #{@manufacture_parts.count} Average Price: #{@manufacture_parts.avg(:low_price)}"
 		puts "Manufacture count: #{@manufacture.count}"
 	end

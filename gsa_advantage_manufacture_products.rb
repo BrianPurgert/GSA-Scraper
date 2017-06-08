@@ -13,13 +13,10 @@ def get_all_products(gsa_a, mfr_href, n, n_low, pg, total_found)
 
 		n_results   = product_tables.length
 		@items      += n_results
-	
-		
 		      product_tables.each_with_index do |product_table, i|
 			    n_low = parse_result(product_table)
 			end
 			#THIS MUST GO
-			
 			pg = pg + 1
 			
 			# bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
