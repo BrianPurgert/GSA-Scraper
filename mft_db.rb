@@ -196,7 +196,7 @@ require 'sequel'
 		safe_stop
 		escaped = @client.escape("#{name}")
 		insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
-		puts insert_string.colorize(:green)
+		# puts insert_string.colorize(:green)
 	      @client.query("#{insert_string}")
 	end
 
@@ -224,9 +224,8 @@ require 'sequel'
           row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          p "#{row[:name]}"
-	          # check_out(row[:name])
+	           check_out(row[:name])
           end
-
           mfr_href = row_list.map{|mfr| mfr[:href_name]}
           return row_list
      end

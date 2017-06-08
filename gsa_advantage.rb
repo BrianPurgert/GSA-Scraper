@@ -91,6 +91,7 @@ def split_screen(browser,split,pos_h,pos_v)
 end
 
 def initialize_browser
+		# begin rescue Watir::Exception::UnknownObjectException, Timeout::Error
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
@@ -98,20 +99,16 @@ def initialize_browser
 		unless Mechanized
 		# browser       = Watir::Browser.new :chrome, switches: ["proxy-server=#{socks}","host-resolver-rules=#{host}"]
 		Dev_mode ? switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
-		browser       = Watir::Browser.new :chrome, switches: switch
+		browser       = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, switches: switch
 		gsa_a = GsaAdvantagePage.new(browser)
-		gsa_a.goto
+		# gsa_a.goto
 		else
-			@agent[pg] =  Mechanize.new do |a|
-				a.set_proxy P_list.sample, 45623
-				a.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.82 Safari/537.36"
-				a.follow_meta_refresh = true
-			end
+
 		end
-		puts "#{gsa_a.title} | #{r_proxy} | #{}".colorize(:blue)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
+		puts "#{gsa_a.title} | #{r_proxy} | ".colorize(:blue)
 		return gsa_a
 end
 

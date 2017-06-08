@@ -61,12 +61,15 @@ threads     = []
 display_statistics
 
 #----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 10        : n_total = 25          # Number of Manufactures to search
-Dev_mode ? n_thr = 5           : n_thr = 12             # Number of browsers to run
+Dev_mode ? n_total = 10        : n_total = 55          # Number of Manufactures to search
+Dev_mode ? n_thr = 5           : n_thr = 10             # Number of browsers to run
 gsa_a     = []
 
 
-get_mfr(n_total).each {|mfr| @mfr_queue << mfr}
+
+	manufactures = get_mfr(n_total).uniq { |mfr| mfr[:href_name] }
+	p manufactures.each {|mfr| p mfr[:href_name] }
+	manufactures.each {|mfr| @mfr_queue << mfr}
 
 threads << Thread.new do
 	while @reading < 10 do
@@ -99,14 +102,12 @@ end
 
 n_thr.times do |n|
 	threads << Thread.new do
-		# gsa_a[n] = initialize_browser
+		 gsa_a[n] = initialize_browser
 			until @mfr_queue.empty?
 				mfr = @mfr_queue.shift
-				gsa_a[n] = initialize_browser
 				get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1, 0)
-				gsa_a[n].browser.close
 			end
-		# gsa_a[n].browser.close
+		 gsa_a[n].browser.close
 		end
 end
 

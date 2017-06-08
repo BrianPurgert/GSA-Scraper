@@ -1,7 +1,7 @@
 # helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
 	include PageObject
-	page_url('https://www.gsaadvantage.gov/')
+	page_url('https://www.gsaadvantage.gov/advantage/search/headerSearch.do')
      
      # /advantage/s/mfr.do?q=1:4*&listFor=
 		table(:mft_table, css: '#main > table > tbody > tr:nth-child(2) > td:nth-child(2) > table:nth-child(3)')
