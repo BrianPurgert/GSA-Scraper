@@ -54,8 +54,7 @@ require 'sequel'
 		check_out bit default b'0' not null,
 		last_low_price float default '90000000' null,
 		priority int(10) default '0' not null,
-		constraint manufacture_name_uindex
-			unique (name)
+		primary key (id)
 	);"
 
 	# TODO: Convert
