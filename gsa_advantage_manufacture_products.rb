@@ -103,12 +103,14 @@ end
 
 n_thr.times do |n|
 	threads << Thread.new do
-		gsa_a[n] = initialize_browser
+		# gsa_a[n] = initialize_browser
 			until @mfr_queue.empty?
 				mfr = @mfr_queue.shift
+				gsa_a[n] = initialize_browser
 				get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1, 0)
+				gsa_a[n].browser.close
 			end
-		gsa_a[n].browser.close
+		# gsa_a[n].browser.close
 		end
 end
 

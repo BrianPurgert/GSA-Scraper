@@ -74,12 +74,14 @@ require 'sequel'
 		Integer     :found
 	end
 
-	@DB.create_table? :searches do
-		primary_key :id
-		String      :title
-		String      :url
-		Integer     :found
-	end
+
+      # todo:
+	# @DB.create_table? :manufacture do
+	# 	primary_key :id
+	# 	String      :name
+	# 	String      :url
+	# 	Integer     :found
+	# end
 
 
 	def searched(title,url,found)
@@ -90,8 +92,8 @@ require 'sequel'
 	
 	# puts DB.schema(:mfr_parts)
 	def display_statistics
-		@manufacture_parts = @DB[:mfr_parts]
-		@manufacture       = @DB[:mfr]
+		@manufacture_parts = @DB[:manufacture_parts]
+		@manufacture       = @DB[:manufacture]
 		puts "Manufacture Parts count: #{@manufacture_parts.count} Average Price: #{@manufacture_parts.avg(:low_price)}"
 		puts "Manufacture count: #{@manufacture.count}"
 	end
@@ -202,16 +204,20 @@ require 'sequel'
 	     safe_stop
 	end
 
+
+
       def get_mfr(amount = 1)
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY item_count DESC LIMIT #{amount};", :symbolize_keys => true).to_a
+          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
-	          print row
-	          check_out(row[:name]) if IS_PROD
+	          p "#{row[:name]}"
+	          # check_out(row[:name])
           end
 
           mfr_href = row_list.map{|mfr| mfr[:href_name]}
           return row_list
      end
+# get_mfr(5)
+
 
 	def get_mfr_part(amount = 1)
 		row_list = []
@@ -221,22 +227,18 @@ require 'sequel'
 			row_list << row
 		end
 		mfr_part_href = row_list.map!{|link| link[:href_name]}
-		if IS_PROD
-			check_out_parts(amount)
-		end
+		check_out_parts(amount)
 		return mfr_part_href
 	end
 
-
-
-def get_mfr_list(amount = 1)
-	row_list = []
-	result = @client.query("SELECT list_for FROM `mft_data`.`page_mfr_list` ORDER BY last_update LIMIT #{amount};", :symbolize_keys => true)
-	result.each { |row| row_list << row }
-	mfr_list = row_list.map!{|link| link[:list_for]}
-	p mfr_list.inspect
-	return mfr_list
-end
+	def get_mfr_list(amount = 1)
+		row_list = []
+		result = @client.query("SELECT list_for FROM `mft_data`.`page_mfr_list` ORDER BY last_update LIMIT #{amount};", :symbolize_keys => true)
+		result.each { |row| row_list << row }
+		mfr_list = row_list.map!{|link| link[:list_for]}
+		p mfr_list.inspect
+		return mfr_list
+	end
 
 
 
