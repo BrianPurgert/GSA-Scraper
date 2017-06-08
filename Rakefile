@@ -21,7 +21,7 @@ end
 
 desc "Get all Manufactures"
 task(:get_manufactures) do
-	ruby 'gsa_advantage_manufacture.rb'
+	ruby 'gsa_advantage_manufactures.rb'
 end
 
 
