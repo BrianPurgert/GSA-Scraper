@@ -43,6 +43,21 @@ require 'sequel'
 		primary key (id)
 	);"
 
+	@DB.run "CREATE TABLE IF NOT EXISTS  mfr
+	(
+		id INT(11) NOT NULL AUTO_INCREMENT,
+		name varchar(255) not null,
+		href_name varchar(255) null,
+		last_updated datetime default CURRENT_TIMESTAMP not null,
+		last_search datetime default CURRENT_TIMESTAMP not null,
+		item_count int(10) unsigned null,
+		check_out bit default b'0' not null,
+		last_low_price float default '90000000' null,
+		priority int(10) default '0' not null,
+		constraint manufacture_name_uindex
+			unique (name)
+	);"
+
 	# TODO: Convert
 	# @DB.run "CREATE TABLE IF NOT EXISTS manufactures
 	# (
@@ -136,11 +151,11 @@ require 'sequel'
 		@client.query("#{insert_string}", cast: false)
 	end
 
-	@insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
-	def insert_mfr_part(part)
-            @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
-		# puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
-            end
+	# @insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
+	# def insert_mfr_part(part)
+       #      @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
+	# 	# puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
+       #      end
 
 	def insert_mfr_parts(mfr_parts_data)
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)

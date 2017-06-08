@@ -15,7 +15,6 @@ def get_all_products(gsa_a, mfr_href, n, n_low, pg, total_found)
 		@items      += n_results
 	
 		
-		
 		      product_tables.each_with_index do |product_table, i|
 			    n_low = parse_result(product_table)
 			end
@@ -65,8 +64,8 @@ threads     = []
 display_statistics
 
 #----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 10        : n_total = 20          # Number of Manufactures to search
-Dev_mode ? n_thr = 5          : n_thr = 5             # Number of browsers to run
+Dev_mode ? n_total = 10        : n_total = 25          # Number of Manufactures to search
+Dev_mode ? n_thr = 5           : n_thr = 12             # Number of browsers to run
 gsa_a     = []
 
 
@@ -117,7 +116,7 @@ end
 
 
 threads.each { |thr| thr.join }
-
+display_statistics
 
 end
 
