@@ -1,0 +1,39 @@
+
+a.arial[href*="product_detail.do?gsin"]{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+a.arial[href*="product_detail.do?gsin"]::before{
+  content:"product_detail";
+position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
+}
+
+
+span.newOrange.black12pt.arial > strong{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+span.newOrange.black12pt.arial > strong::before{
+  	content:"ms_low_price";
+ 	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
+}
+
+
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td::before{
+ 	content:"ms_desc";
+	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
+}
+
+
+tbody tr > td black8pt.font{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody tr > td black8pt.font::before{
+    content:"ms_mpn";
+    position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
+}
+
+
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td{box-shadow:0px 0px 0px 4px rgba(255, 255,0, .8);}
+tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td::before{
+    content:"ms_desc";
+	position:relative;color:#000;background-color: rgba(255, 255,0, .8);top:0;left:0;
+}
+
+/* a[href*="product_detail.do?gsin"]:first-child{
+    background-color: rgba(0, 136, 204, 0.3);
+    box-shadow:0px 0px 1px 10px #26b85c;
+} */

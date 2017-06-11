@@ -3,22 +3,83 @@ I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
 
 
 # require 'socket'
-require_relative 'gsa_advantage'
-# require_relative 'adv_constants'
-# require_relative 'pages/gsa_advantage_page'
-# require 'watir'
-# require 'rubygems'
+require_relative 'adv/gsa_advantage'
 require 'mechanize'
 require 'logger'
+require 'watir'
 logger = Logger.new $stdout
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+# OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+# P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
+
+def initialize_fake_browser
+	proxy       = P_list.sample
+	url         = 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do'
+	switch      = ["headless", "disable-gpu","proxy-server=#{proxy}:45623"]
+	# browser     = Watir::Browser.start url, :chrome, switches: switch
+	# raise 'Welcome to GSA Advantage! not in title' unless browser.title.include? 'Welcome to GSA Advantage!'
+	# cookie      = browser.cookies.to_a
+	# user_agent  = browser.driver.execute_script("return navigator.userAgent;")
+
+	agent   =  Mechanize.new do |a|
+		a.set_proxy proxy, 45623
+		a.user_agent = user_agent
+		a.cookie_jar = cookie
+		# a.follow_meta_refresh = true
+	end
+	return agent
+end
+
+frat = Mechanize.start
+
+agent = initialize_fake_browser
+agent.get ()
+pp agent.cookies
+
+
+
+
+def abcd
+	browser = Watir::Browser.start 'chrome://version/',:chrome
+	browser.goto 'https://www.gsaadvantage.gov/'
+	 browser.cookies.to_a.inspect
+	browser.cookies.save                            # '.cookies' is default
+	browser.close
+	browser = Watir::Browser.start 'https://www.gsaadvantage.gov/',:chrome
+	puts "\n----\n#{browser.cookies.to_a.inspect}\n----\n"
+	browser.cookies.clear
+	browser.cookies.load
+	puts browser.cookies.to_a.inspect
+end
+
+
+
+
+
+
+
+
+
 threads     = []
 @agent      = []
+(1..2).each do |pg|
+	threads << Thread.new do
+		proxy       = P_list.sample
+		@agent[pg]  = initialize_browser
+		cookies     = @agent[pg].browser.cookies.to_a
+
+		@agent[pg]  =  Mechanize.new do |a|
+			a.set_proxy proxy, 45623
+		end
+		# driver.executeScript(return navigator.userAgent;
+		#save(file = '.cookies')
+
+	end
+end
+threads.each { |thr| thr.join }
+
+exit
 
 
-display_statistics
-
-P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
 (1..5).each do |pg|
 	threads << Thread.new do
 		@agent[pg] =  Mechanize.new do |a|
@@ -26,27 +87,21 @@ P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
 			a.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.82 Safari/537.36"
 			a.follow_meta_refresh = true
 		end
-
-	 @agent[pg].log = logger
-
-	@agent[pg].cookie_jar.to_a.inspect
-	@agent[pg].get("https://www.gsaadvantage.gov/")
-	@agent[pg].cookie_jar
-
-
-#Do whatever you need an use the cookies again in a new session after that
-# "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?gsin=11000004518225"
-
-
+		@agent[pg].cookie_jar.to_a.inspect
+		@agent[pg].get("https://www.gsaadvantage.gov/advantage/main/start_page.do")
+		@agent[pg].cookie_jar
 		html = @agent[pg].get_file("https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:760000&c=100&s=9&p=#{pg}")
-		uri = URI "search.do-#{pg}.html"
-		   file = Mechanize::File.new uri, nil, html
-		   filename = file.save!  # saves to test.html
-		p filename
+		# @agent[pg].log = logger
+		# cookie_jar= cookie_jar
 
+		
+		
+		uri = URI "search.do-#{pg}.html"
+		file = Mechanize::File.new uri, nil, html
+		  filename = file.save!  # saves to test.html
+		p filename
 		p @agent[pg].cookie_jar.to_a.inspect
 	end
-
 end
 
 threads.each { |thr| thr.join }
@@ -63,6 +118,8 @@ end
 page = agent.get('https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1')
 page.links.each do |link|
 	puts link.text
+
+
 
 end
 sleep 5
@@ -173,17 +230,7 @@ p
 #   Socket.ip_address_list.each {|add| p add}
 
 
-require 'watir'
-browser = Watir::Browser.start 'chrome://version/',:chrome
-browser.goto 'https://www.gsaadvantage.gov/'
-puts browser.cookies.to_a.inspect
-browser.cookies.save                            # '.cookies' is default
-browser.close
-browser = Watir::Browser.start 'https://www.gsaadvantage.gov/',:chrome
-puts "\n----\n#{browser.cookies.to_a.inspect}\n----\n"
-browser.cookies.clear
-browser.cookies.load
-puts browser.cookies.to_a.inspect
+
 
 
 # Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
@@ -236,13 +283,6 @@ exit
 
 
 #
-# ChromeOptions options = new ChromeOptions();
-# options.addArguments("user-data-dir=/path/to/your/custom/profile");
-
-# ChromeOptions options = new ChromeOptions();
-# options.setBinary("/path/to/other/chrome/binary");
-
-# options.setBinary("C:\\Users\\u0125202\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe")
 
 #
 # def split(b,n,total)
@@ -269,40 +309,7 @@ exit
 
 
 
-#
-# all_sql_data = client.query('
-# SELECT *
-# FROM `mft_data`.`lowest_price_contractor`;
-# ')
-# #
-# result.each_with_index  do |row, index|
-# 		puts "#{index}\t#{row}"
-# end
-#
-# client.query('
-# INSERT INTO
-# FROM `mft_data`.`lowest_price_contractor`
-# WHERE lowest_contractor IS NULL ;
-# ')
-#
-# result = client.query('
-# SELECT *
-# FROM `mft_data`.`lowest_price_contractor`
-# WHERE lowest_contractor IS NULL ;
-# ')
-#
-# result = client.query('
-# INSERT INTO manufacturer_name
-# VALUES ()
-# FROM `mft_data`.`lowest_price_contractor`
-# WHERE lowest_contractor IS NULL ;
-# ')
-#
-#
-# result.each_with_index  do |row, index|
-#   puts "#{index}\t#{row}"
-# end
-#
+
 
 
 

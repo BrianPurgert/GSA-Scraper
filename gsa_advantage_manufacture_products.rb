@@ -1,14 +1,15 @@
-require_relative 'gsa_advantage'
-
+require_relative 'adv/gsa_advantage'
 
 def get_all_products(gsa_a, mfr_href, n, n_low, pg, total_found)
 	begin
-		gsa_a[n].browser.goto search_url(mfr_href, n_low)
-		
-		doc         = Nokogiri::HTML(gsa_a[n].html)
+		 gsa_a[n].browser.goto search_url(mfr_href, n_low)
+		 response = gsa_a[n].html
+		# agent_doc = gsa_a[n].get(search_url(mfr_href, n_low))
+		# response = agent_doc.content
+		doc         = Nokogiri::HTML(response)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
-		
+		puts "#{next_page}"
 		product_tables = doc.search('#pagination~ table:not(#pagination2)')
 
 		n_results   = product_tables.length
@@ -16,12 +17,8 @@ def get_all_products(gsa_a, mfr_href, n, n_low, pg, total_found)
 		      product_tables.each_with_index do |product_table, i|
 			    n_low = parse_result(product_table)
 			end
-			#THIS MUST GO
 			pg = pg + 1
-			
 			# bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
-			
-	
 	end while next_page
 end
 
@@ -103,11 +100,12 @@ end
 n_thr.times do |n|
 	threads << Thread.new do
 		 gsa_a[n] = initialize_browser
+		 # gsa_a[n] = initialize_agent
 			until @mfr_queue.empty?
 				mfr = @mfr_queue.shift
 				get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1, 0)
 			end
-		 gsa_a[n].browser.close
+		 # gsa_a[n].browser.close
 		end
 end
 

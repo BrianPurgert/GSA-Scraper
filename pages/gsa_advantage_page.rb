@@ -1,6 +1,12 @@
 # helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
 	include PageObject
+	def ree
+		p 'reeeeee'
+	end
+	# User Alerts
+	# Session Terminated
+	
 	page_url('https://www.gsaadvantage.gov/advantage/search/headerSearch.do')
      
      # /advantage/s/mfr.do?q=1:4*&listFor=
