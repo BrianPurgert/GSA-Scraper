@@ -89,10 +89,9 @@ benchmark '', @count
 end
 
 threads.each { |thr| thr.join }
-color_p @count
-benchmark 'Manufactures', @count
-letters.each {|l| set_mfr_list_time(l)}
-# "https://www.gsaadvantage.gov/advantage/s/search.do?q=1:4*&s=4&c=100&q=28:5#{href_mfr}"
+color_p "#{Time.now} Complete"
+benchmark 'Manufactures/Contractors', @count
+
 end
 
 

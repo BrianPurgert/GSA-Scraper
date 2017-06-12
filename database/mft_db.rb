@@ -2,8 +2,8 @@ require 'mysql2'
 require 'colorize'
 require 'colorized_string'
 require 'sequel'
-@client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
-@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
+@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
+@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
@@ -115,19 +115,12 @@ require 'sequel'
 	# --------------------------------------------------------------------------------------------------------------- #
 	# ---------------------------------------------------------------------------------------------------------------#
 
-	@mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
-	def set_mfr_list_time(letter)
-		@mfr_list_time.execute(letter)
-		puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
-	end
-
-
-	# #TODO Save searched urls to database
-	# @insert_manufacture = @client.prepare("REPLACE INTO mft_data.mfr(name, href_name, item_count) VALUES (?, ?, ?)")
-	# def insert_mfr(name,href_name,item_count=1)
-	# 	# puts "#{name} | #{href_name} | #{item_count}"
-	# 	@insert_manufacture.execute("#{name}","#{href_name}","#{item_count}")
+	# @mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
+	# def set_mfr_list_time(letter)
+	# 	@mfr_list_time.execute(letter)
+	# 	puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
 	# end
+
 
 
 	def insert_contractors(mfrs)
@@ -136,16 +129,7 @@ require 'sequel'
 
 	def insert_manufactures(mfrs)
 		@DB[:manufactures].import([:name, :href_name, :category, :item_count], mfrs)
-		# insert_string = 'REPLACE INTO mft_data.mfr(name, href_name, item_count)
-		# 		         VALUES'
-		# mfrs.each_with_index do |mfr, i|
-		# 	insert_string += ',' if i > 0
-		# 	insert_string +=   "('#{@client.escape(mfr[0])}','#{@client.escape(mfr[1])}','#{mfr[2]}')\n"
-		# end
-		# # puts insert_string.colorize(:green)
-		# @client.query("#{insert_string}", cast: false)
 	end
-
 
 	def insert_mfr_parts(mfr_parts_data)
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)

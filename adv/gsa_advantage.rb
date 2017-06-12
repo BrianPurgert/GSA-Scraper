@@ -123,6 +123,7 @@ Bench_time         = [Time.now]
 def benchmark name = '', completed = 1
 	Bench_time << Time.now
 	elapsed       = Bench_time[-1] - Bench_time[-2]
-	elapsed == 0? say = "----------".colorize(:blue) : say = "#{completed/elapsed} #{name} per second".colorize(:red)
+	elapsed == 0? say = " ---------- ".colorize(:blue) : say = "#{completed/elapsed} #{name} per second".colorize(:red)
 	puts say
+	puts elapsed
 end
