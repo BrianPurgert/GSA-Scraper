@@ -1,23 +1,19 @@
 require_relative 'adv/gsa_advantage'
 
-def get_all_products(gsa_a, mfr_href, n, n_low, pg, total_found)
+def get_all_products(gsa_a, mfr_href, n, n_low, pg)
 	begin
-		 gsa_a[n].browser.goto search_url(mfr_href, n_low)
-		 response = gsa_a[n].html
-		# agent_doc = gsa_a[n].get(search_url(mfr_href, n_low))
-		# response = agent_doc.content
-		doc         = Nokogiri::HTML(response)
+		gsa_a[n].browser.goto search_url(mfr_href, n_low)
+		doc         = Nokogiri::HTML(gsa_a[n].html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
-		puts "#{next_page}"
 		product_tables = doc.search('#pagination~ table:not(#pagination2)')
-
 		n_results   = product_tables.length
 		@items      += n_results
 		      product_tables.each_with_index do |product_table, i|
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
+			
 			# bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end
@@ -49,72 +45,80 @@ def parse_result(product_table)
 end
 
 
-1.times do
-@reading    = 0
-@items      = 0
-@db_queue   = Queue.new
-@mfr_queue  = Queue.new
-threads     = []
-display_statistics
-
-#----------Normal-----------------Headless-------------#
-Dev_mode ? n_total = 10        : n_total = 55          # Number of Manufactures to search
-Dev_mode ? n_thr = 5           : n_thr = 10             # Number of browsers to run
-gsa_a     = []
-
-
-
+def add_manufactures(n_total)
 	manufactures = get_mfr(n_total).uniq { |mfr| mfr[:href_name] }
-	p manufactures.each {|mfr| p mfr[:href_name] }
-	manufactures.each {|mfr| @mfr_queue << mfr}
-
-threads << Thread.new do
-	while @reading < 10 do
-		until @db_queue.empty?
-			insert_mfr_parts(take(@db_queue))
-			@reading = 0
-		end
-		@reading += 1
-		color_p "-#{@db_queue.length}", 7 if @reading > 5
-		sleep 5
-	end
-end
-
-def parse_results(html)
-	 main_alt = Nokogiri::HTML.fragment(html)
-	 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
-	 product_tables.each_with_index do |product_table, i|
-		 p i
-		 parse_result(product_table)
-	 end
+	manufactures.each { |mfr| p mfr[:href_name] }
+	manufactures.each { |mfr| @mfr_queue << mfr }
 end
 
 
 
-def normalize_price(last_price)
-	n_low = last_price[1..-1].tap { |s| s.delete!(',') }
-	return n_low.to_f.round(2)
-end
-
-
-n_thr.times do |n|
+	@reading    = 0
+	@items      = 0
+	@db_queue   = Queue.new
+	@mfr_queue  = Queue.new
+	Thread.abort_on_exception = true
+	threads     = []
+	n_total     = 10         # Number of Manufactures to search
+	n_thr       = 5          # Number of browsers to run
+	gsa_a       = []
+	
+	display_statistics
+	add_manufactures(n_total)
+	
 	threads << Thread.new do
-		 gsa_a[n] = initialize_browser
-		 # gsa_a[n] = initialize_agent
-			until @mfr_queue.empty?
-				mfr = @mfr_queue.shift
-				get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1, 0)
-			end
-		 # gsa_a[n].browser.close
+		loop do
+				if @mfr_queue.size < (n_thr+5)
+					display_statistics
+					add_manufactures(n_thr*4)
+				else
+					sleep 5
+				end
 		end
-end
+	end
+	
+	threads << Thread.new do
+		while @reading < 10 do
+			until @db_queue.empty?
+				insert_mfr_parts(take(@db_queue))
+				@reading = 0
+			end
+			@reading += 1
+			color_p "#{@db_queue.length}", 7 if @reading > 5
+			sleep 5
+		end
+	end
 
+	def parse_results(html)
+		 main_alt = Nokogiri::HTML.fragment(html)
+		 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
+		 product_tables.each_with_index do |product_table, i|
+			 parse_result(product_table)
+		 end
+	end
+
+	def normalize_price(last_price)
+		n_low = last_price[1..-1].tap { |s| s.delete!(',') }
+		return n_low.to_f.round(2)
+	end
+
+	n_thr.times do |n|
+		threads << Thread.new do
+			 gsa_a[n] = initialize_browser
+				until @mfr_queue.empty?
+					mfr = @mfr_queue.shift
+					get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1)
+				end
+			 gsa_a[n].browser.close
+			end
+	end
+	
 
 
 threads.each { |thr| thr.join }
-display_statistics
+	display_statistics
 
-end
+
 
 
 

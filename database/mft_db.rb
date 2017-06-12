@@ -1,7 +1,6 @@
 require 'mysql2'
 require 'colorize'
 require 'colorized_string'
-require 'pp'
 require 'sequel'
 @client = Mysql2::Client.new(host: "localhost", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
 @DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
@@ -12,15 +11,21 @@ require 'sequel'
 
 
 	# TODO: Convert
-# @DB.create_table? :searches do
-# 	primary_key :id
-# 	String      :mfr
-# 	String      :mpn
-# 	String      :name
-# 	String      :href_name
-# 	String      :desc
-# 	String      :low_price
-# 	String      :sources
+	@DB.run "CREATE TABLE IF NOT EXISTS vendors
+	(
+		name varchar(255) not null
+			primary key,
+		href_name varchar(255) null,
+		last_updated datetime default CURRENT_TIMESTAMP not null,
+		last_search datetime default CURRENT_TIMESTAMP not null,
+		item_count int(10) unsigned null,
+		`change` int(10) default '0' not null,
+		check_out bit default b'0' not null,
+		constraint manufacture_name_uindex
+			unique (name)
+	);"
+
+	# TODO: Convert
 	@DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
 	(
 		id INT(11) NOT NULL AUTO_INCREMENT,
@@ -89,12 +94,13 @@ require 'sequel'
 		items.insert(title: title,url: url,found: found)
 	end
 
-	# pp @DB.schema(:manufactures)
+	
+	# pp @ DB.schema(:manufactures)
 	def display_statistics
-		@manufacture_parts = @DB[:manufacture_parts_0]
-		@manufacture       = @DB[:mfr]
-		puts "Manufacture Parts count: #{@manufacture_parts.count} Average Price: #{@manufacture_parts.avg(:low_price)}"
-		puts "Manufacture count: #{@manufacture.count}"
+		manufacture_parts = @DB[:manufacture_parts]
+		manufacture       = @DB[:manufactures]
+		puts "Manufacture Parts count: #{manufacture_parts.count} Average Price: #{manufacture_parts.avg(:low_price)}"
+		puts "Manufacture count: #{manufacture.count}"
 	end
 
 	def take(queue)
@@ -142,8 +148,7 @@ require 'sequel'
 
 
 	def insert_mfr_parts(mfr_parts_data)
-		# puts mfr_parts_data.inspect
-		 @DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
+		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
 	end
 
 
@@ -224,15 +229,16 @@ require 'sequel'
 
 
       def move_empty_queue
-          @client.query('
-               UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
-               SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-                   lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-                   lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-                   lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-               WHERE lowest_price_contractor.mpn = queue.mpn;
-                    ')
-          @client.query('TRUNCATE `mft_data`.`queue`;')
+		# should use this
+          # @client.query('
+          #      UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
+          #      SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
+          #          lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
+          #          lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
+          #          lowest_price_contractor.mpn_page_url = queue.mpn_page_url
+          #      WHERE lowest_price_contractor.mpn = queue.mpn;
+          #           ')
+          # @client.query('TRUNCATE `mft_data`.`queue`;')
      end
 
 	def load_table_mfr
