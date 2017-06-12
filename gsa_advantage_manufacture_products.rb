@@ -1,5 +1,4 @@
-require_relative 'gsa_advantage'
-
+require_relative 'adv/gsa_advantage'
 
 def get_all_products(gsa_a, mfr_href, n, n_low, pg)
 	begin
@@ -14,6 +13,7 @@ def get_all_products(gsa_a, mfr_href, n, n_low, pg)
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
+			
 			# bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end

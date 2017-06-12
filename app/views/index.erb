@@ -1,0 +1,65 @@
+<h1>Overview</h1>
+
+<p>This is the demo site for <a href="https://github.com/jeremyevans/forme">Forme</a>.  Forme is a HTML forms library for ruby with the following goals:</p>
+
+<ol>
+  <li>Have no external dependencies</li>
+  <li>Have a simple API</li>
+  <li>Support forms both with and without related objects</li>
+  <li>Allow compiling down to different types of output</li>
+</ol>
+
+<p>Note that as Forme is just an HTML forms library, the forms on this demo site are for display purposes only, you can't submit them.</p>
+
+<h2>Basic</h2>
+
+<p>These are basic model forms showing many field types and multiple association types.  All pages in this section use the same template, with different options per page.  The differences between some of these links are not visually obvious, you are encouraged to view the source of the page to see the markup differences.</p>
+
+<ul>
+  <li><a href="/album/basic/default">Default</a></li>
+  <li><a href="/album/basic/explicit">Explicit Labels</a></li>
+  <li><a href="/album/basic/table">Table</a></li>
+  <li><a href="/album/basic/list">List</a></li>
+  <li><a href="/album/basic/date">Date Multiple Select Boxes</a></li>
+  <li><a href="/album/basic/alt_assoc">Association Radio and Checkboxes</a></li>
+  <li><a href="/album/basic/readonly">Read Only</a></li>
+  <li><a href="/album/basic/text">Plain Text</a></li>
+</ul>
+
+<h2>Nested Associations</h2>
+
+<p>These show nested associations support.</p>
+
+<ul>
+  <li><a href="/album/nested">Single Level Nesting</a></li>
+  <li><a href="/artist/nested">Multiple Level Nesting</a></li>
+  <li><a href="/album/grid">Single Level Grid</a></li>
+  <li><a href="/artist/grid">Multiple Level Grid</a></li>
+</ul>
+
+<h2>Bootstrap 3 Support</h2>
+
+<p>Forme now supports <a href="http://getbootstrap.com/">Bootstrap 3</a> Form output.</p>
+
+<ul>
+  <li><a href="/bs3/album/basic/default">Bootstrap 3 - Defaults</a></li>
+  <li><a href="/bs3/album/basic/alt_assoc">Bootstrap 3 - Association Radio and Checkboxes</a></li>
+  <li><a href="/bs3/album/basic/table">Bootstrap 3 - Table</a></li>
+  <li><a href="/bs3/album/basic/list">Bootstrap 3 - List</a></li>
+  <li><a href="/bs3/album/basic/date">Bootstrap 3 - Date Multiple Select Boxes</a></li>
+  <li><a href="/bs3/album/basic/readonly">Bootstrap 3 - Read Only</a></li>
+  <li><a href="/bs3/album/nested">Bootstrap 3 - Single Level Nesting</a></li>
+  <li><a href="/bs3/artist/nested">Bootstrap 3 - Multiple Level Nesting</a></li>
+</ul>
+
+<p>Raise an <a href="http://github.com/jeremyevans/forme/issues">issue</a> if anything is wrong or missing in this support.</p>
+
+
+<h2>Database Schema</h2>
+
+<p>All examples use the same database schema, created by this Sequel::Model code:</p>
+
+<pre><code><%= File.read(CREATE_TABLES_FILE) %></code></pre>
+
+<p>This demo site is part of the Forme repository, so if you want to know how it works, you can <a href="https://github.com/jeremyevans/forme/tree/master/demo-site">review the source</a>.</p>
+

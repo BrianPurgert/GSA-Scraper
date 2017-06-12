@@ -1,4 +1,4 @@
-require_relative 'gsa_advantage'
+require_relative 'adv/gsa_advantage'
 require 'benchmark'
 
 

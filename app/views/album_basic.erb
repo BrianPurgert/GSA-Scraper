@@ -1,0 +1,13 @@
+<% form(Album.last, form_attr, form_opts) do |f| %>
+  <% f.inputs(:legend=>'Album') do %>
+    <%= f.input(:name) %>
+    <%= f.input(:artist, form_opts[:one]) %>
+    <%= f.input(:release_date, form_opts[:date]) %>
+    <%= f.input(:release_party_time, form_opts[:date]) %>
+    <%= f.input(:copies_sold) %>
+    <%= f.input(:debut_album) %>
+    <%= f.input(:out_of_print) %>
+    <%= f.input(:tags, form_opts[:many]) %>
+  <% end %>
+  <%= f.button(:value=>'Update Album') %>
+<% end %>
