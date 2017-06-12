@@ -70,18 +70,7 @@ def xls_read
     puts @mfrn_found ? "Manufacture found".colorize(:green) : 'Manufacture not found'.colorize(:red)
     exit if !@mfrn_found
 end
-def xls_to_database(client)
-    insert_mfr_part = client.prepare('
-INSERT IGNORE INTO `mft_data`.`lowest_price_contractor`(mpn, manufacturer_name)
-VALUES (?, ?);
-')
-    
-    @href_name.each_index do |mfr_index|
-	  print "#{mfr_index}\t".colorize(:magenta)
-	  puts "#{@href_name[mfr_index]}\t\t\t#{@mfr_name[mfr_index]}".colorize(:cyan)
-	  insert_mfr_part.execute(@href_name[mfr_index], @mfr_name[mfr_index])
-    end
-end
+
 def write_new_xls(output_xls)
     out_book    = Spreadsheet::Workbook.new
     sheet1      = out_book.create_worksheet
@@ -94,26 +83,14 @@ def write_new_xls(output_xls)
     }
     out_book.write(output_xls)
 end
-def skip(search_item)
-    puts "skipping MFT: #{search_item}"
-end
+
 def benchmark
     Bench_time << Time.now
     elapsed       = Bench_time[-1] - Bench_time[-2]
     total_elapsed = Bench_time[-1] - Bench_time[0]
     print "\tElapsed: #{total_elapsed}\tSince Last: #{elapsed}\n".colorize(:blue)
 end
-def move_empty_queue
-	@client.query('
-UPDATE `mft_data`.`lowest_price_contractor`, `mft_data`.`queue`
-SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-    lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-    lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-    lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-WHERE lowest_price_contractor.mpn = queue.mpn;
-')
-	@client.query('TRUNCATE `mft_data`.`queue`;')
-end
+
 def search_url(mpn, mft)
     return "https://www.gsaadvantage.gov/advantage/s/search.do?q=9,8:0#{mpn}&q=10:2#{mft}&s=0&c=25&searchType=0"
 end

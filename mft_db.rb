@@ -90,7 +90,6 @@ require 'sequel'
 		Integer     :found
 	end
 
-
       # todo:
 	# @DB.create_table? :manufacture do
 	# 	primary_key :id
@@ -104,14 +103,11 @@ require 'sequel'
 		items = @DB[:searches]
 		items.insert(title: title,url: url,found: found)
 	end
-
 	
 	# puts DB.schema(:mfr_parts)
 	def display_statistics
-		@manufacture_parts = @DB[:manufacture_parts]
-		@manufacture       = @DB[:mfr]
-		puts "Manufacture Parts count: #{@manufacture_parts.count} Average Price: #{@manufacture_parts.avg(:low_price)}"
-		puts "Manufacture count: #{@manufacture.count}"
+		puts "Number of Manufacture Parts: #{@DB[:manufacture_parts].count}".colorize(:green)
+		puts "Manufacture count: #{@DB[:mfr].count}".colorize(:green)
 	end
 
 	def take(queue)
@@ -148,31 +144,26 @@ require 'sequel'
 			insert_string += ',' if i > 0
 			insert_string +=   "('#{@client.escape(mfr[0])}','#{@client.escape(mfr[1])}','#{mfr[2]}')\n"
 		end
-		# puts insert_string.colorize(:green)
 		@client.query("#{insert_string}", cast: false)
 	end
 
-	# @insert_part = @client.prepare("REPLACE INTO mft_data.mfr_parts (mfr, mpn, name, href_name, `desc`, low_price, sources) VALUES (?, ?, ?, ?, ?, ?, ?)")
-	# def insert_mfr_part(part)
-       #      @insert_part.execute(part[0],part[1],part[2],part[3],part[4],part[5],part[6])
-	# 	# puts "REPLACE COMPLETE:\t#{part.inspect}".colorize(:green)
-       #      end
+
 
 	def insert_mfr_parts(mfr_parts_data)
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
 	end
 
 	
-	def insert_result_block(mfr_parts_data)
-		insert_string = 'REPLACE INTO mft_data.mfr_part_blocks (href_search, result_block, href_name)
-				         VALUES'
-		mfr_parts_data.each_with_index do |mfr_part, i|
-			insert_string += ',' if i > 0
-			insert_string += "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}')\n"
-		end
-		puts insert_string.colorize(:green)
-		@client.query("#{insert_string}")
-	end
+	# def insert_result_block(mfr_parts_data)
+	# 	insert_string = 'REPLACE INTO mft_data.mfr_part_blocks (href_search, result_block, href_name)
+	# 			         VALUES'
+	# 	mfr_parts_data.each_with_index do |mfr_part, i|
+	# 		insert_string += ',' if i > 0
+	# 		insert_string += "('#{@client.escape(mfr_part[0])}','#{@client.escape(mfr_part[1])}','#{@client.escape(mfr_part[2])}')\n"
+	# 	end
+	# 	puts insert_string.colorize(:green)
+	# 	@client.query("#{insert_string}")
+	# end
 	
 	
 	def mfr_time(name)
@@ -259,15 +250,16 @@ require 'sequel'
 
 
       def move_empty_queue
-          @client.query('
-               UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
-               SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-                   lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-                   lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-                   lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-               WHERE lowest_price_contractor.mpn = queue.mpn;
-                    ')
-          @client.query('TRUNCATE `mft_data`.`queue`;')
+		# should use this
+          # @client.query('
+          #      UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
+          #      SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
+          #          lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
+          #          lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
+          #          lowest_price_contractor.mpn_page_url = queue.mpn_page_url
+          #      WHERE lowest_price_contractor.mpn = queue.mpn;
+          #           ')
+          # @client.query('TRUNCATE `mft_data`.`queue`;')
      end
 
 	def load_table_mfr

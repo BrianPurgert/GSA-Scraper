@@ -1,8 +1,3 @@
-require_relative 'gsa_advantage'
-require "net/http"
-require "uri"
-require "httparty"
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 
 base_url    = "https://www.gsaadvantage.gov/"
@@ -62,23 +57,3 @@ end
 "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"
 
 
-#
-# <select name="advRecordNames.matchByCriteriaNamesIndexed[4]">
-# <option value="2" selected="selected">any the words</option>
-#                         <option value="0">all the words</option>
-# <option value="1">the exact phrase</option>
-#                         <option value="3">none of the words</option></select>
-#
-#                     <input type="text" name="advRecordNames.typedCriteriaInputNamesIndexed[4]" maxlength="80" size="25" value="">
-#                       <strong>in</strong>
-# <select name="advRecordNames.fieldTypeCriteriaNamesIndexed[4]"><option value="0" selected="selected">any product field</option>
-#                         <option value="9,8">NSN or mfr part number</option>
-# <option value="11,12">product name or description</option>
-#                         <option value="11">product name</option>
-# <option value="10">manufacturer</option>
-#                         <option value="19">contract number</option>
-# <option value="24">contractor</option>
-#                         <option value="27">vendor p/n</option>
-#                         <option value="23">category name</option>
-# <option value="20">Special Item Number (SIN)</option>
-# </select>
