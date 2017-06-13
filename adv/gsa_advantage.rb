@@ -17,10 +17,7 @@ require_relative '../database/mft_db'
 require_relative '../pages/gsa_advantage_page'
 
 
-p Dev_mode ? "Running in dev mode" : "Running in production mode"
 
-
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
 
 def color_p(str,i=-1)
