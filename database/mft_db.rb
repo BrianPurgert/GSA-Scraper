@@ -2,8 +2,12 @@ require 'mysql2'
 require 'colorize'
 require 'colorized_string'
 require 'sequel'
-@client = Mysql2::Client.new(host: "192.168.1.104", username: "mft_data", password: "GoV321CoN",encoding: 'utf8')
-@DB = Sequel.connect('mysql2://mft_data:GoV321CoN@192.168.1.104/mft_data')
+MYSQL_HOSTS = %w(localhost 192.168.1.104)
+MYSQL_USER  = 'mft_data'
+MYSQL_PASS  = 'GoV321CoN'
+
+@client = Mysql2::Client.new(host: MYSQL_HOSTS[0], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
+@DB = Sequel.connect("mysql2://#{MYSQL_USER}:#{MYSQL_PASS}@#{MYSQL_HOSTS[0]}/mft_data")
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
