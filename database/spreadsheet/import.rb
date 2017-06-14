@@ -26,7 +26,7 @@ Header_PRICE   = /(.*)Price(.*)/i
 		# end
 	end
 
-	def comparison_table(name, extra_columns = [])
+	def create_client_table(name, extra_columns = [])
 		@DB.create_table! name do
 			primary_key :id
 			String :manufacture_name
@@ -44,20 +44,38 @@ Header_PRICE   = /(.*)Price(.*)/i
 		 spreadsheet.parse(clean: true,   manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
 	end
 
+	def update_priorty(manufacture_name, amount)
+	
+	end
 	
 
 	def import_products(path,table_name)
 		spreadsheet = open_spreadsheet(path)
-		p spreadsheet.info
+		color_p spreadsheet.info, 12
 		table = @DB[table_name]
 		set = parse_prices(spreadsheet)
-		comparison_table table_name, ['a','b','c']
+		create_client_table table_name, ['a', 'b', 'c']
 		import_client_prices table, set
-		@DB[table_name][:manufacture_name => 'YJM']
+		# color_p@DB[table_name].all
+		# @DB[table_name].each{|row| p row} # SELECT * FROM table
+		# [:manufacture_name => 'YJM']
+		#     p @DB[table_name][:manufacture_name]
+		manufactures = @DB[table_name].order(:id).distinct(:manufacture_name)
+		
+		# uniq { |mfr| mfr[:manufacture_name] }
+		manufactures.each do |manufacture|
+			puts manufacture[:manufacture_name]
+			@DB[:manufactures]
+			# update_priority(manufacture_name, n)
+		end
 		
 		
 		
-		# dataset = DB.from(:items)
+		# manufactures.each { |mfr| p mfr[:href_name] }
+		
+
+		# DB[:table].columns
+	
 		# create_table
 		# create_table name, extra_columns
 		# parse_prices

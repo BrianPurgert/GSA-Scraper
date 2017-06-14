@@ -2,7 +2,7 @@ require 'mysql2'
 require 'colorize'
 require 'colorized_string'
 require 'sequel'
-MYSQL_HOSTS = %w(localhost 192.168.1.104)
+MYSQL_HOSTS = %w(192.168.1.104 localhost)
 MYSQL_USER  = 'mft_data'
 MYSQL_PASS  = 'GoV321CoN'
 
