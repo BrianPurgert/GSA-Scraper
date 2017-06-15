@@ -28,7 +28,7 @@ threads << Thread.new do
 		end
 		@reading += 1
 		color_p "End in: #{10-@reading}", 7 if @reading > 5
-		sleep 2
+		sleep 10
 	end
 end
 
