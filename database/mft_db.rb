@@ -205,8 +205,8 @@ end
 
 
       def get_mfr(amount = 1)
-		 @DB[:manufactures].where(check_out: 0 & )
-          row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
+		 # @DB[:manufactures].where(check_out: 0 )
+          row_list = @client.query("SELECT * FROM `mft_data`.`manufactures` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          p "#{row[:name]}"
 	           check_out(row[:name])
