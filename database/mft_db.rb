@@ -21,8 +21,9 @@ rescue Exception => e
 	retry if count <= MYSQL_HOSTS.size
 end
 
+	
 
-
+	@DB.extension(:pretty_table)
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be

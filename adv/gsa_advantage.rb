@@ -20,6 +20,7 @@ require_relative '../pages/gsa_advantage_page'
 
 
 
+
 def color_p(str,i=-1)
 	case i
 		when -1
@@ -30,10 +31,10 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-def bp(arr_str,length = [80,80,80,80,80,80,80])
+def bp(arr_str,length = [50,50,50,50,50,50,50])
 	out_str = ""
 	arr_str.each_with_index do |str, i|
-		out_str += "|\t#{(str + ' ' * length[i])[0, length[i]]} |".colorize(String.colors[i])
+		out_str += "|#{(str + ' ' * length[i])[0, length[i]]}|".colorize(String.colors[i])
 	end
 	puts out_str
 end

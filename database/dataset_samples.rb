@@ -3,7 +3,7 @@ require_relative './spreadsheet/import'
 def run_sample
 	
 	sample_table_join
-	puts sample_having.inspect
+	# puts sample_having.inspect
 	
 	
 	
@@ -27,7 +27,10 @@ end
 
 
 def sample_table_join
-	result = @DB[:test1].join_table(:inner, @DB[:manufactures], manufacture_name: 'name')
+	spreadsheet_table = @DB[:test1]
+	part         = @DB[:manufacture_parts][:mpn => '36Z254']
+	color_p part.pretty_inspect
+	result = @DB[:test1].join_table(:inner, @DB[:manufacture_parts], manufacture_name: 'name')
 	puts result.inspect
 		# SELECT * FROM a INNER JOIN (SELECT * FROM b) AS t1 ON (t1.c = a.d)
 	# @DB[:test1].join_table(:left, :b___c, [:d])
