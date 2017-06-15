@@ -6,7 +6,9 @@ require 'sequel'
 MYSQL_HOSTS = %w(localhost 192.168.1.104 70.61.131.182)
 MYSQL_USER  = 'mft_data'
 MYSQL_PASS  = 'GoV321CoN'
-
+def line
+	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
+end
 
 count = 0
 begin
@@ -14,9 +16,9 @@ begin
 	@client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
 	@DB = Sequel.connect("mysql2://#{MYSQL_USER}:#{MYSQL_PASS}@#{MYSQL_HOSTS[count]}/mft_data")
 rescue Exception => e
-	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
+	line
 	puts "#{e.message}".colorize(:red)
-	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
+	line
 	count += 1
 	retry if count <= MYSQL_HOSTS.size
 end
@@ -119,8 +121,9 @@ end
 	def display_statistics
 		manufacture_parts = @DB[:manufacture_parts]
 		manufacture       = @DB[:manufactures]
-		puts "Manufacture Parts count: #{manufacture_parts.count} Average Price: #{manufacture_parts.avg(:low_price)}"
-		puts "Manufacture count: #{manufacture.count}"
+		line
+		color_p "Manufacture Parts count: #{manufacture_parts.count}   Manufacture count: #{manufacture.count}", 7
+		line
 	end
 
 	def take(queue)
@@ -177,11 +180,24 @@ end
 	end
 
 
+	# def check_in
+	#      insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE check_out=1"
+	#      puts insert_string
+	#       @client.query("#{insert_string}")
+	#      safe_stop
+	# end
+
+	def check_in(name)
+		safe_stop
+		escaped = @client.escape("#{name}")
+		insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE name='#{escaped}'"
+	      @client.query("#{insert_string}")
+	end
+
 	def check_out(name)
 		safe_stop
 		escaped = @client.escape("#{name}")
-		insert_string = "UPDATE mft_data.mfr SET check_out=1 WHERE name='#{escaped}'"
-		# puts insert_string.colorize(:green)
+		insert_string = "UPDATE mft_data.manufactures SET check_out=1 WHERE name='#{escaped}'"
 	      @client.query("#{insert_string}")
 	end
 
@@ -196,12 +212,6 @@ end
 			SET status_id = '1' WHERE temp.href_name = t.href_name")
 	end
 
-	def check_in
-	     insert_string = "UPDATE mft_data.mfr SET check_out=0 WHERE check_out=1"
-	     puts insert_string
-	      @client.query("#{insert_string}")
-	     safe_stop
-	end
 
 
 

@@ -6,7 +6,7 @@ require "bundler/setup"
 
 
 
-desc 'Default Tasks'
+desc "Default Tasks"
 task default: [:install,:get_products]
 
 desc "Install Gems"
@@ -19,7 +19,7 @@ task(:gsa_advantage_manufacture_products) do
 	ruby 'gsa_advantage_manufacture_products.rb'
 end
 
-desc "Get all Manufactures"
+desc "Update listing for all Manufactures and Venudures"
 task(:get_manufactures) do
 	ruby 'gsa_advantage_manufactures.rb'
 end

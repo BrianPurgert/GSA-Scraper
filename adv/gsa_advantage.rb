@@ -17,10 +17,6 @@ require_relative '../database/mft_db'
 require_relative '../pages/gsa_advantage_page'
 
 
-
-
-
-
 def color_p(str,i=-1)
 	case i
 		when -1
