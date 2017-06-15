@@ -11,7 +11,7 @@ logger = Logger.new $stdout
 # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 # P_list = ['192.225.106.163', '192.225.98.17','69.162.164.78']
 
-def initialize_fake_browser
+def sample1
 	proxy       = P_list.sample
 	url         = 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do'
 	switch      = ["headless", "disable-gpu","proxy-server=#{proxy}:45623"]
@@ -29,16 +29,9 @@ def initialize_fake_browser
 	return agent
 end
 
-frat = Mechanize.start
-
-agent = initialize_fake_browser
-agent.get ()
-pp agent.cookies
 
 
-
-
-def abcd
+def sample2
 	browser = Watir::Browser.start 'chrome://version/',:chrome
 	browser.goto 'https://www.gsaadvantage.gov/'
 	 browser.cookies.to_a.inspect
@@ -52,13 +45,7 @@ def abcd
 end
 
 
-
-
-
-
-
-
-
+def sample3
 threads     = []
 @agent      = []
 (1..2).each do |pg|
@@ -76,10 +63,9 @@ threads     = []
 	end
 end
 threads.each { |thr| thr.join }
+end
 
-exit
-
-
+def sample4
 (1..5).each do |pg|
 	threads << Thread.new do
 		@agent[pg] =  Mechanize.new do |a|
@@ -103,11 +89,10 @@ exit
 		p @agent[pg].cookie_jar.to_a.inspect
 	end
 end
-
 threads.each { |thr| thr.join }
+end
 
-exit
-
+def sample5
 agent[] = Mechanize.new
 agent.set_proxy '69.162.164.78', 45623
 page = agent.get('https://www.gsaadvantage.gov/advantage/main/start_page.do')
@@ -118,18 +103,20 @@ end
 page = agent.get('https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=14:7900000000&c=100&s=9&p=1')
 page.links.each do |link|
 	puts link.text
-
-
-
 end
-sleep 5
-exit
+end
+
+
 
 def open(url ,name='new_tab' , specs='specs' , replace='replace')
 	# window = Watir::Window.new browser.driver,
 	# p browser.window.inspect, browser.window.title, browser.window.url
 	expected = @browser.windows.size + 1
 	@browser.driver.execute_script("window.open(arguments[0]);",url)
+# "	function OpenInNewTabWinBrowser(url) {
+# 		var win = window.open(url, '_blank');
+# 		win.focus();
+# 	}"
 	Watir::Wait.until { @browser.windows.size == expected }
 	p "Opens: #{@browser.windows.size}"
 	# browser.driver.switch_to.window(browser.driver.window_handles.last)
@@ -152,12 +139,8 @@ end
 
 
 
-
+def sample6
 @threads     = []
-
-
-
-
 @browser = Watir::Browser.start 'http://www.deelay.me/0',:chrome
 @browser.alert
 	open_message "errrroooo"
@@ -177,13 +160,12 @@ p "Number of windows#{@browser.windows.size}"
 @browser.window(title: 'closeable window')
 @browser.window(title: 'closeable window')
 @browser.switch
-
-exit
-
+end
 
 
 
 
+def sample7
 
 # letters = ("A".."Z").to_a << '0'
 # p letters
@@ -222,7 +204,7 @@ letters.each do |letter|
 		"https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4#{category}*&listFor=#{letter}"
 	end
 end
-
+end
 
 p
 # p Socket.ip_address_list.any? {|addr| addr.to_s.include? "bb82"}
@@ -230,8 +212,7 @@ p
 #   Socket.ip_address_list.each {|add| p add}
 
 
-
-
+def sample8
 
 # Selenium::WebDriver::Chrome.path = 'C:\Users\Brian\AppData\Local\Google\Chrome SxS\Application\chrome.exe'
 #  browser = Watir::Browser.new :chrome
@@ -253,9 +234,10 @@ browser.driver.execute_script("window.open('https://govconsvcs.com/');")
 p browser.windows.inspect
 		# browser.driver.switchTo.window(tab1)
 browser.driver.execute_script("window.open('https://www.google.com');")
-
-
 browser.goto 'https://www.govconsvcs.com/'
+
+end
+
 #main > article > div > ul:nth-child(2) > li
 
  	browser.divs(css: '*').each do |element|
@@ -362,3 +344,8 @@ exit
 #   gsa_advantage[index] = GsaAdvantagePage.new(browser[index])
 #   gsa_advantage[index].browser.goto 'http://www.ipaddresslocation.org/'
 # end
+
+# ==================================================================================================================== #
+
+# ==================================================================================================================== #
+

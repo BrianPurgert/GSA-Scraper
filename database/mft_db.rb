@@ -2,19 +2,34 @@ require 'mysql2'
 require 'colorize'
 require 'colorized_string'
 require 'sequel'
-MYSQL_HOSTS = %w(192.168.1.104 localhost)
+
+MYSQL_HOSTS = %w(localhost 192.168.1.104 70.61.131.182)
 MYSQL_USER  = 'mft_data'
 MYSQL_PASS  = 'GoV321CoN'
 
-@client = Mysql2::Client.new(host: MYSQL_HOSTS[0], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
-@DB = Sequel.connect("mysql2://#{MYSQL_USER}:#{MYSQL_PASS}@#{MYSQL_HOSTS[0]}/mft_data")
+
+count = 0
+begin
+	puts "Connecting to #{MYSQL_HOSTS[count]}"
+	@client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
+	@DB = Sequel.connect("mysql2://#{MYSQL_USER}:#{MYSQL_PASS}@#{MYSQL_HOSTS[count]}/mft_data")
+rescue Exception => e
+	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
+	puts "#{e.message}".colorize(:red)
+	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
+	count += 1
+	retry if count <= MYSQL_HOSTS.size
+end
+
+
+
 
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
 
 
-	# TODO: Convert
+	
 	@DB.run "CREATE TABLE IF NOT EXISTS vendors
 	(
 		name varchar(255) not null
@@ -78,13 +93,13 @@ MYSQL_PASS  = 'GoV321CoN'
 	
 	
 	
-	# TODO: Convert
-	@DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
-	(
-		list_for char(50) not null
-			primary key,
-		last_update timestamp default CURRENT_TIMESTAMP not null
-	);"
+	# TODO: Remove Convert
+	# @DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
+	# (
+	# 	list_for char(50) not null
+	# 		primary key,
+	# 	last_update timestamp default CURRENT_TIMESTAMP not null
+	# );"
 
 	@DB.create_table? :searches do
 		primary_key :id
@@ -190,6 +205,7 @@ MYSQL_PASS  = 'GoV321CoN'
 
 
       def get_mfr(amount = 1)
+		 @DB[:manufactures].where(check_out: 0 & )
           row_list = @client.query("SELECT * FROM `mft_data`.`mfr` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
           row_list.each do |row|
 	          p "#{row[:name]}"

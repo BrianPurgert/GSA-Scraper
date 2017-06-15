@@ -41,11 +41,21 @@ Header_PRICE   = /(.*)Price(.*)/i
 
 
 	def parse_prices(spreadsheet)
-		 spreadsheet.parse(clean: true,   manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
+		begin
+			return spreadsheet.parse(clean: true, manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
+		rescue Exception => e
+				puts e.message
+			# TODO: return a template file
+		end
+		
 	end
 
-	def update_priorty(manufacture_name, amount)
+     def comparison_results
+		
+     end
 	
+	def update_priority(manufacture_name, amount)
+		@DB[:manufactures][]
 	end
 	
 
@@ -60,12 +70,28 @@ Header_PRICE   = /(.*)Price(.*)/i
 		# @DB[table_name].each{|row| p row} # SELECT * FROM table
 		# [:manufacture_name => 'YJM']
 		#     p @DB[table_name][:manufacture_name]
-		manufactures = @DB[table_name].order(:id).distinct(:manufacture_name)
 		
 		# uniq { |mfr| mfr[:manufacture_name] }
-		manufactures.each do |manufacture|
-			puts manufacture[:manufacture_name]
-			@DB[:manufactures]
+		# @DB[table_name].order(:id).distinct(:manufacture_name)
+		# @DB[table_name].group_and_count(:manufacture_name).all
+		color_p @DB[table_name].inspect
+		@DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
+			m = manufacture[:manufacture_name]
+			color_p m
+			# Sequel.lit("name = ?", )
+			dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
+			dataset.where(name:  m).update(:priority => 110)
+			
+			
+			#dataset.each { |mfr| puts mfr.update(:priority=>100,:check_out=>false) }
+			# select(:priority).
+			# dataset = @DB[:items].select(:x, :y, :z).filter{(x > 1) & (y > 2)}.update(priority: 100)
+			# matched_mfr = @DB[:manufactures].where(name: m)
+			# puts matched_mfr.all
+			
+			# DB[:manufactures].update(:x=>nil) # UPDATE table SET x = NULL
+
+			# @DB[:manufactures]
 			# update_priority(manufacture_name, n)
 		end
 		
