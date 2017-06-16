@@ -1,10 +1,11 @@
 require_relative './import'
 
 
-path = File.join(__dir__, 'test/Test File 1.xlsx')
-puts path
-import_products path, :test1
-# import_products "./test/Test File 2.xlsx", :test2
+path1 = File.join(__dir__, 'test/Test File 1.xlsx')
+path2 = File.join(__dir__, 'test/Test File 2.xlsx')
+puts path1
+import_products path1, :test1
+import_products path2, :test2
 
 
 
