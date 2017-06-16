@@ -1,7 +1,11 @@
+# Database file
+# Sequel ORM
+# Why? https://twin.github.io/evaluating-ruby-libraries/
+require 'sequel'
 require 'mysql2'
 require 'colorize'
 require 'colorized_string'
-require 'sequel'
+
 
 MYSQL_HOSTS = %w(localhost 192.168.1.104 70.61.131.182)
 MYSQL_USER  = 'mft_data'
@@ -26,7 +30,9 @@ end
 	
 
 	@DB.extension(:pretty_table)
-
+	# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
+	# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
+	# todo: sequel extension      http://shrinerb.com/
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
@@ -212,21 +218,13 @@ end
 			SET status_id = '1' WHERE temp.href_name = t.href_name")
 	end
 
-
-
-
       def get_mfr(amount = 1)
-		 # @DB[:manufactures].where(check_out: 0 )
-          row_list = @client.query("SELECT * FROM `mft_data`.`manufactures` WHERE check_out=0 ORDER BY priority DESC LIMIT #{amount};", :symbolize_keys => true).to_a
-          row_list.each do |row|
-	          p "#{row[:name]}"
-	           check_out(row[:name])
-          end
-          mfr_href = row_list.map{|mfr| mfr[:href_name]}
-          return row_list
+		manufacture_set = @DB[:manufactures].where(check_out: 0).order(Sequel.desc(:priority)).limit(amount)
+		manufacture_set.print
+		manufacture_set.update(check_out: 1)
+          return manufacture_set.all
      end
-# get_mfr(5)
-
+ # get_mfr(30)
 
 	def get_mfr_part(amount = 1)
 		row_list = []

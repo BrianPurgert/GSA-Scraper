@@ -17,10 +17,10 @@ Header_PRICE   = /(.*)Price(.*)/i
 		set.each do |row|
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
-			bp ["----","#{row_manufacture}","","#{row_part_number}","-----"], [1,25,1,25,1]
+			color_p"#{row_manufacture} : #{row_part_number}",7
 			part         = @DB[:manufacture_parts][:mpn => row_part_number]
 			#[:mfr => row_manufacture]
-			color_p part.inspect
+			puts part.inspect
 		end
 		
 		set.collect! do |row|
@@ -69,39 +69,38 @@ Header_PRICE   = /(.*)Price(.*)/i
      def comparison_results
 		
      end
-	
-	def update_priority(manufacture_name, amount)
-		@DB[:manufactures][]
-	end
-	
 
-	def import_products(path,table_name)
+
+def prioritize(table_name)
+	@DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
+		m = manufacture[:manufacture_name]
+		color_p "Checkout & Prioritize: #{m}", 11
+		dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
+		dataset.where(name: m).update(priority: 100, check_out: 0)
+	end
+end
+
+def import_products(path,table_name)
 		spreadsheet = open_spreadsheet(path)
 		color_p spreadsheet.info, 3
 		table = @DB[table_name]
-		table.print
 		set = parse_prices(spreadsheet)
 		create_client_table table_name, ['a', 'b', 'c']
 		import_client_prices table, set
+		table.print
+		prioritize(table_name)
+	
 		# color_p@DB[table_name].all
 		# @DB[table_name].each{|row| p row} # SELECT * FROM table
 		# [:manufacture_name => 'YJM']
 		#     p @DB[table_name][:manufacture_name]
 		
-		# uniq { |mfr| mfr[:manufacture_name] }
+		
 		# @DB[table_name].order(:id).distinct(:manufacture_name)
 		# @DB[table_name].group_and_count(:manufacture_name).all
 		
-		@DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
-			m = manufacture[:manufacture_name]
-			color_p "adding #{m}"
-			
-			
-			dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
-			dataset.where(name:  m).update(priority: 110)
-			
-			
-			# dataset.each { |mfr| puts mfr.update(:priority=>100,:check_out=>false) }
+		
+	# dataset.each { |mfr| puts mfr.update(:priority=>100,:check_out=>false) }
 			# select(:priority).
 			# dataset = @DB[:items].select(:x, :y, :z).filter{(x > 1) & (y > 2)}.update(priority: 100)
 			# matched_mfr = @DB[:manufactures].where(name: m)
@@ -111,7 +110,7 @@ Header_PRICE   = /(.*)Price(.*)/i
 
 			# @DB[:manufactures]
 			# update_priority(manufacture_name, n)
-		end
+		
 		
 		
 		

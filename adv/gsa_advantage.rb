@@ -35,12 +35,14 @@ def bp(arr_str,length = [50,50,50,50,50,50,50])
 	puts out_str
 end
 
-def search_url(mfr_href_name, current_lowest_price,page_number=1,high_low=true)
+def search_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
+	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
-	url = url + "q=28:5#{mfr_href_name}"
+	url = url + "q=28:5#{url_encoded_name}"
 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
 	url = url + "&c=100"
-	url = url + (high_low ? "&s=9" : "&s=6")                      # if true sorts by price high to how
+	url = url + (high_low ? '&s=9' : '&s=6')
+	url = url + "&q=1:4#{category}*"
 	url = url + "&p=#{page_number}"
 	return url
 end

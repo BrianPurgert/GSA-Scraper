@@ -1,8 +1,8 @@
 require_relative 'adv/gsa_advantage'
 
-def get_all_products(gsa_a, mfr_href, n, n_low, pg)
+def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
-		gsa_a[n].browser.goto search_url(mfr_href, n_low)
+		gsa_a[n].browser.goto search_url(mfr[:href_name], n_low,mfr[:category])
 		doc         = Nokogiri::HTML(gsa_a[n].html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
@@ -46,8 +46,8 @@ end
 
 
 def add_manufactures(n_total)
-	manufactures = get_mfr(n_total).uniq { |mfr| mfr[:href_name] }
-	manufactures.each { |mfr| p mfr[:href_name] }
+	manufactures = get_mfr(n_total)#.uniq { |mfr| mfr[:href_name] }
+	manufactures.each { |mfr| p "#{mfr[:name]} #{mfr[:category]}" }
 	manufactures.each { |mfr| @mfr_queue << mfr }
 end
 
@@ -107,7 +107,7 @@ end
 			 gsa_a[n] = initialize_browser
 				until @mfr_queue.empty?
 					mfr = @mfr_queue.shift
-					get_all_products(gsa_a, mfr[:href_name], n, 900000000, 1)
+					get_all_products(gsa_a, mfr, n, 900000000, 1)
 				end
 			 gsa_a[n].browser.close
 			end
