@@ -47,7 +47,7 @@ end
 
 def add_manufactures(n_total)
 	manufactures = get_mfr(n_total)#.uniq { |mfr| mfr[:href_name] }
-	manufactures.each { |mfr| p "#{mfr[:name]} #{mfr[:category]}" }
+	# manufactures.each { |mfr| p "#{mfr[:name]} #{mfr[:category]}" }
 	manufactures.each { |mfr| @mfr_queue << mfr }
 end
 
