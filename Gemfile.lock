@@ -72,10 +72,9 @@ GEM
       spreadsheet (> 0.9.0)
     ruby-ole (1.2.12.1)
     rubyzip (1.2.1)
-    selenium-webdriver (3.4.0)
+    selenium-webdriver (3.4.3)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
-      websocket (~> 1.0)
     sequel (4.47.0)
     spreadsheet (1.1.4)
       ruby-ole (>= 1.0)
@@ -88,7 +87,6 @@ GEM
     watir-nokogiri (1.0.0)
       nokogiri
     webrobots (0.1.2)
-    websocket (1.2.4)
     yml_reader (0.7)
 
 PLATFORMS

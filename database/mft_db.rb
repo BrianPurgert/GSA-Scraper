@@ -7,18 +7,22 @@ require 'colorize'
 require 'colorized_string'
 
 
-MYSQL_HOSTS = %w(localhost 192.168.1.104 70.61.131.182)
-MYSQL_USER  = 'mft_data'
-MYSQL_PASS  = 'GoV321CoN'
+MYSQL_HOSTS = %w(gcs-data.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
+MYSQL_USER  = "BrianPurgert@gcs-data"  #'mft_data'
+MYSQL_PASS  = "GoV321CoN"
 def line
 	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
 end
 
+
+
 count = 0
 begin
 	puts "Connecting to #{MYSQL_HOSTS[count]}"
-	@client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
-	@DB = Sequel.connect("mysql2://#{MYSQL_USER}:#{MYSQL_PASS}@#{MYSQL_HOSTS[count]}/mft_data")
+	@client = Mysql2::Client.new(username: "BrianPurgert@gcs-data", password: 'GoV321CoN', database: "mft_data", host: "gcs-data.mysql.database.azure.com", port: 3306, sslverify:false, sslcipher:'AES256-SHA')
+	@DB = Sequel.connect(:adapter=>'mysql2', :host=>'gcs-data.mysql.database.azure.com', :database=>'mft_data', :user=>'BrianPurgert@gcs-data', :password=>'GoV321CoN')
+	# @client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
+	# @DB = Sequel.connect("mysql2://BrianPurgert@gcs-data:#{MYSQL_PASS}/mft_data")
 rescue Exception => e
 	line
 	puts "#{e.message}".colorize(:red)
@@ -26,8 +30,6 @@ rescue Exception => e
 	count += 1
 	retry if count <= MYSQL_HOSTS.size
 end
-
-	
 
 	@DB.extension(:pretty_table)
 	# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
