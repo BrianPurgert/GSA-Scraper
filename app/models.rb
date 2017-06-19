@@ -1,13 +1,13 @@
 require 'rubygems'
 require 'sequel'
 require 'logger'
-require_relative '../database/mft_db.rb'
+# require_relative '../database/mft_db.rb'
 $: << ::File.expand_path('../../lib',  __FILE__)
 
 module FormeDemo
 DEMO_MODE = !!ENV['DATABASE_URL']
 DB = Sequel.connect('mysql2://mft_data:GoV321CoN@localhost/mft_data')
-#Sequel.connect(ENV['FORME_DATABASE_URL'] || ENV['DATABASE_URL'] || 'sqlite:/', :identifier_mangling=>false)
+Sequel.connect(ENV['FORME_DATABASE_URL'] || ENV['DATABASE_URL'] || 'sqlite:/', :identifier_mangling=>false)
 DB.extension(:freeze_datasets)
 CREATE_TABLES_FILE = File.join(File.dirname(__FILE__), 'create_tables.rb')
 

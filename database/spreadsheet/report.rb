@@ -5,7 +5,7 @@ files                       = Dir.glob(basedir+"*.xlsx")
 files.each_with_index do |file, num|
 	puts "#{num}\t#{file}\t".colorize(:green)
 end
-@DB.schema.each { |table | puts table.inspect }
+
 begin
 	import_products files[gets.to_i], :test1
 rescue Exception => e
