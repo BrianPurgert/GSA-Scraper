@@ -67,7 +67,7 @@ end
 
 	
 	threads << Thread.new do
-		100.times do
+		2000.times do
 				if @mfr_queue.size < (n_thr+10)
 					display_statistics
 					add_manufactures(n_thr*4)

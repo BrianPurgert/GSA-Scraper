@@ -80,6 +80,15 @@ def initialize_hybrid
 end
 
 def initialize_browser
+	begin
+		return initialize_browser_s
+	rescue Exception => e
+		puts e.message
+		return initialize_browser_s
+	end
+end
+
+def initialize_browser_s
 		r_proxy       = Proxy_list.sample
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
