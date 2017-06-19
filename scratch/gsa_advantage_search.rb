@@ -135,12 +135,13 @@ end
 @data_out.each_pair do |key, value| puts "#{key}\t#{value[0]}\t#{value[1]}\t#{value[2]}\t#{value[3]}\t#{value[4]}"
 end
 
+excel_file_out_name = "#{Basedir_output}#{Current_time.month}-#{Current_time.day}-#{xls_read}"
 n_row = 0
-puts excel_file_out_name
+
 excel_file_out       = Spreadsheet::Workbook.new
 gsa_price_sheet      = excel_file_out.create_worksheet
 gsa_price_sheet.name = 'GSA Product Price'
-gsa_price_sheet.insert_row(n_row, ['mpn', 'manufacturer_name', 'lowest_contractor', 'lowest_contractor_price', 'lowest_contractor_page_url', 'mpn_page_url'])
+gsa_price_sheet.insert_row(n_row, ['Manufacture Part', 'Manufacture Name', 'lowest_contractor', 'lowest_contractor_price', 'lowest_contractor_page_url', 'mpn_page_url'])
 n_row = n_row + 1
 
 @data_out.each_pair do |key, value| gsa_price_sheet.insert_row(n_row, ["#{key}", "#{value[0]}", "#{value[1]}", "#{value[2]}", "#{value[3]}", "#{value[4]}"])
