@@ -8,7 +8,7 @@ require 'colorized_string'
 
 
 MYSQL_HOSTS = %w(gcs-data.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
-MYSQL_USER  = "BrianPurgert@gcs-data"  #'mft_data'
+MYSQL_USER  =  %w(BrianPurgert@gcs-data mft_data)  #'mft_data'
 MYSQL_PASS  = "GoV321CoN"
 def line
 	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
@@ -19,8 +19,8 @@ end
 count = 0
 begin
 	puts "Connecting to #{MYSQL_HOSTS[count]}"
-	@client = Mysql2::Client.new(username: "BrianPurgert@gcs-data", password: 'GoV321CoN', database: "mft_data", host: "gcs-data.mysql.database.azure.com", port: 3306, sslverify:false, sslcipher:'AES256-SHA')
-	@DB = Sequel.connect(:adapter=>'mysql2', :host=>'gcs-data.mysql.database.azure.com', :database=>'mft_data', :user=>'BrianPurgert@gcs-data', :password=>'GoV321CoN')
+	@client = Mysql2::Client.new(username: MYSQL_USER[count], password: 'GoV321CoN', database: "mft_data", host: MYSQL_HOSTS[count], port: 3306, sslverify:false, sslcipher:'AES256-SHA')
+	@DB = Sequel.connect(:adapter=>'mysql2', :host=>MYSQL_HOSTS[count], :database=>'mft_data', :user=>MYSQL_USER[count], :password=>'GoV321CoN')
 	# @client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
 	# @DB = Sequel.connect("mysql2://BrianPurgert@gcs-data:#{MYSQL_PASS}/mft_data")
 rescue Exception => e
@@ -171,7 +171,7 @@ end
 	
 	def mfr_time(name)
 		escaped       = @client.escape("#{name}")
-		insert_string = "UPDATE mft_data.mfr SET last_search=NOW() WHERE name='#{escaped}'"
+		insert_string = "UPDATE mft_data.manufactures SET last_search=NOW() WHERE name='#{escaped}'"
 		puts insert_string.colorize(:green)
 		@client.query("#{insert_string}")
 	end
@@ -188,26 +188,25 @@ end
 	end
 
 
-	# def check_in
-	#      insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE check_out=1"
-	#      puts insert_string
+	def check_in
+	     insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE check_out=1"
+	     puts insert_string
+	      @client.query("#{insert_string}")
+	     # safe_stop
+	end
+
+	# def check_in(name)
+	# 	escaped = @client.escape("#{name}")
+	# 	insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE name='#{escaped}'"
 	#       @client.query("#{insert_string}")
-	#      safe_stop
 	# end
-
-	def check_in(name)
-		safe_stop
-		escaped = @client.escape("#{name}")
-		insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE name='#{escaped}'"
-	      @client.query("#{insert_string}")
-	end
-
-	def check_out(name)
-		safe_stop
-		escaped = @client.escape("#{name}")
-		insert_string = "UPDATE mft_data.manufactures SET check_out=1 WHERE name='#{escaped}'"
-	      @client.query("#{insert_string}")
-	end
+	#
+	# def check_out(name)
+	# 	puts name
+	# 	escaped = @client.escape("#{name}")
+	# 	insert_string = "UPDATE mft_data.manufactures SET check_out=1 WHERE name='#{escaped}'"
+	#       @client.query("#{insert_string}")
+	# end
 
 	def check_out_parts(n)
 		result = @client.query("UPDATE `mft_data`.`mfr_parts` as t,(
@@ -221,12 +220,18 @@ end
 	end
 
       def get_mfr(amount = 1)
-		manufacture_set = @DB[:manufactures].where(check_out: 0).order(Sequel.desc(:priority)).limit(amount)
-		manufacture_set.print
-		manufacture_set.update(check_out: 1)
-          return manufacture_set.all
+		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority),:name).limit(amount)#.update(priority: 100)
+		      up_next = queued_set.all
+		      result = queued_set.update(check_out: 1)
+		      p result
+		# manufacture_set = @DB[:manufactures].where(check_out: 0).order(Sequel.desc(:priority)).limit(amount)
+		# manufacture_set
+		# manufacture_set.print
+		     p up_next.inspect
+		      queued_set.print
+          return up_next
      end
- # get_mfr(30)
+  # get_mfr(30)
 
 	def get_mfr_part(amount = 1)
 		row_list = []

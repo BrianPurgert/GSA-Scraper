@@ -1,11 +1,21 @@
 require_relative './import'
+loop do
+basedir                     = File.join(__dir__,'test/')
+files                       = Dir.glob(basedir+"*.xlsx")
+files.each_with_index do |file, num|
+	puts "#{num}\t#{file}\t".colorize(:green)
+end
+
+begin
+	import_products files[gets.to_i], :test1
+rescue Exception => e
+	puts e.message
+end
+
+end
 
 
-path1 = File.join(__dir__, 'test/Test File 1.xlsx')
-path2 = File.join(__dir__, 'test/Test File 2.xlsx')
-puts path1
-import_products path1, :test1
-import_products path2, :test2
+# import_products path2, :test2
 
 
 

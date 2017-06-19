@@ -27,8 +27,10 @@ end
 
 
 def sample_table_join
-	spreadsheet_table = @DB[:test1]
-	part         = @DB[:manufacture_parts][:mpn => '36Z254']
+	@DB[:test1].print
+	# r = @DB[:test1].join_table(:left, manufacture_parts, [:manufacture_part])
+	# r.print
+	exit
 	color_p part.pretty_inspect
 	result = @DB[:test1].join_table(:inner, @DB[:manufacture_parts], manufacture_name: 'name')
 	puts result.inspect

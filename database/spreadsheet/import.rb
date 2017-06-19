@@ -5,22 +5,20 @@ require 'pp'
 
 Header    = [/(MFG|MFR|Manufacture)Name/ix, /(MFG|MFR|Manufacture)Number/ix, /(.*)Price(.*)/ix]
 
-Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer) Name/i
-Header_PART    = /(MFG|MFR|Manufacture|Manufacturer) Number/i
-Header_PRICE   = /(.*)Price(.*)/i
+Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
+Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
+Header_PRICE   = /(.*)Price(.*)/ix
 
 
 	def import_client_prices(table, set)
-	spreadsheet_table = @DB[:test1]
-	
 		#temporary solution
 		set.each do |row|
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
 			color_p"#{row_manufacture} : #{row_part_number}",7
-			part         = @DB[:manufacture_parts][:mpn => row_part_number]
+			# part         = @DB[:manufacture_parts][:mpn => row_part_number]
 			#[:mfr => row_manufacture]
-			puts part.inspect
+			# puts part.inspect
 		end
 		
 		set.collect! do |row|
@@ -61,7 +59,6 @@ Header_PRICE   = /(.*)Price(.*)/i
 			return spreadsheet.parse(clean: true, manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
 		rescue Exception => e
 				puts e.message
-			# TODO: return a template file
 		end
 		
 	end
@@ -72,12 +69,19 @@ Header_PRICE   = /(.*)Price(.*)/i
 
 
 def prioritize(table_name)
-	@DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
-		m = manufacture[:manufacture_name]
-		color_p "Checkout & Prioritize: #{m}", 11
-		dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
-		dataset.where(name: m).update(priority: 100, check_out: 0)
-	end
+	distinct_set = @DB[table_name].distinct(:manufacture_name)
+	ds = distinct_set.map(:manufacture_name)
+	puts @DB[:manufactures].where(name: ds).update(priority: 109)
+	# @DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
+	# 	m = manufacture[:manufacture_name]
+	# 	x = m.split(' ')
+	# 	color_p "Checkout & Prioritize: #{m}", 11
+	# 	dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
+	# 	# Sequel.ilike( :name,  term )
+	# 	pp @DB[:manufactures].where(name: m).update(priority: 100)#, check_out: 0)
+	# 	pp @DB[:manufactures].where(name: x).update(priority: 30)
+	#
+	# end
 end
 
 def import_products(path,table_name)

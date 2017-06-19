@@ -47,8 +47,10 @@ end
 
 def add_manufactures(n_total)
 	manufactures = get_mfr(n_total)#.uniq { |mfr| mfr[:href_name] }
-	# manufactures.each { |mfr| p "#{mfr[:name]} #{mfr[:category]}" }
-	manufactures.each { |mfr| @mfr_queue << mfr }
+	manufactures.each do |mfr|
+		@mfr_queue << mfr
+		p "#{mfr[:name]} #{mfr[:category]}"
+	end
 end
 
 
@@ -57,22 +59,20 @@ end
 	@items      = 0
 	@db_queue   = Queue.new
 	@mfr_queue  = Queue.new
-	Thread.abort_on_exception = true
+	# Thread.abort_on_exception = true
 	threads     = []
 	n_total     = 10         # Number of Manufactures to search
-	n_thr       = 5          # Number of browsers to run
+	n_thr       = 25          # Number of browsers to run
 	gsa_a       = []
-	
-	display_statistics
-	add_manufactures(n_total)
+
 	
 	threads << Thread.new do
-		loop do
-				if @mfr_queue.size < (n_thr+5)
+		100.times do
+				if @mfr_queue.size < (n_thr+10)
 					display_statistics
 					add_manufactures(n_thr*4)
 				else
-					sleep 5
+					sleep 1
 				end
 		end
 	end
@@ -80,6 +80,7 @@ end
 	threads << Thread.new do
 		while @reading < 10 do
 			until @db_queue.empty?
+				p @db_queue.size
 				insert_mfr_parts(take(@db_queue))
 				@reading = 0
 			end
@@ -104,12 +105,12 @@ end
 
 	n_thr.times do |n|
 		threads << Thread.new do
-			 gsa_a[n] = initialize_browser
+			  gsa_a[n] = initialize_browser
 				until @mfr_queue.empty?
 					mfr = @mfr_queue.shift
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
 				end
-			 gsa_a[n].browser.close
+			 # gsa_a[n].browser.close
 			end
 	end
 	

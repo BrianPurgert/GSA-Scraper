@@ -36,14 +36,17 @@ def bp(arr_str,length = [50,50,50,50,50,50,50])
 end
 
 def search_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
+	
 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
+	
 	url = url + "q=28:5#{url_encoded_name}"
 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
 	url = url + "&c=100"
 	url = url + (high_low ? '&s=9' : '&s=6')
 	url = url + "&q=1:4#{category}*"
 	url = url + "&p=#{page_number}"
+	puts url
 	return url
 end
 
@@ -81,7 +84,8 @@ def initialize_browser
 		r_socks       = Socks_list.sample
 		socks         = "socks5://#{r_socks}:#{Socks_port}"
 		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
-		Dev_mode ?                       switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		Dev_mode ?    switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		 Selenium::WebDriver::Chrome::Options#add_argument
 		browser       = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, switches: switch
 		gsa_a = GsaAdvantagePage.new(browser)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
