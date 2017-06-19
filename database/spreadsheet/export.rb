@@ -20,18 +20,20 @@ def excel(table)
             wb.add_worksheet(:name => "Overview") do |sheet|
 	                  sheet.add_row ['Mfg Part number',
 	                                 'MFG Name',
+	                                 'Product',
 	                                 'Lowest Price',
-	                                 'URL',
 	                                 'Client Price',
-	                                 'sources'
+	                                 'URL',
+	                                 'sources',
 	                                ], :style => [ col_header, col_header, col_header,  col_header,  col_header, col_header]
 	                  
 		result.each do |row|
 			sheet.add_row([row[:mpn],
 			              row[:mfr],
+			              row[:name],
 			              row[:low_price],
-			              row[:href_name],
 			              row[:gsa_price],
+			              row[:href_name],
 					  row[:sources]])
 		end
       p.serialize "#{table.to_s}-PCP.xlsx"

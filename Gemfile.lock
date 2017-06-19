@@ -31,6 +31,14 @@ GIT
       ntlm-http (~> 0.1, >= 0.1.1)
       webrobots (>= 0.0.9, < 0.2)
 
+GIT
+  remote: git://github.com/watir/watir.git
+  revision: d2c64d4b69f0b32a924e21dbb820eb6d14634c16
+  branch: 6_3_0
+  specs:
+    watir (6.3.0)
+      selenium-webdriver (~> 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,10 +102,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.4-x64-mingw32)
     unf_ext (0.0.7.4-x86-mingw32)
-    watir (6.2.1)
-      selenium-webdriver (~> 3.0)
-    watir-nokogiri (1.0.0)
-      nokogiri
     webrobots (0.1.2)
     yml_reader (0.7)
 
@@ -118,8 +122,7 @@ DEPENDENCIES
   roo (~> 2.7, >= 2.7.1)
   roo-xls
   sequel (~> 4.47)
-  watir (~> 6.2, >= 6.2.1)
-  watir-nokogiri
+  watir!
 
 BUNDLED WITH
    1.15.1
