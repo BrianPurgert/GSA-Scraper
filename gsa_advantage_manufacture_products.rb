@@ -61,13 +61,12 @@ end
 	@mfr_queue  = Queue.new
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_total     = 10         # Number of Manufactures to search
-	n_thr       = 25          # Number of browsers to run
+	n_thr       = 10          # Number of browsers to run
 	gsa_a       = []
 
 	
 	threads << Thread.new do
-		2000.times do
+		1000.times do
 				if @mfr_queue.size < (n_thr+10)
 					display_statistics
 					add_manufactures(n_thr*4)
