@@ -9,14 +9,11 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 
 	def import_client_prices(table, set)
-		#temporary solution
 		set.each do |row|
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
 			color_p"#{row_manufacture} : #{row_part_number}",7
-			# part         = @DB[:manufacture_parts][:mpn => row_part_number]
-			#[:mfr => row_manufacture]
-			# puts part.inspect
+
 		end
 		
 		set.collect! do |row|

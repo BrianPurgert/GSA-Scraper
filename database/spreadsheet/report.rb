@@ -4,7 +4,7 @@ require_relative './export'
 basedir                     = File.join(__dir__,'test/')
 files                       = Dir.glob(basedir+"*.xlsx")
 
-
+# todo name tables
 tables = [:client1,:client2,:client3,:client4,:client5]
 
 
