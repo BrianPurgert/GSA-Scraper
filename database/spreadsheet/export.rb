@@ -9,7 +9,11 @@ def view(table)
 end
 
 def excel(table)
+	puts "Manufacture parts join #{table}"
 	result = @DB[:manufacture_parts].join(table, :manufacture_part => :mpn,:manufacture_name => :mfr)
+	result.print
+	# Todo create table from that dataset
+	
 	result = result.all
 	p = Axlsx::Package.new
 	wb = p.workbook
@@ -26,10 +30,11 @@ def excel(table)
 	                                 'URL',
 	                                 'sources',
 	                                 'description',
-	                                ], :style => [ col_header, col_header, col_header,  col_header,  col_header, col_header, col_header]
+	                                ], :style => [ col_header, col_header, col_header,  col_header,  col_header, col_header, col_header, col_header]
 	                  
 		result.each do |row|
-			sheet.add_row([row[:mpn],
+			sheet.add_row([
+			              row[:mpn],
 			              row[:mfr],
 			              row[:name],
 			              row[:low_price],

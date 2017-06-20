@@ -3,8 +3,6 @@ require 'roo'
 require 'prettyprint'
 require 'pp'
 
-Header    = [/(MFG|MFR|Manufacture)Name/ix, /(MFG|MFR|Manufacture)Number/ix, /(.*)Price(.*)/ix]
-
 Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
 Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
 Header_PRICE   = /(.*)Price(.*)/ix
