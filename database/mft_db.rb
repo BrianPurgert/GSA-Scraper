@@ -64,12 +64,10 @@ end
 
 
 
-@DB.create_table? :controller do
-	primary_key :id
-	String      :key
-	Integer     :value, :default => 0
+@DB.create_table? :controller! do
+	Integer     :stop
 end
-@DB[:controller].insert(key: 'stop',value: 0)
+# @DB[:controller].insert(key: 'stop',value: 0)
 
 	@DB.create_table? :searches do
 		primary_key :id
@@ -136,7 +134,7 @@ end
 	
 	
 	def safe_stop
-		@client.query("SELECT stop FROM mft_data.control", :symbolize_keys => true).each do |row|
+		@client.query("SELECT stop FROM mft_data.controller", :symbolize_keys => true).each do |row|
 			if row[:stop].to_i == 1
 				puts "Safe Stop value from database = 1".colorize(:green)
 				ColorizedString.colors.each { |c| print "||".colorize(c) }
