@@ -86,6 +86,10 @@ def initialize_agent
 	return agent
 end
 
+def restart_browser(gsa_a)
+	gsa_a.browser.close
+	return initialize_browser
+end
 
 def initialize_browser
 	begin
@@ -98,10 +102,8 @@ end
 
 def initialize_browser_s
 		r_proxy       = Proxy_list.sample
-		# options = Selenium::WebDriver::Chrome::Options.new(args: [''])
-		switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
-		
-		browser = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, switches: switch
+		options = Selenium::WebDriver::Chrome::Options.new(args: ["headless", "disable-gpu","proxy-server=#{r_proxy}"])
+		browser = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, options: options
 		gsa_a = GsaAdvantagePage.new(browser)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'

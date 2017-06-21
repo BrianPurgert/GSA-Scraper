@@ -47,6 +47,7 @@ end
 
 def add_manufactures(n_total)
 	manufactures = get_mfr(n_total)#.uniq { |mfr| mfr[:href_name] }
+	
 	manufactures.each do |mfr|
 		@mfr_queue << mfr
 		puts "#{mfr[:name]} #{mfr[:category]}"
@@ -55,30 +56,29 @@ end
 
 
 
-	@reading    = 0
-	@items      = 0
+	@reading              = 0
+	@items                = 0
 	@db_queue   = Queue.new
 	@mfr_queue  = Queue.new
+	@continue   = continue
+	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 35          # Number of browsers to run
+	n_thr       = 30          # Number of browsers to run
 	gsa_a       = []
 
 	
 	threads << Thread.new do
-		loop do
+		while @continue do
 				if @mfr_queue.size < (n_thr*4)
-					display_statistics
-					stop = @DB[:controller].filter(key: 'stop').select(:value).first
-					p stop[:value]
-					stop[:value] ? add_manufactures(n_thr*10) : break
+					add_manufactures(n_thr*10)
 				end
-				sleep 6
+				sleep 4
 		end
 	end
 	
 	threads << Thread.new do
-		while @reading < 10 do
+		while @continue do
 			until @db_queue.empty?
 				p size = @db_queue.size
 				insert_mfr_parts(take(@db_queue))
@@ -104,15 +104,20 @@ end
 		return n_low.to_f.round(2)
 	end
 
+	
 	n_thr.times do |n|
 		sleep 1
 		threads << Thread.new do
 			  gsa_a[n] = initialize_browser
+			  i = 0
 				until @mfr_queue.empty?
+					i += 1
 					mfr = @mfr_queue.shift
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
+					gsa_a[n] = restart_browser gsa_a[n] if n % 20 == 0
+					
 				end
-			 # gsa_a[n].browser.close
+			 gsa_a[n].browser.close
 			end
 	end
 	

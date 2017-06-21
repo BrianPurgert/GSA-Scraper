@@ -122,7 +122,18 @@ end
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
 	end
 
-
+	def continue
+		stop = @DB[:controller].filter(key: 'stop').select(:value).first
+		print 'Controller: '
+		if stop[:value]==1
+			puts "Stopping".colorize(:red)
+			@continue = false
+		else
+			puts "Continue".colorize(:green)
+			@continue = true
+		end
+		
+	end
 	
 	
 	def mfr_time(name)
@@ -176,10 +187,15 @@ end
 	end
 
       def get_mfr(amount = 1)
+		 if continue
 		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :item_count, :name).limit(amount)#.update(priority: 100)
 		      up_next = queued_set.all
 		      queued_set.update(check_out: 1)
-		      # queued_set.print
+		 else
+			 up_next = []
+		 end
+		  display_statistics
+		        # queued_set.print
           return up_next
      end
   # get_mfr(30)
