@@ -13,7 +13,8 @@ def excel(table)
 	result = @DB[:manufacture_parts].join(table, :manufacture_part => :mpn,:manufacture_name => :mfr)
 	result.print
 	# Todo create table from that dataset
-	
+	# @DB[:table1].import([:x, :y], result.select(:a, :b))
+	# DB[:table].multi_insert([{:x => 1}, {:x => 2}])
 	result = result.all
 	p = Axlsx::Package.new
 	wb = p.workbook

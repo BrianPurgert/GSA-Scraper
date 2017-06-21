@@ -27,7 +27,7 @@ Proxy_list1       = YAML::load_file(File.join(__dir__, '../config/proxy1.yml'))
 Socks_list        = YAML::load_file(File.join(__dir__, '../config/socks5_proxy.yml'))
 Socks_port        = 61336
 Catalog_hudson    = '//192.168.1.104/gsa_price/'
-RX_mfr            = /(?<=\q=2.:.).*/                                      # Regex selects manufacture name after link
+RX_mfr            = /(?<=\q=..:.).*/                                      # Regex selects manufacture name after link
 
 
 

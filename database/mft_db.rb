@@ -12,8 +12,6 @@ MYSQL_USER  =  %w(BrianPurgert@gcs-data mft_data)  #'mft_data'
 MYSQL_PASS  = "GoV321CoN"
 basedir                     = File.join(__dir__,'./helpers/')
 helpers                 = Dir.glob(basedir+"*.sql")
-puts helpers[0]
-p helpers.inspect
 
 def line
 	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
@@ -26,12 +24,9 @@ begin
 	puts "Connecting to #{MYSQL_HOSTS[count]}"
 	@client = Mysql2::Client.new(username: MYSQL_USER[count], password: 'GoV321CoN', database: "mft_data", host: MYSQL_HOSTS[count], port: 3306, sslverify:false, sslcipher:'AES256-SHA')
 	@DB = Sequel.connect(:adapter=>'mysql2', :host=>MYSQL_HOSTS[count], :database=>'mft_data', :user=>MYSQL_USER[count], :password=>'GoV321CoN')
-	# @client = Mysql2::Client.new(host: MYSQL_HOSTS[count], username: MYSQL_USER, password: MYSQL_PASS,encoding: 'utf8')
-	# @DB = Sequel.connect("mysql2://BrianPurgert@gcs-data:#{MYSQL_PASS}/mft_data")
 rescue Exception => e
 	line
 	puts "#{e.message}".colorize(:red)
-	line
 	count += 1
 	retry if count <= MYSQL_HOSTS.size
 end
@@ -44,28 +39,37 @@ end
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
+
 helpers.each do |sql|
 	contents = File.open(sql, "rb")
-	puts contents
 	@DB.run contents.read
 end
 
-	
+# @DB.create_table? :manufactures do
+# 	primary_key :id
+# 	String      :name, :null=>false
+# 	String      :name, :null=>false
+# end
 
-	
+#  varchar(255) not null,
+# href_name varchar(255) null,
+# category varchar(255) null,
+# last_updated datetime default CURRENT_TIMESTAMP not null,
+# last_search datetime default CURRENT_TIMESTAMP not null,
+# item_count int(10) unsigned null,
+#                             check_out bit default b'0' not null,
+# id int not null auto_increment
+# primary key,
+#         priority int(10) default '10' not null
 
 
 
-	
-	
-	
-	# TODO: Remove Convert
-	# @DB.run "CREATE TABLE IF NOT EXISTS page_mfr_list
-	# (
-	# 	list_for char(50) not null
-	# 		primary key,
-	# 	last_update timestamp default CURRENT_TIMESTAMP not null
-	# );"
+@DB.create_table? :controller do
+	primary_key :id
+	String      :key
+	Integer     :value, :default => 0
+end
+@DB[:controller].insert(key: 'stop',value: 0)
 
 	@DB.create_table? :searches do
 		primary_key :id
@@ -86,7 +90,6 @@ end
 		manufacture       = @DB[:manufactures]
 		line
 		color_p "Manufacture Parts count: #{manufacture_parts.count}   Manufacture count: #{manufacture.count}", 7
-		line
 	end
 
 	def take(queue)
@@ -175,15 +178,10 @@ end
 	end
 
       def get_mfr(amount = 1)
-		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
+		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :item_count, :name).limit(amount)#.update(priority: 100)
 		      up_next = queued_set.all
-		      result = queued_set.update(check_out: 1)
-		      p result
-		# manufacture_set = @DB[:manufactures].where(check_out: 0).order(Sequel.desc(:priority)).limit(amount)
-		# manufacture_set
-		# manufacture_set.print
-		     p up_next.inspect
-		      queued_set.print
+		      queued_set.update(check_out: 1)
+		      # queued_set.print
           return up_next
      end
   # get_mfr(30)
@@ -203,18 +201,6 @@ end
 
 
 
-      def move_empty_queue
-		# should use this
-          # @client.query('
-          #      UPDATE `mft_data`.`mfr`, `mft_data`.`queue`
-          #      SET lowest_price_contractor.lowest_contractor = queue.lowest_contractor,
-          #          lowest_price_contractor.lowest_contractor_price = queue.lowest_contractor_price,
-          #          lowest_price_contractor.lowest_contractor_page_url = queue.lowest_contractor_page_url,
-          #          lowest_price_contractor.mpn_page_url = queue.mpn_page_url
-          #      WHERE lowest_price_contractor.mpn = queue.mpn;
-          #           ')
-          # @client.query('TRUNCATE `mft_data`.`queue`;')
-     end
 
 	def load_table_mfr
 	@mfr_table = []

@@ -5,30 +5,21 @@ require 'bundler/setup'
 # Bundler::Install.options
 
 desc 'Default Tasks'
-task(default: [:install])
+task(default: [:s2])
 
-desc 'Build tables from Manufactures/Vendor lists(1)'
-task(:get_manufactures) do
-	ruby 'gsa_advantage_manufactures.rb'
-end
+
+
 
 
 desc 'Price Comparisons from spreadsheet(2)'
-task(:pcp) do
-	ruby 'database/spreadsheet/report.rb'
-end
+task(:pcp)           { ruby 'database/spreadsheet/report.rb' }
 
-desc 'Find products and related data(2)'
-task(:gsa_advantage_manufacture_products) do
-	ruby 'gsa_advantage_manufacture_products.rb'
-end
+desc 'Build tables from Manufactures/Vendor'
+task(:s1)                     { ruby 'adv_base.rb' }
 
-
-task(:get_products)                     { ruby 'gsa_advantage_manufacture_products.rb' }
-task(:dl_product_pages)                 { ruby 'gsa_advantage_product_detail.rb' }
-
-task(:gsa_advantage_manufactures)       { ruby 'gsa_advantage_manufactures.rb' }
-task(:gsa_advantage_product_detail)     { ruby 'gsa_advantage_product_detail.rb' }
+desc 'Find products'
+task(:s2)                     { ruby 'adv_search.rb' }
+task(:s3)                     { ruby 'adv_product.rb' }
 
 
 desc 'Install Gems'
