@@ -7,15 +7,12 @@ files                       = Dir.glob(basedir+"*.xlsx")
 # todo name tables
 tables = [:client1,:client2,:client3,:client4,:client5]
 
-
-@DB.tables.each do |table|
-	puts "#{table}"
-	puts "\t#{@DB[table].columns.inspect}".colorize(:blue)
+@DB.tables.each { |table| puts "#{table}\t#{@DB[table].columns.inspect}".colorize(:blue) }
+files.each_with_index do |file, num|
+	puts "#{num}\t#{file}".colorize(:green)
 end
-
 	files.each_with_index do |file, num|
 		begin
-			puts "#{num}\t#{file}\t".colorize(:green)
 			import_products file, tables[num]
 			excel tables[num]
 		rescue Exception => e

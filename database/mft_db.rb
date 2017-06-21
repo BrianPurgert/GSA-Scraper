@@ -144,16 +144,6 @@ end
 	end
 	
 	
-	def safe_stop
-		@client.query("SELECT stop FROM mft_data.controller", :symbolize_keys => true).each do |row|
-			if row[:stop].to_i == 1
-				puts "Safe Stop value from database = 1".colorize(:green)
-				ColorizedString.colors.each { |c| print "||".colorize(c) }
-				exit
-			end
-		end
-	end
-
 
 	def check_in
 	     insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE check_out=1"
@@ -167,13 +157,7 @@ end
 	# 	insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE name='#{escaped}'"
 	#       @client.query("#{insert_string}")
 	# end
-	#
-	# def check_out(name)
-	# 	puts name
-	# 	escaped = @client.escape("#{name}")
-	# 	insert_string = "UPDATE mft_data.manufactures SET check_out=1 WHERE name='#{escaped}'"
-	#       @client.query("#{insert_string}")
-	# end
+
 
 	def check_out_parts(n)
 		result = @client.query("UPDATE `mft_data`.`mfr_parts` as t,(
@@ -211,9 +195,6 @@ end
 		check_out_parts(amount)
 		return mfr_part_href
 	end
-
-
-
 
 
 	def load_table_mfr
