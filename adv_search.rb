@@ -64,7 +64,7 @@ end
 	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 30          # Number of browsers to run
+	n_thr       = 35          # Number of browsers to run
 	gsa_a       = []
 
 	
@@ -80,13 +80,8 @@ end
 	threads << Thread.new do
 		while @continue do
 			until @db_queue.empty?
-				p size = @db_queue.size
 				insert_mfr_parts(take(@db_queue))
-				@reading = 0
-				sleep 10 if size < 500
 			end
-			@reading += 1
-			color_p "#{@db_queue.length}", 7 if @reading > 5
 			sleep 5
 		end
 	end
@@ -106,7 +101,7 @@ end
 
 	
 	n_thr.times do |n|
-		sleep 1
+		sleep 0.25
 		threads << Thread.new do
 			  gsa_a[n] = initialize_browser
 			  i = 0
@@ -114,7 +109,7 @@ end
 					i += 1
 					mfr = @mfr_queue.shift
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
-					gsa_a[n] = restart_browser gsa_a[n] if n % 20 == 0
+					gsa_a[n] = restart_browser gsa_a[n] if i % 15 == 0
 					
 				end
 			 gsa_a[n].browser.close
