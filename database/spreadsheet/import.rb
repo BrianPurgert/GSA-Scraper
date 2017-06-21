@@ -12,7 +12,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 		set.each do |row|
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
-			color_p"#{row_manufacture} : #{row_part_number}",7
+			# color_p"#{row_manufacture} : #{row_part_number}",7
 
 		end
 		
@@ -36,7 +36,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 	end
 
 	def create_client_table(name, extra_columns = [])
-		@DB.create_table! name do
+		 @DB.create_table? name do
 			primary_key :id
 			String :manufacture_name
 			String :manufacture_part
@@ -66,17 +66,10 @@ Header_PRICE   = /(.*)Price(.*)/ix
 def prioritize(table_name)
 	distinct_set = @DB[table_name].distinct(:manufacture_name)
 	ds = distinct_set.map(:manufacture_name)
-	puts @DB[:manufactures].where(name: ds).update(priority: 109)
-	# @DB[table_name].order(:id).distinct(:manufacture_name).each do |manufacture|
-	# 	m = manufacture[:manufacture_name]
-	# 	x = m.split(' ')
-	# 	color_p "Checkout & Prioritize: #{m}", 11
-	# 	dataset = @DB[:manufactures] #.filter(name: m)#.update(priority: 100)
-	# 	# Sequel.ilike( :name,  term )
+	@DB[:manufactures].where(name: ds).update(priority: 109)
 	# 	pp @DB[:manufactures].where(name: m).update(priority: 100)#, check_out: 0)
 	# 	pp @DB[:manufactures].where(name: x).update(priority: 30)
-	#
-	# end
+
 end
 
 def import_products(path,table_name)
@@ -86,10 +79,9 @@ def import_products(path,table_name)
 		set = parse_prices(spreadsheet)
 		create_client_table table_name, ['a', 'b', 'c']
 		import_client_prices table, set
-		table.print
 		prioritize(table_name)
+		# table.limit(10).print
 	
-		# color_p@DB[table_name].all
 		# @DB[table_name].each{|row| p row} # SELECT * FROM table
 		# [:manufacture_name => 'YJM']
 		#     p @DB[table_name][:manufacture_name]

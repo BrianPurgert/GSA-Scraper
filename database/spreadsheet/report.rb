@@ -3,11 +3,12 @@ require_relative './export'
 
 basedir                     = File.join(__dir__,'test/')
 files                       = Dir.glob(basedir+"*.xlsx")
-
+csv_files                   = Dir.glob(basedir+"*.csv")
+xls_files                   = Dir.glob(basedir+"*.xls")
 # todo name tables
+@tables = []
 tables = [:client1,:client2,:client3,:client4,:client5]
 
-@DB.tables.each { |table| puts "#{table}\t#{@DB[table].columns.inspect}".colorize(:blue) }
 files.each_with_index do |file, num|
 	puts "#{num}\t#{file}".colorize(:green)
 end
@@ -28,3 +29,4 @@ end
 #
 # puts xlsx.info
 # import_price_list xlsx
+# @DB.tables.each { |table| puts "#{table}\t#{@DB[table].columns.inspect}".colorize(:blue) }

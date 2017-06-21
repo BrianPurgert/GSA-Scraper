@@ -8,10 +8,25 @@ def view(table)
 	@DB.create_view(:price_comparisons,result)
 end
 
+# def to_xlxs(include_column_titles = true)
+#       n = naked
+#       cols = n.columns
+#       xlxs = String.new
+#       xlxs << "#{cols.join(', ')}\r\n" if include_column_titles
+#       n.each{|r| csv << "#{cols.collect{|c| r[c]}.join(', ')}\r\n"}
+#       xlxs
+#     end
+# end
+
 def excel(table)
 	puts "Manufacture parts join #{table}"
 	result = @DB[:manufacture_parts].join(table, :manufacture_part => :mpn,:manufacture_name => :mfr)
-	result.print
+	line
+	puts result.inspect
+	line
+	# result.print
+	
+	
 	# Todo create table from that dataset
 	# @DB[:table1].import([:x, :y], result.select(:a, :b))
 	# DB[:table].multi_insert([{:x => 1}, {:x => 2}])
@@ -19,6 +34,8 @@ def excel(table)
 	p = Axlsx::Package.new
 	wb = p.workbook
 	styles = wb.styles
+
+	
 	
 	    col_header = styles.add_style :bg_color => "FFDFDEDF", :b => true, :alignment => { :horizontal => :center }
 
