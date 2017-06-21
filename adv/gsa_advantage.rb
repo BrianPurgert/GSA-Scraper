@@ -86,9 +86,6 @@ def initialize_agent
 	return agent
 end
 
-def initialize_hybrid
-	@browser = WatirNokogiri::Document.new(response.body)
-end
 
 def initialize_browser
 	begin
@@ -101,12 +98,10 @@ end
 
 def initialize_browser_s
 		r_proxy       = Proxy_list.sample
-		r_socks       = Socks_list.sample
-		socks         = "socks5://#{r_socks}:#{Socks_port}"
-		host          = "MAP * 0.0.0.0 , EXCLUDE #{r_socks}"
-		Dev_mode ?    switch = ["proxy-server=#{r_proxy}"] : switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
-		 Selenium::WebDriver::Chrome::Options#add_argument
-		browser       = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, switches: switch
+		# options = Selenium::WebDriver::Chrome::Options.new(args: [''])
+		switch = ["headless", "disable-gpu","proxy-server=#{r_proxy}"]
+		
+		browser = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, switches: switch
 		gsa_a = GsaAdvantagePage.new(browser)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'

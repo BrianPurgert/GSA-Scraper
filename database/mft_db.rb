@@ -10,6 +10,11 @@ require 'colorized_string'
 MYSQL_HOSTS = %w(gcs-data.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
 MYSQL_USER  =  %w(BrianPurgert@gcs-data mft_data)  #'mft_data'
 MYSQL_PASS  = "GoV321CoN"
+basedir                     = File.join(__dir__,'./helpers/')
+helpers                 = Dir.glob(basedir+"*.sql")
+puts helpers[0]
+p helpers.inspect
+
 def line
 	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
 end
@@ -32,74 +37,24 @@ rescue Exception => e
 end
 
 	@DB.extension(:pretty_table)
+
 	# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
 	# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
 	# todo: sequel extension      http://shrinerb.com/
 	# ------------------------------------------------------------------ #
 	#     Create Tables if they need to be
 	# ------------------------------------------------------------------ #
-
+helpers.each do |sql|
+	contents = File.open(sql, "rb")
+	puts contents
+	@DB.run contents.read
+end
 
 	
-	@DB.run "CREATE TABLE IF NOT EXISTS vendors
-	(
-		name varchar(255) not null
-			primary key,
-		href_name varchar(255) null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		last_search datetime default CURRENT_TIMESTAMP not null,
-		item_count int(10) unsigned null,
-		`change` int(10) default '0' not null,
-		check_out bit default b'0' not null,
-		constraint manufacture_name_uindex
-			unique (name)
-	);"
 
-	# TODO: Convert
-	@DB.run "CREATE TABLE IF NOT EXISTS manufacture_parts
-	(
-		id INT(11) NOT NULL AUTO_INCREMENT,
-		mfr varchar(255) not null,
-		mpn varchar(40) not null,
-		name varchar(255) null,
-		href_name varchar(255) null,
-		low_price varchar(255) null,
-		`desc` text null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		status_id tinyint default '0' not null,
-		sources int(10) default '0' null,
-		primary key (id)
-	);"
+	
 
 
-
-	 @DB.run "CREATE TABLE IF NOT EXISTS manufactures
-	(
-		name varchar(255) not null,
-		href_name varchar(255) null,
-		category varchar(255) null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		last_search datetime default CURRENT_TIMESTAMP not null,
-		item_count int(10) unsigned null,
-		                            check_out bit default b'0' not null,
-		id int not null auto_increment
-		primary key,
-		        priority int(10) default '10' not null
-	);"
-
-	@DB.run "CREATE TABLE IF NOT EXISTS contractors
-		(
-		name varchar(255) not null,
-		href_name varchar(255) null,
-		category varchar(255) null,
-		last_updated datetime default CURRENT_TIMESTAMP not null,
-		last_search datetime default CURRENT_TIMESTAMP not null,
-		item_count int(10) unsigned null,
-		                            check_out bit default b'0' not null,
-		id int not null auto_increment
-		primary key,
-		        priority int(10) default '10' not null
-	);"
 
 	
 	
@@ -220,7 +175,7 @@ end
 	end
 
       def get_mfr(amount = 1)
-		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority),:name).limit(amount)#.update(priority: 100)
+		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
 		      up_next = queued_set.all
 		      result = queued_set.update(check_out: 1)
 		      p result
