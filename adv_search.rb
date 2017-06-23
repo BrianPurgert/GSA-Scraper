@@ -50,7 +50,7 @@ def add_manufactures(n_total)
 	
 	manufactures.each do |mfr|
 		@mfr_queue << mfr
-		puts "#{mfr[:name]} #{mfr[:category]}"
+		print "[#{mfr[:name]} #{mfr[:category]}]/t"
 	end
 end
 
@@ -64,13 +64,13 @@ end
 	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 20          # Number of browsers to run
+	n_thr       = 15          # Number of browsers to run
 	gsa_a       = []
 
 	
 	threads << Thread.new do
 		while @continue do
-				if @mfr_queue.size < (n_thr*4)
+				if @mfr_queue.size < (n_thr*2)
 					add_manufactures(n_thr*10)
 				end
 				sleep 4
@@ -101,7 +101,7 @@ end
 
 	
 	n_thr.times do |n|
-		sleep 0.25
+		sleep 1
 		threads << Thread.new do
 			  gsa_a[n] = initialize_browser
 			  i = 0
@@ -109,18 +109,24 @@ end
 					i += 1
 					mfr = @mfr_queue.shift
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
-					gsa_a[n] = restart_browser gsa_a[n] if i % 15 == 0
-					
+					gsa_a[n] = restart_browser gsa_a[n] if i % 10 == 0
 				end
-			 gsa_a[n].browser.close
 			end
 	end
 	
 
 
 threads.each { |thr| thr.join }
+
 	display_statistics
 
+gsa_a.each do |b|
+	begin
+	b.close
+	rescue
+		puts 'Browser already closed'
+	end
+end
 
 
 

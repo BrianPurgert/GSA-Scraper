@@ -6,12 +6,15 @@ require 'mysql2'
 require 'colorize'
 require 'colorized_string'
 
+ENV['MYSQL_HOST'] = 'gcs-data0.mysql.database.azure.com'
+ENV['MYSQL_USER'] = 'BrianPurgert@gcs-data0'
 
-MYSQL_HOSTS = %w(gcs-data.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
-MYSQL_USER  =  %w(BrianPurgert@gcs-data mft_data)  #'mft_data'
+MYSQL_HOSTS = %w(gcs-data0.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
+MYSQL_USER  =  %w(BrianPurgert@gcs-data0 mft_data)  #'mft_data'
 MYSQL_PASS  = "GoV321CoN"
-basedir                     = File.join(__dir__,'./helpers/')
-helpers                 = Dir.glob(basedir+"*.sql")
+
+basedir     = File.join(__dir__,'./helpers/')
+helpers     = Dir.glob(basedir+"*.sql")
 
 def line
 	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
@@ -19,10 +22,16 @@ end
 
 
 
-count = 1
+count = 0
 begin
 	puts "Connecting to #{MYSQL_HOSTS[count]}"
-	@client = Mysql2::Client.new(username: MYSQL_USER[count], password: 'GoV321CoN', database: "mft_data", host: MYSQL_HOSTS[count], port: 3306, sslverify:false, sslcipher:'AES256-SHA')
+	@client = Mysql2::Client.new(username:    MYSQL_USER[count],
+	                             password:    'GoV321CoN',
+	                             database:    'mft_data',
+	                             host:        MYSQL_HOSTS[count],
+	                             port:        3306,
+	                             sslverify:   false,
+	                             sslcipher:   'AES256-SHA')
 	@DB = Sequel.connect(:adapter=>'mysql2', :host=>MYSQL_HOSTS[count], :database=>'mft_data', :user=>MYSQL_USER[count], :password=>'GoV321CoN')
 	puts 'connected'
 rescue Exception => e
