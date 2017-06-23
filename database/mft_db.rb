@@ -19,11 +19,12 @@ end
 
 
 
-count = 0
+count = 1
 begin
 	puts "Connecting to #{MYSQL_HOSTS[count]}"
 	@client = Mysql2::Client.new(username: MYSQL_USER[count], password: 'GoV321CoN', database: "mft_data", host: MYSQL_HOSTS[count], port: 3306, sslverify:false, sslcipher:'AES256-SHA')
 	@DB = Sequel.connect(:adapter=>'mysql2', :host=>MYSQL_HOSTS[count], :database=>'mft_data', :user=>MYSQL_USER[count], :password=>'GoV321CoN')
+	puts 'connected'
 rescue Exception => e
 	line
 	puts "#{e.message}".colorize(:red)
@@ -64,9 +65,9 @@ end
 
 
 
-@DB.create_table? :controller! do
-	Integer     :stop
-end
+# @DB.create_table? :controller do
+# 	Integer     :stop
+# end
 # @DB[:controller].insert(key: 'stop',value: 0)
 
 	@DB.create_table? :searches do

@@ -9,6 +9,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 
 	def import_client_prices(table, set)
+		puts "Importing into #{table}"
 		set.each do |row|
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
@@ -17,7 +18,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 		end
 		
 		set.collect! do |row|
-			[row[:manufacture_name],row[:manufacture_part],row[:gsa_price]]
+			[row[:manufacture_name],row[:manufacture_part],row[:gsa_price].to_f.round(2)]
 		end
 		  table.import([:manufacture_name, :manufacture_part, :gsa_price], set)
 	end
@@ -25,22 +26,18 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 	def self.open_spreadsheet(file)
 		color_p "\t\tSpreadsheet Open (#{file.inspect}", 8
-			Roo::Spreadsheet.open(file)
-		# case File.extname(file.original_filename)
-		# 	when ".csv"       then Roo::CSV.new(file.path, nil, :ignore)
-		# 	when ".xls"       then Roo::Excel.new(file.path, nil, :ignore)
-		# 	when ".xlsx"      then Roo::Excelx.new(file.path, nil, :ignore)
-		# 	else raise "Unknown file type: #{file.original_filename}"
-		# end
-		
+		spreadsheet = Roo::Spreadsheet.open(file)
+		color_p spreadsheet.info, 3
+		return spreadsheet
 	end
 
 	def create_client_table(name, extra_columns = [])
-		 @DB.create_table? name do
+		 @DB.create_table! name do
 			primary_key :id
 			String :manufacture_name
 			String :manufacture_part
 			Float :gsa_price
+			 # foreign_key :mpn,:manufacture_parts #mft_data.manufacture_parts.manufacture_parts_mfr_mpn_index
 			# String :url
 			# String :vendor_name
 			# Float  :lowest_price
@@ -51,6 +48,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 	def parse_prices(spreadsheet)
 		begin
+			puts 'Finding Header Row'
 			return spreadsheet.parse(clean: true, manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
 		rescue Exception => e
 				puts e.message
@@ -74,7 +72,7 @@ end
 
 def import_products(path,table_name)
 		spreadsheet = open_spreadsheet(path)
-		color_p spreadsheet.info, 3
+		
 		table = @DB[table_name]
 		set = parse_prices(spreadsheet)
 		create_client_table table_name, ['a', 'b', 'c']

@@ -20,11 +20,14 @@ end
 
 def excel(table)
 	puts "Manufacture parts join #{table}"
-	result = @DB[:manufacture_parts].join(table, :manufacture_part => :mpn,:manufacture_name => :mfr)
+	manufacture_parts = @DB[:manufacture_parts].order(:last_updated).reverse.distinct(:mpn)
+	result = @DB[table].left_outer_join(manufacture_parts,:mfr=>:manufacture_name  , :mpn=>:manufacture_part )
+	# result = @DB[table].left_join(:manufacture_parts,:manufacture_name => :mfr, :manufacture_part => :mpn)
 	line
 	puts result.inspect
+	
 	line
-	# result.print
+	result.print
 	
 	
 	# Todo create table from that dataset
@@ -34,31 +37,32 @@ def excel(table)
 	p = Axlsx::Package.new
 	wb = p.workbook
 	styles = wb.styles
-
+	
 	
 	
 	    col_header = styles.add_style :bg_color => "FFDFDEDF", :b => true, :alignment => { :horizontal => :center }
 
             wb.add_worksheet(:name => "Overview") do |sheet|
-	                  sheet.add_row ['Manufacture Part',
-	                                 'Manufacture Name',
+	                  sheet.add_row [
+	                                'Manufacture Name',
+	                                'Manufacture Part',
 	                                 'Product',
+	                                 'Your Price',
 	                                 'Lowest Price',
-	                                 'Client Price',
 	                                 'URL',
-	                                 'sources',
+	                                 'Sources',
 	                                 'description',
-	                                ], :style => [ col_header, col_header, col_header,  col_header,  col_header, col_header, col_header, col_header]
+	                                ], style: [col_header, col_header, col_header, col_header, col_header, col_header, col_header, col_header]
 	                  
 		result.each do |row|
 			sheet.add_row([
-			              row[:mpn],
-			              row[:mfr],
+			              row[:manufacture_name],
+			              row[:manufacture_part],
 			              row[:name],
-			              row[:low_price],
 			              row[:gsa_price],
-			              row[:href_name],
-					  row[:sources],
+			              row[:low_price],
+			              "https://gsaadvantage.gov#{row[:href_name]}",
+			              row[:sources],
 			              row[:desc]
 			              ])
 		end
