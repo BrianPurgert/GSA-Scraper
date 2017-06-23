@@ -63,7 +63,7 @@ end
 	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 25          # Number of browsers to run
+	n_thr       = 45          # Number of browsers to run
 	gsa_a       = []
 
 	
