@@ -130,9 +130,14 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
+		sleep 30
 	end
 
 	def continue
+			@continue = true
+	end
+
+	def continuex
 		stop = @DB[:controller].filter(key: 'stop').select(:value).first
 		print 'Controller: '
 		if stop[:value]==1
@@ -155,10 +160,8 @@ end
 	
 	
 
-	def check_in
-	     insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE check_out=1"
-	     puts insert_string
-	      @client.query("#{insert_string}")
+	def check_in(mfr,cat)
+		@DB[:manufactures].where(name: mfr, category: cat).update(check_out: 2)
 	     # safe_stop
 	end
 

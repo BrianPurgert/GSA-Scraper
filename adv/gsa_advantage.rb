@@ -44,7 +44,7 @@ def vendor_url(url_encoded_name, current_lowest_price,category,page_number=1,hig
 	url = url + (high_low ? '&s=9' : '&s=6')
 	url = url + "&q=1:4#{category}*"
 	url = url + "&p=#{page_number}"
-	puts url
+	# puts url
 	return url
 end
 
@@ -57,7 +57,7 @@ def search_url(url_encoded_name, current_lowest_price,category,page_number=1,hig
 	url = url + (high_low ? '&s=9' : '&s=6')
 	url = url + "&q=1:4#{category}*"
 	url = url + "&p=#{page_number}"
-	puts url
+	# puts url
 	return url
 end
 
