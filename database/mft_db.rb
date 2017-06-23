@@ -55,12 +55,13 @@ helpers.each do |sql|
 	@DB.run contents.read
 end
 
-# @DB.create_table? :manufactures do
-# 	primary_key :id
-# 	String      :name, :null=>false
-# 	String      :name, :null=>false
-# end
-
+def clean_copy_parts
+	@DB.create_table? :clean_manufactures do
+		# primary_key :id
+		String      :name, :null=>false
+		String      :name, :null=>false
+	end
+end
 #  varchar(255) not null,
 # href_name varchar(255) null,
 # category varchar(255) null,

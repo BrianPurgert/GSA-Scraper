@@ -14,13 +14,13 @@ Header_PRICE   = /(.*)Price(.*)/ix
 			row_manufacture = row[:manufacture_name]
 			row_part_number = row[:manufacture_part]
 			# color_p"#{row_manufacture} : #{row_part_number}",7
-
 		end
 		
 		set.collect! do |row|
 			[row[:manufacture_name],row[:manufacture_part],row[:gsa_price].to_f.round(2)]
 		end
 		  table.import([:manufacture_name, :manufacture_part, :gsa_price], set)
+		prioritize(table)
 	end
 
 
@@ -47,9 +47,10 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 
 	def parse_prices(spreadsheet)
+		print 'Finding Header Row '
 		begin
-			puts 'Finding Header Row'
 			return spreadsheet.parse(clean: true, manufacture_name: Header_MFR, manufacture_part:  Header_PART, gsa_price: Header_PRICE)
+			puts 'found'
 		rescue Exception => e
 				puts e.message
 		end
@@ -61,54 +62,33 @@ Header_PRICE   = /(.*)Price(.*)/ix
      end
 
 
-def prioritize(table_name)
-	distinct_set = @DB[table_name].distinct(:manufacture_name)
-	ds = distinct_set.map(:manufacture_name)
-	@DB[:manufactures].where(name: ds).update(priority: 109)
-	# 	pp @DB[:manufactures].where(name: m).update(priority: 100)#, check_out: 0)
-	# 	pp @DB[:manufactures].where(name: x).update(priority: 30)
+def find_duplicates
+	@DB[:manufacture_parts].order(:last_updated).distinct(:mfr,:mpn)
+	@DB[:manufactures].group_and_count(:mfr,:mpn)
+end
 
+def prioritize(table)
+	manufacture_count = table.group_and_count(:manufacture_name)
+	manufacture_count.each do |mfr|
+		affected = @DB[:manufactures].where(name: mfr[:manufacture_name]).update(priority: mfr[:count], check_out: 0)
+		puts "#{mfr[:manufacture_name]}: #{affected}"
+	end
 end
 
 def import_products(path,table_name)
+		begin
+	
 		spreadsheet = open_spreadsheet(path)
 		
 		table = @DB[table_name]
 		set = parse_prices(spreadsheet)
 		create_client_table table_name, ['a', 'b', 'c']
 		import_client_prices table, set
-		prioritize(table_name)
-		# table.limit(10).print
-	
-		# @DB[table_name].each{|row| p row} # SELECT * FROM table
-		# [:manufacture_name => 'YJM']
-		#     p @DB[table_name][:manufacture_name]
 		
 		
-		# @DB[table_name].order(:id).distinct(:manufacture_name)
-		# @DB[table_name].group_and_count(:manufacture_name).all
+		rescue Exception => e
+			puts e.message
+		end
 		
 		
-	# dataset.each { |mfr| puts mfr.update(:priority=>100,:check_out=>false) }
-			# select(:priority).
-			# dataset = @DB[:items].select(:x, :y, :z).filter{(x > 1) & (y > 2)}.update(priority: 100)
-			# matched_mfr = @DB[:manufactures].where(name: m)
-			# puts matched_mfr.all
-			
-			# DB[:manufactures].update(:x=>nil) # UPDATE table SET x = NULL
-
-			# @DB[:manufactures]
-			# update_priority(manufacture_name, n)
-		
-		
-		
-		
-		# manufactures.each { |mfr| p mfr[:href_name] }
-		
-
-		# DB[:table].columns
-	
-		# create_table
-		# create_table name, extra_columns
-		# parse_prices
 	end

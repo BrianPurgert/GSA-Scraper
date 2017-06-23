@@ -1,6 +1,6 @@
-# require_relative './import'
-# require_relative './export'
-Dir["*.rb"].each { |file| require_relative(file) }
+require_relative './import'
+require_relative './export'
+# Dir["*.rb"].each { |file| require_relative(file) }
 basedir                     = File.join(__dir__,'test/')
 files                       = Dir.glob(basedir+"*.xlsx")
 csv_files                   = Dir.glob(basedir+"*.csv")
@@ -12,15 +12,16 @@ tables = [:client1,:client2,:client3,:client4,:client5,:client6,:client7,:client
 files.each_with_index do |file, num|
 	puts "#{num}\t#{file}".colorize(:green)
 end
-	files.each_with_index do |file, num|
-		begin
-			import_products file, tables[num]
-			excel tables[num]
-		rescue Exception => e
-			puts e.message
-		end
-	end
 
+
+	files.each_with_index do |file, num|
+			import_products file, tables[num]
+	end
+puts 'generating results in 200 s'
+sleep 200
+	files.each_with_index do |file, num|
+		excel tables[num]
+	end
 
 # import_products path2, :test2
 
