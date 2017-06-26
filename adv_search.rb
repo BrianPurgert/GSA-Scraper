@@ -2,19 +2,20 @@ require_relative 'adv/gsa_advantage'
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
-		gsa_a[n].browser.goto search_url(mfr[:href_name], n_low,mfr[:category])
+		url = search_url(mfr[:href_name], n_low,mfr[:category])
+		gsa_a[n].browser.goto url
 		doc         = Nokogiri::HTML(gsa_a[n].html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
 		product_tables = doc.search('#pagination~ table:not(#pagination2)')
-		n_results   = product_tables.length
-		@items      += n_results
+		 n_results   = product_tables.length
+		 @items      += n_results
 		      product_tables.each_with_index do |product_table, i|
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
-			
-			# bp [" #{mfr_name}","pg:#{n_results}/#{total_found}","$#{n_low}","#{url}","#{@items}"],[45,15,10,130,14,80,80]
+			color_p "#{url}  #{n_results}", 11
+			 # bp [" #{mfr[:href_name]}","pg:#{n_results}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end
 
@@ -63,26 +64,33 @@ end
 	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 45          # Number of browsers to run
+	n_thr       = 35          # Number of browsers to run
 	gsa_a       = []
 
 	
 	threads << Thread.new do
 		while @continue do
 				if @mfr_queue.size < (n_thr*3)
-					add_manufactures(n_thr*10)
+					add_manufactures(n_thr*3)
 				end
 				sleep 10
 		end
 	end
 	
 	threads << Thread.new do
+		i = 0
 		while @continue do
-			until @db_queue.empty?
+			if  @db_queue.size > 10000
+				color_p i, 12
 				insert_mfr_parts(take(@db_queue))
+				i = 0
+			else
+				i = i + 1
+				sleep 1
 			end
-			sleep 11
+			
 		end
+				insert_mfr_parts(take(@db_queue))
 	end
 
 	def parse_results(html)
@@ -100,7 +108,7 @@ end
 
 	
 	n_thr.times do |n|
-		 sleep 1
+		 # sleep 1
 		threads << Thread.new do
 			  gsa_a[n] = initialize_browser
 			  i = 0
@@ -108,11 +116,11 @@ end
 				until @mfr_queue.empty?
 					i += 1
 					mfr = @mfr_queue.shift
-					puts "Start: #{mfr[:name]} #{mfr[:category]}"
+					# puts "Start: #{mfr[:name]} #{mfr[:category]}"
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
-					check_in(mfr[:name],mfr[:category])
+					# check_in(mfr[:name],mfr[:category])
 					# puts "Finished: #{mfr[:name]} #{mfr[:category]}"
-					# gsa_a[n] = restart_browser gsa_a[n] if i % 10 == 0
+					 gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
 				end
 				  sleep 5
 			  end
