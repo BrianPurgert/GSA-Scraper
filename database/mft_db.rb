@@ -5,43 +5,48 @@ require 'sequel'
 require 'mysql2'
 require 'colorize'
 require 'colorized_string'
+require 'logger'
 
-ENV['MYSQL_HOST'] = 'gcs-data0.mysql.database.azure.com'
-ENV['MYSQL_USER'] = 'BrianPurgert@gcs-data0'
 
+
+ENV['MYSQL_HOST'] = 'gcs-data.mysql.database.azure.com'
+ENV['MYSQL_USER'] = 'BrianPurgert@gcs-data'
+ENV['MYSQL_PASS'] = 'GoV321CoN'
 MYSQL_HOSTS = %w(gcs-data0.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
-MYSQL_USER  =  %w(BrianPurgert@gcs-data0 mft_data)  #'mft_data'
-MYSQL_PASS  = "GoV321CoN"
+MYSQL_USER  =  %w(BrianPurgert@gcs-data0 mft_data)
+MYSQL_PASS  = 'GoV321CoN'
 
 basedir     = File.join(__dir__,'./helpers/')
 helpers     = Dir.glob(basedir+"*.sql")
-
-def line
-	puts "-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-\t-".colorize(:white)
-end
+c = 0
 
 
 
-count = 0
 begin
-	puts "Connecting to #{MYSQL_HOSTS[count]}"
-	@client = Mysql2::Client.new(username:    MYSQL_USER[count],
-	                             password:    'GoV321CoN',
-	                             database:    'mft_data',
-	                             host:        MYSQL_HOSTS[count],
-	                             port:        3306,
-	                             sslverify:   false,
-	                             sslcipher:   'AES256-SHA')
-	@DB = Sequel.connect(:adapter=>'mysql2', :host=>MYSQL_HOSTS[count], :database=>'mft_data', :user=>MYSQL_USER[count], :password=>'GoV321CoN')
-	puts 'connected'
+	puts "Connecting to #{ENV['MYSQL_HOST']}"
+	# @client = Mysql2::Client.new(username:    MYSQL_USER[c],
+	#                              password:    MYSQL_PASS,
+	#                              database:    'mft_data',
+	#                              host:        MYSQL_HOSTS[c],
+	#                              sslverify:   false,
+	#                              sslcipher:   'AES256-SHA')
+	@DB = Sequel.connect(
+			adapter:       'mysql2',
+			host:          ENV['MYSQL_HOST'],
+			database:      'mft_data',
+			user:          ENV['MYSQL_USER'],
+			password:      ENV['MYSQL_PASS'])
+	
 rescue Exception => e
-	line
 	puts "#{e.message}".colorize(:red)
-	count += 1
-	retry if count <= MYSQL_HOSTS.size
+	c += 1
+	retry if c <= MYSQL_HOSTS.size
 end
 
-	@DB.extension(:pretty_table)
+# @DB.loggers << Logger.new($stdout)
+# @DB.extension :freeze_datasets
+@DB.extension :pretty_table
+# Sequel.extension :migration
 
 	# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
 	# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
@@ -56,23 +61,10 @@ helpers.each do |sql|
 end
 
 def clean_copy_parts
-	@DB.create_table? :clean_manufactures do
-		# primary_key :id
-		String      :name, :null=>false
-		String      :name, :null=>false
-	end
+	pp @DB.schema(:manufactures).inspect
+	pp @DB.schema(:manufacture_parts)
+	clean = @DB[:manufacture_parts].order(:last_updated).reverse.distinct(:href_name)
 end
-#  varchar(255) not null,
-# href_name varchar(255) null,
-# category varchar(255) null,
-# last_updated datetime default CURRENT_TIMESTAMP not null,
-# last_search datetime default CURRENT_TIMESTAMP not null,
-# item_count int(10) unsigned null,
-#                             check_out bit default b'0' not null,
-# id int not null auto_increment
-# primary key,
-#         priority int(10) default '10' not null
-
 
 
 # @DB.create_table? :controller do
@@ -87,23 +79,44 @@ end
 		Integer     :found
 	end
 
+def create_distinct_manufactures
+@DB.create_table!(:search_manufactures,:as => @DB[:manufactures].distinct(:href_name))
+end
+
+def create_distinct_products
+	# todo: XSB
+	@DB.create_table!(:distinct_products,:as => @DB[:manufacture_parts].distinct(:href_name))
+end
+
+# do
+# 	primary_key(:name, String)
+# 	Integer :check_out , :default => '0'
+# 	Integer :priority, :default => '0'
+# 	String :href_name
+# 	# foreign_key :category_id, :categories
+#
+# 	index :name
+# end
+# @DB[:manufactures].distinct(:href_name).each do |row|
+# 	@DB[:search_manufactures].insert(name: row[:name], href_name: row[:href_name],check_out: '0',priority: '0')
+# end
+
 	def searched(title,url,found)
 		items = @DB[:searches]
 		items.insert(title: title,url: url,found: found)
 	end
 
 	
-	# pp @ DB.schema(:manufactures)
+
 	def display_statistics
 		manufacture_parts = @DB[:manufacture_parts]
 		manufacture       = @DB[:manufactures]
-		line
 		color_p "Manufacture Parts count: #{manufacture_parts.count}   Manufacture count: #{manufacture.count}", 7
 	end
 
 	def take(queue)
 		[].tap { |array| i = 0
-			until queue.empty? || i == 1000
+			until queue.empty? || i == 10000
 				array << queue.pop
 				i += 1
 			end
@@ -112,14 +125,17 @@ end
 
 	# --------------------------------------------------------------------------------------------------------------- #
 	# ---------------------------------------------------------------------------------------------------------------#
-
-	# @mfr_list_time = @client.prepare("UPDATE mft_data.page_mfr_list SET last_update=NOW() WHERE list_for=?")
-	# def set_mfr_list_time(letter)
-	# 	@mfr_list_time.execute(letter)
-	# 	puts "UPDATE COMPLETE:\t#{letter}".colorize(:green)
-	# end
-
-
+	def get_mfr(amount = 1)
+		if continue
+			manufactures = IGNORE_CAT ? @DB[:search_manufactures] : @DB[:manufactures]
+			queued_set = manufactures.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
+			queued_set.update(check_out: 1)
+			up_next = queued_set.all
+		else
+			up_next = []
+		end
+		up_next
+	end
 
 	def insert_contractors(mfrs)
 		@DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
@@ -131,14 +147,18 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
-		sleep 30
+	end
+
+	def check_in(mfr,cat)
+		@DB[:manufactures].where(name: mfr, category: cat).update(check_out: 2)
+		# safe_stop
 	end
 
 	def continue
 			@continue = true
 	end
 
-	def continuex
+	def continue_exec
 		stop = @DB[:controller].filter(key: 'stop').select(:value).first
 		print 'Controller: '
 		if stop[:value]==1
@@ -158,45 +178,9 @@ end
 		puts insert_string.colorize(:green)
 		@client.query("#{insert_string}")
 	end
-	
-	
-
-	def check_in(mfr,cat)
-		@DB[:manufactures].where(name: mfr, category: cat).update(check_out: 2)
-	     # safe_stop
-	end
-
-	# def check_in(name)
-	# 	escaped = @client.escape("#{name}")
-	# 	insert_string = "UPDATE mft_data.manufactures SET check_out=0 WHERE name='#{escaped}'"
-	#       @client.query("#{insert_string}")
-	# end
 
 
-	def check_out_parts(n)
-		result = @client.query("UPDATE `mft_data`.`mfr_parts` as t,(
-		      SELECT href_name
-		      FROM `mft_data`.`mfr_parts`
-		      WHERE status_id='0'
-	            ORDER BY last_updated
-	            LIMIT #{n}
-			) as temp
-			SET status_id = '1' WHERE temp.href_name = t.href_name")
-	end
 
-      def get_mfr(amount = 1)
-		 if continue
-		      queued_set = @DB[:manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :item_count, :name).limit(amount)#.update(priority: 100)
-		      up_next = queued_set.all
-		      queued_set.update(check_out: 1)
-		 else
-			 up_next = []
-		 end
-		  display_statistics
-		        # queued_set.print
-          return up_next
-     end
-  # get_mfr(30)
 
 	def get_mfr_part(amount = 1)
 		row_list = []
