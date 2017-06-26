@@ -24,12 +24,6 @@ c = 0
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
-	# @client = Mysql2::Client.new(username:    MYSQL_USER[c],
-	#                              password:    MYSQL_PASS,
-	#                              database:    'mft_data',
-	#                              host:        MYSQL_HOSTS[c],
-	#                              sslverify:   false,
-	#                              sslcipher:   'AES256-SHA')
 	@DB = Sequel.connect(
 			adapter:       'mysql2',
 			host:          ENV['MYSQL_HOST'],
@@ -43,8 +37,8 @@ rescue Exception => e
 	retry if c <= MYSQL_HOSTS.size
 end
 
-# @DB.loggers << Logger.new($stdout)
-# @DB.extension :freeze_datasets
+LogDatabase = true
+LogDatabase ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
 @DB.extension :pretty_table
 # Sequel.extension :migration
 

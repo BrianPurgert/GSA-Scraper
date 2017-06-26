@@ -14,7 +14,8 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
-			color_p "#{url}  #{n_results}", 11
+			# color_p "#{url}  #{n_results}", 11
+		
 			 # bp [" #{mfr[:href_name]}","pg:#{n_results}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end
@@ -47,8 +48,7 @@ end
 
 
 def add_manufactures(n_total)
-	manufactures = get_mfr(n_total)#.uniq { |mfr| mfr[:href_name] }
-	
+	manufactures = get_mfr(n_total)
 	manufactures.each do |mfr|
 		@mfr_queue << mfr
 	end
@@ -77,6 +77,8 @@ end
 		end
 	end
 	
+
+
 	threads << Thread.new do
 		i = 0
 		while @continue do

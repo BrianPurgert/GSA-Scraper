@@ -59,7 +59,6 @@ GEM
     in_threads (1.4.0)
     io-like (0.3.0)
     mime-types (2.99.3)
-    mime-types-data (3.2016.0521)
     mimemagic (0.3.2)
     mini_portile2 (2.2.0)
     mysql2 (0.4.6-x64-mingw32)

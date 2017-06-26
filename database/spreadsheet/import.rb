@@ -17,7 +17,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 		end
 		
 		set.collect! do |row|
-			[row[:manufacture_name],row[:manufacture_part],row[:gsa_price].to_f.round(2)]
+			[row[:manufacture_name].to_s,row[:manufacture_part].to_s,row[:gsa_price].to_f.round(2)]
 		end
 		  table.import([:manufacture_name, :manufacture_part, :gsa_price], set)
 		prioritize(table)
@@ -64,28 +64,32 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 def find_duplicates
 	@DB[:manufacture_parts].order(:last_updated).distinct(:mfr,:mpn)
-	@DB[:manufactures].group_and_count(:mfr,:mpn)
+	@DB[:search_manufactures].group_and_count(:mfr,:mpn)
 end
 
 def prioritize(table)
 	manufacture_count = table.group_and_count(:manufacture_name)
 	manufacture_count.each do |mfr|
-		affected = @DB[:manufactures].where(name: mfr[:manufacture_name]).update(priority: mfr[:count], check_out: 0)
-		puts "#{mfr[:manufacture_name]}: #{affected}"
+		similar = "%#{mfr[:manufacture_name]}%"
+		priority = mfr[:count]+10
+		affected = @DB[:search_manufactures].where(Sequel.ilike(:name, similar)).update(priority: priority, check_out: 0)
+		
+		if affected>0
+			puts "#{mfr[:manufacture_name]} : #{affected}".colorize(:green)
+		else
+			puts "No Similar Manufacture Names found\n#{mfr[:manufacture_name]} : #{affected}".colorize(:red)
+		end
 	end
 end
 
 def import_products(path,table_name)
+
 		begin
-	
-		spreadsheet = open_spreadsheet(path)
-		
-		table = @DB[table_name]
-		set = parse_prices(spreadsheet)
-		create_client_table table_name, ['a', 'b', 'c']
-		import_client_prices table, set
-		
-		
+			spreadsheet = open_spreadsheet(path)
+			table = @DB[table_name]
+			set = parse_prices(spreadsheet)
+			create_client_table table_name, ['a', 'b', 'c']
+			import_client_prices table, set
 		rescue Exception => e
 			puts e.message
 		end
