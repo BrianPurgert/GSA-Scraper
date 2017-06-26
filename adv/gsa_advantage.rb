@@ -27,13 +27,13 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-def bp(arr_str,length = [50,50,50,50,50,50,50])
-	out_str = ""
-	arr_str.each_with_index do |str, i|
-		out_str += "|#{(str + ' ' * length[i])[0, length[i]]}|".colorize(String.colors[i])
-	end
-	puts out_str
-end
+# def bp(arr_str,length = [50,50,50,50,50,50,50])
+# 	out_str = ""
+# 	arr_str.each_with_index do |str, i|
+# 		out_str += "|#{(str + ' ' * length[i])[0, length[i]]}|".colorize(String.colors[i])
+# 	end
+# 	puts out_str
+# end
 
 def vendor_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
@@ -55,9 +55,10 @@ def search_url(url_encoded_name, current_lowest_price,category,page_number=1,hig
 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
 	url = url + "&c=100"
 	url = url + (high_low ? '&s=9' : '&s=6')
-	url = url + "&q=1:4#{category}*"
+	url = url + (IGNORE_CAT ? '' : "&q=1:4#{category}*")
 	url = url + "&p=#{page_number}"
 	# puts url
+	# todo save to db
 	return url
 end
 

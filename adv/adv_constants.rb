@@ -19,9 +19,10 @@ I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
 	Categories   = ["ADV.BUI", "ADV.ELE", "ADV.FAC", "ADV.FUR", "ADV.LAW", "ADV.OEQ", "ADV.OFF", "ADV.FSSI", "ADV.SCI", "ADV.TOO", "ADV.VEH"]
    end
 
-Mechanized        = FALSE
-Dev_mode          = FALSE
-IS_PROD           = TRUE  # Check out items if true
+IGNORE_CAT        = true
+Mechanized        = false
+Dev_mode          = false
+IS_PROD           = true  # Check out items if true
 Proxy_list        = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
 Proxy_list1       = YAML::load_file(File.join(__dir__, '../config/proxy1.yml'))
 Socks_list        = YAML::load_file(File.join(__dir__, '../config/socks5_proxy.yml'))

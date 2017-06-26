@@ -8,25 +8,17 @@ def view(table)
 	@DB.create_view(:price_comparisons,result)
 end
 
-# def to_xlxs(include_column_titles = true)
-#       n = naked
-#       cols = n.columns
-#       xlxs = String.new
-#       xlxs << "#{cols.join(', ')}\r\n" if include_column_titles
-#       n.each{|r| csv << "#{cols.collect{|c| r[c]}.join(', ')}\r\n"}
-#       xlxs
-#     end
-# end
+
 
 def excel(table)
 	puts "Manufacture parts join #{table}"
 	manufacture_parts = @DB[:manufacture_parts].order(:last_updated).reverse.distinct(:mpn)
 	result = @DB[table].left_outer_join(manufacture_parts,:mfr=>:manufacture_name  , :mpn=>:manufacture_part )
 	# result = @DB[table].left_join(:manufacture_parts,:manufacture_name => :mfr, :manufacture_part => :mpn)
-	line
+
 	puts result.inspect
 	
-	line
+	
 	result.print
 	
 	
