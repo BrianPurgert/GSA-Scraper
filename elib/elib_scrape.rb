@@ -1,8 +1,8 @@
-require 'page-object'
-require 'watir'
+# require 'page-object'
+# require 'watir'
 require 'yaml'
-require 'page-object/page_factory'
-require_relative 'features/support/gsaelibrary_page'
+# require 'page-object/page_factory'
+# require_relative 'features/support/gsaelibrary_page'
 require 'axlsx'
 require 'nokogiri'
 require 'open-uri'
@@ -10,12 +10,15 @@ require 'net_http_ssl_fix'
 # require 'open_uri_redirections'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 require 'fastercsv'
+@Elibq = Queue.new
+
 ElibMain       = "https://www.gsaelibrary.gsa.gov/ElibMain/"
 ContractorList = "contractorList.do?contractorListFor="
 MfrList        = "mfrList.do?scheduleNumber=84&searchMethod=autonomy"
 Manufacturer   = "manufacturer.do?mfrName=3M+Company"
-# advRedirect.do?contract=GS-21F-0075X&sin=105+002&src=elib&app=cat
-# advRedirect.do?contract=GS-07F-0039V&mfrName=3M&src=elib&app=cat
+CSS_contract   = "a[href*='contract=']"
+CSS_table      = "td td td+ td"
+
 
 mcsv       = FCSV.new
 #CSV.open("contractor_data.csv", "wb") do |csv|
@@ -37,20 +40,21 @@ wb.add_worksheet(name: "Contract End Dates") do |sheet|
 		contractors.each { |contractor| @page_links << contractor['href'] }
 		
 		puts @page_links
-	
+	threads = []
 		
 
 		# mcsv.to_csv(@page_links)
 		@page_links.each_with_index do |contractor_information, link_index|
+			threads << Thread.new do
+			
 			url = "#{ElibMain}#{contractor_information}"
 			doc = Nokogiri::HTML(open(url))
-			begin
-				doc.css("a[href*='contract=']").each_with_index { |catalog, i| sheet.add_row [catalog['href']] }
-				
-			rescue
-				puts 'element not found '
-			end
+			inner = doc.css(CSS_table)
+			inner.each { |td| print "#{td.text}" }
+			
+		end
 		end
 	end
-	p.serialize("Contractor_Experation_dates.xlsx")
+threads.each { |thr| thr.join }
+	# p.serialize("Contractor_Experation_dates.xlsx")
 end

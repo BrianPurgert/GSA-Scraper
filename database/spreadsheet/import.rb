@@ -78,6 +78,9 @@ def prioritize(table)
 			puts "#{mfr[:manufacture_name]} : #{affected}".colorize(:green)
 		else
 			puts "No Similar Manufacture Names found\n#{mfr[:manufacture_name]} : #{affected}".colorize(:red)
+			similar = mfr[:manufacture_name].gsub!(/[^0-9A-Za-z]/, '%')
+			affected = @DB[:search_manufactures].where(Sequel.ilike(:name, similar)).update(priority: priority, check_out: 0)
+			puts "#{similar} #{affected}"
 		end
 	end
 end

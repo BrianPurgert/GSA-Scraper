@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rspec'
 # gem 'sinatra'
 # gem 'erubi'
 # gem 'roda'
@@ -26,4 +27,7 @@ gem 'mechanize', github: 'sparklemotion/mechanize'
 # gem 'httparty'
 # gem 'watir', github: 'watir', :branch => '6_3_0'
 gem 'watir', '~> 6.3'
+
+gem 'fastercsv', '~> 1.5', '>= 1.5.5'
+gem 'net_http_ssl_fix', require: 'net_http_ssl_fix'
 
