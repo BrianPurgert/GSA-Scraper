@@ -12,6 +12,7 @@ Socks_port        = 61336
 Catalog_hudson    = '//192.168.1.104/gsa_price/'
 RX_mfr            = /(?<=\q=..:.).*/                                      # Regex selects manufacture name after link
 I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
    module ADV
 	FSSI        = "a[href*='#fssi']"

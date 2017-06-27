@@ -3,7 +3,8 @@ require_relative 'adv/gsa_advantage'
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
 		url = search_url(mfr[:href_name], n_low,mfr[:category])
-		gsa_a[n].browser.goto url
+		Mechanized ? (gsa_a[n].get url) : (gsa_a[n].browser.goto url)
+		# Mechanized ? Mechanize::Page.new URI.parse(url) :
 		doc         = Nokogiri::HTML(gsa_a[n].html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
@@ -54,8 +55,6 @@ def add_manufactures(n_total)
 	end
 end
 
-
-
 	@reading              = 0
 	@items                = 0
 	@db_queue   = Queue.new
@@ -64,20 +63,19 @@ end
 	exit unless @continue
 	# Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 15          # Number of browsers to run
+	n_thr       = 40          # Number of browsers to run
 	gsa_a       = []
 
 	
 	threads << Thread.new do
 		while @continue do
-				if @mfr_queue.size < (n_thr*3)
+				if @mfr_queue.size < (n_thr*4)
 					add_manufactures(n_thr*3)
 				end
 				sleep 10
 		end
 	end
 	
-
 
 	threads << Thread.new do
 		i = 0

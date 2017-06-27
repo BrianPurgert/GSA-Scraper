@@ -103,9 +103,9 @@ end
 	
 
 	def display_statistics
-		manufacture_parts = @DB[:manufacture_parts]
+		manufacture_parts = @DB[:manufacture_parts].distinct(:href_name).count
 		manufacture       = @DB[:manufactures]
-		color_p "Manufacture Parts count: #{manufacture_parts.count}   Manufacture count: #{manufacture.count}", 7
+		color_p "Manufacture Parts count: #{manufacture_parts}", 7
 	end
 
 	def take(queue)
