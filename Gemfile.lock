@@ -36,7 +36,7 @@ GEM
   specs:
     archive-zip (0.7.0)
       io-like (~> 0.3.0)
-    childprocess (0.7.0)
+    childprocess (0.7.1)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.1.0)
       archive-zip (~> 0.7.0)

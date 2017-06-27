@@ -77,14 +77,16 @@ end
 def initialize_agent
 	proxy       = Proxy_list.sample.partition(":")
 	puts proxy.inspect
-	url         = 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do'
-	agent =  Mechanize.new do |a|
-		a.set_proxy proxy[0], proxy[2]
-		a.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.82 Safari/537.36"
-		a.follow_meta_refresh = true
-	end
-	agent.get(url)
-	return agent
+	url         = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
+	agent = Mechanize.new
+	agent.log = Logger.new ($stdout)
+	agent.user_agent_alias = 'Mac Safari'
+	agent.set_proxy proxy[0], proxy[2]
+	# page = agent.get url
+	# page = Mechanize::Page.new URI.parse('http://example.com'), [], driver.page_source, 200, agent
+	# puts page.body
+
+	return agent.get(url)
 end
 
 def restart_browser(gsa_a)
@@ -94,10 +96,10 @@ end
 
 def initialize_browser
 	begin
-		return initialize_browser_s
+		Mechanized ? (return initialize_agent) : (return initialize_browser_s)
 	rescue Exception => e
 		puts e.message
-		return initialize_browser_s
+		Mechanized ? (return initialize_agent) : (return initialize_browser_s)
 	end
 end
 
