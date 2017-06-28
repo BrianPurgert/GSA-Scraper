@@ -26,12 +26,6 @@ def list_files(files)
 	end
 end
 
-def simple_csv_import_export
-	somefile = File.open("sample.txt", "w")
-	somefile.puts "Hello file!"
-	somefile.close
-end
-
 def import_spreadsheets(files, tables)
 	puts "Import Spreadsheets? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
@@ -40,7 +34,6 @@ def import_spreadsheets(files, tables)
 			threads << Thread.new { import_products file, tables[num] }
 		end
 		threads.each { |thr| thr.join }
-		
 	end
 end
 
@@ -55,6 +48,6 @@ def export_price_comparisons(files, tables)
 	end
 end
 
-list_files(files)
-import_spreadsheets(files, tables)
-export_price_comparisons(files, tables)
+ list_files(files)
+ import_spreadsheets(files, tables)
+ export_price_comparisons(files, tables)

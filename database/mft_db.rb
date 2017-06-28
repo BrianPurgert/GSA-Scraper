@@ -100,12 +100,15 @@ end
 		items.insert(title: title,url: url,found: found)
 	end
 
-	
-
 	def display_statistics
 		manufacture_parts = @DB[:manufacture_parts].distinct(:href_name).count
 		manufacture       = @DB[:manufactures]
 		color_p "Manufacture Parts count: #{manufacture_parts}", 7
+	end
+
+	def priority_manufactures
+		result = @DB[:search_manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(50)
+		result.all
 	end
 
 	def take(queue)
@@ -117,8 +120,7 @@ end
 		}
 	end
 
-	# --------------------------------------------------------------------------------------------------------------- #
-	# ---------------------------------------------------------------------------------------------------------------#
+# ---------------------------------------------------------------------------------#
 	def get_mfr(amount = 1)
 		if continue
 			manufactures = IGNORE_CAT ? @DB[:search_manufactures] : @DB[:manufactures]
@@ -165,16 +167,12 @@ end
 		
 	end
 	
-	
 	def mfr_time(name)
 		escaped       = @client.escape("#{name}")
 		insert_string = "UPDATE mft_data.manufactures SET last_search=NOW() WHERE name='#{escaped}'"
 		puts insert_string.colorize(:green)
 		@client.query("#{insert_string}")
 	end
-
-
-
 
 	def get_mfr_part(amount = 1)
 		row_list = []
@@ -187,7 +185,6 @@ end
 		check_out_parts(amount)
 		return mfr_part_href
 	end
-
 
 	def load_table_mfr
 	@mfr_table = []

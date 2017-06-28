@@ -9,22 +9,27 @@ def view(table)
 end
 
 
-
-def excel(table)
+def compare_products(table)
 	puts "Manufacture parts join #{table}"
 	# manufacture_parts = @DB[:manufacture_parts].reverse(:last_updated).distinct(:mpn)
-	manufacture_parts = @DB[:manufacture_parts]#.select(:, :b)
-	result = @DB[table].left_outer_join(manufacture_parts,:mfr=>:manufacture_name  , :mpn=>:manufacture_part )
+	manufacture_parts = @DB[:manufacture_parts] #.select(:, :b)
+	result            = @DB[table].left_outer_join(manufacture_parts, :mfr => :manufacture_name, :mpn => :manufacture_part)
 	# result = @DB[table].left_join(:manufacture_parts,:manufacture_name => :mfr, :manufacture_part => :mpn)
 	
 	# Todo create table from that dataset
 	# @DB[:table1].import([:x, :y], result.select(:a, :b))
 	# DB[:table].multi_insert([{:x => 1}, {:x => 2}])
-	result = result.all
+	result            = result.all
 	puts "Lookup Complete #{table}"
-	p = Axlsx::Package.new
-	wb = p.workbook
-	styles = wb.styles
+	result
+end
+
+
+def excel(table)
+	result         = compare_products(table)
+	p              = Axlsx::Package.new
+	wb             = p.workbook
+	styles         = wb.styles
 	    col_header = styles.add_style :bg_color => "FFDFDEDF", :b => true, :alignment => { :horizontal => :center }
             wb.add_worksheet(:name => "Overview") do |sheet|
 	                  sheet.add_row [
