@@ -1,0 +1,140 @@
+# Logfile created on 2017-06-27 02:45:29 -0400 by logger.rb/56438
+I, [2017-06-27T02:45:29.464031 #27220]  INFO -- : Net::HTTP::Get: /advantage/search/headerSearch.do
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: accept-encoding => gzip,deflate,identity
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: accept => */*
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: user-agent => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: accept-charset => ISO-8859-1,utf-8;q=0.7,*;q=0.7
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: accept-language => en-us,en;q=0.5
+D, [2017-06-27T02:45:29.464530 #27220] DEBUG -- : request-header: host => www.gsaadvantage.gov
+I, [2017-06-27T02:45:34.003353 #27220]  INFO -- : Net::HTTP::Get: /advantage/search/headerSearch.do
+D, [2017-06-27T02:45:34.003353 #27220] DEBUG -- : request-header: accept-encoding => gzip,deflate,identity
+D, [2017-06-27T02:45:34.003353 #27220] DEBUG -- : request-header: accept => */*
+D, [2017-06-27T02:45:34.003852 #27220] DEBUG -- : request-header: user-agent => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9
+D, [2017-06-27T02:45:34.003852 #27220] DEBUG -- : request-header: accept-charset => ISO-8859-1,utf-8;q=0.7,*;q=0.7
+D, [2017-06-27T02:45:34.003852 #27220] DEBUG -- : request-header: accept-language => en-us,en;q=0.5
+D, [2017-06-27T02:45:34.003852 #27220] DEBUG -- : request-header: host => www.gsaadvantage.gov
+I, [2017-06-27T02:49:57.348815 #42200]  INFO -- : Net::HTTP::Get: /advantage/search/headerSearch.do
+D, [2017-06-27T02:49:57.348815 #42200] DEBUG -- : request-header: accept-encoding => gzip,deflate,identity
+D, [2017-06-27T02:49:57.348815 #42200] DEBUG -- : request-header: accept => */*
+D, [2017-06-27T02:49:57.348815 #42200] DEBUG -- : request-header: user-agent => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9
+D, [2017-06-27T02:49:57.348815 #42200] DEBUG -- : request-header: accept-charset => ISO-8859-1,utf-8;q=0.7,*;q=0.7
+D, [2017-06-27T02:49:57.349311 #42200] DEBUG -- : request-header: accept-language => en-us,en;q=0.5
+D, [2017-06-27T02:49:57.349311 #42200] DEBUG -- : request-header: host => www.gsaadvantage.gov
+I, [2017-06-27T02:50:02.670512 #42200]  INFO -- : status: Net::HTTPOK 1.1 200 OK
+D, [2017-06-27T02:50:02.670512 #42200] DEBUG -- : response-header: date => Tue, 27 Jun 2017 06:49:54 GMT
+D, [2017-06-27T02:50:02.670512 #42200] DEBUG -- : response-header: server => Apache
+D, [2017-06-27T02:50:02.670512 #42200] DEBUG -- : response-header: x-frame-options => DENY
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: strict-transport-security => max-age=31536000; includeSubDomains
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: set-cookie => JSESSIONID=53CC15A34EE466DD3FBBBCEFEF720C38.F6; Path=/advantage; Secure
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: cache-control => no-cache
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: pragma => no-cache
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: expires => Wed, 31 Dec 1969 23:59:59 GMT
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: keep-alive => timeout=15, max=100
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: connection => Keep-Alive
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: transfer-encoding => chunked
+D, [2017-06-27T02:50:02.671012 #42200] DEBUG -- : response-header: content-type => text/html;charset=UTF-8
+D, [2017-06-27T02:50:02.671511 #42200] DEBUG -- : Read 0 bytes (0 total)
+D, [2017-06-27T02:50:02.671511 #42200] DEBUG -- : Read 3803 bytes (3803 total)
+D, [2017-06-27T02:50:02.671511 #42200] DEBUG -- : Read 0 bytes (3803 total)
+D, [2017-06-27T02:50:02.776113 #42200] DEBUG -- : Read 4397 bytes (8200 total)
+D, [2017-06-27T02:50:02.776113 #42200] DEBUG -- : Read 0 bytes (8200 total)
+D, [2017-06-27T02:50:02.776113 #42200] DEBUG -- : Read 3805 bytes (12005 total)
+D, [2017-06-27T02:50:02.776113 #42200] DEBUG -- : Read 0 bytes (12005 total)
+D, [2017-06-27T02:50:02.776614 #42200] DEBUG -- : Read 8184 bytes (20189 total)
+D, [2017-06-27T02:50:02.776614 #42200] DEBUG -- : Read 0 bytes (20189 total)
+D, [2017-06-27T02:50:02.881184 #42200] DEBUG -- : Read 1883 bytes (22072 total)
+D, [2017-06-27T02:50:02.881184 #42200] DEBUG -- : Read 0 bytes (22072 total)
+D, [2017-06-27T02:50:02.881184 #42200] DEBUG -- : Read 2443 bytes (24515 total)
+D, [2017-06-27T02:50:02.881184 #42200] DEBUG -- : Read 0 bytes (24515 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 8184 bytes (32699 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 0 bytes (32699 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 8184 bytes (40883 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 0 bytes (40883 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 8184 bytes (49067 total)
+D, [2017-06-27T02:50:02.881684 #42200] DEBUG -- : Read 0 bytes (49067 total)
+D, [2017-06-27T02:50:02.977244 #42200] DEBUG -- : Read 8184 bytes (57251 total)
+D, [2017-06-27T02:50:02.977244 #42200] DEBUG -- : Read 0 bytes (57251 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 8184 bytes (65435 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 0 bytes (65435 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 8184 bytes (73619 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 0 bytes (73619 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 51 bytes (73670 total)
+D, [2017-06-27T02:50:02.987693 #42200] DEBUG -- : Read 0 bytes (73670 total)
+D, [2017-06-27T02:50:02.988192 #42200] DEBUG -- : Read 2731 bytes (76401 total)
+D, [2017-06-27T02:50:02.988192 #42200] DEBUG -- : Read 0 bytes (76401 total)
+D, [2017-06-27T02:50:03.082622 #42200] DEBUG -- : Read 7140 bytes (83541 total)
+D, [2017-06-27T02:50:03.082622 #42200] DEBUG -- : Read 0 bytes (83541 total)
+D, [2017-06-27T02:50:03.082622 #42200] DEBUG -- : Read 8184 bytes (91725 total)
+D, [2017-06-27T02:50:03.082622 #42200] DEBUG -- : Read 0 bytes (91725 total)
+D, [2017-06-27T02:50:03.083122 #42200] DEBUG -- : Read 8184 bytes (99909 total)
+D, [2017-06-27T02:50:03.083122 #42200] DEBUG -- : Read 0 bytes (99909 total)
+D, [2017-06-27T02:50:03.084122 #42200] DEBUG -- : Read 8184 bytes (108093 total)
+D, [2017-06-27T02:50:03.084122 #42200] DEBUG -- : Read 0 bytes (108093 total)
+D, [2017-06-27T02:50:03.188301 #42200] DEBUG -- : Read 6452 bytes (114545 total)
+D, [2017-06-27T02:50:03.188301 #42200] DEBUG -- : Read 0 bytes (114545 total)
+D, [2017-06-27T02:50:03.188301 #42200] DEBUG -- : Read 1388 bytes (115933 total)
+D, [2017-06-27T02:50:03.188301 #42200] DEBUG -- : Read 0 bytes (115933 total)
+D, [2017-06-27T02:50:03.188301 #42200] DEBUG -- : Read 3503 bytes (119436 total)
+D, [2017-06-27T02:50:03.196305 #42200] DEBUG -- : saved cookie: JSESSIONID=53CC15A34EE466DD3FBBBCEFEF720C38.F6
+I, [2017-06-27T02:50:03.199303 #42200]  INFO -- : Net::HTTP::Get: /advantage/search/headerSearch.do
+D, [2017-06-27T02:50:03.199303 #42200] DEBUG -- : request-header: accept-encoding => gzip,deflate,identity
+D, [2017-06-27T02:50:03.199303 #42200] DEBUG -- : request-header: accept => */*
+D, [2017-06-27T02:50:03.199804 #42200] DEBUG -- : request-header: user-agent => Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9
+D, [2017-06-27T02:50:03.199804 #42200] DEBUG -- : request-header: accept-charset => ISO-8859-1,utf-8;q=0.7,*;q=0.7
+D, [2017-06-27T02:50:03.199804 #42200] DEBUG -- : request-header: accept-language => en-us,en;q=0.5
+D, [2017-06-27T02:50:03.199804 #42200] DEBUG -- : request-header: cookie => JSESSIONID=53CC15A34EE466DD3FBBBCEFEF720C38.F6
+D, [2017-06-27T02:50:03.199804 #42200] DEBUG -- : request-header: host => www.gsaadvantage.gov
+I, [2017-06-27T02:50:03.410413 #42200]  INFO -- : status: Net::HTTPOK 1.1 200 OK
+D, [2017-06-27T02:50:03.410413 #42200] DEBUG -- : response-header: date => Tue, 27 Jun 2017 06:49:55 GMT
+D, [2017-06-27T02:50:03.410413 #42200] DEBUG -- : response-header: server => Apache
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: x-frame-options => DENY
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: strict-transport-security => max-age=31536000; includeSubDomains
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: cache-control => no-cache
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: pragma => no-cache
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: expires => Wed, 31 Dec 1969 23:59:59 GMT
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: keep-alive => timeout=15, max=99
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: connection => Keep-Alive
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: transfer-encoding => chunked
+D, [2017-06-27T02:50:03.410913 #42200] DEBUG -- : response-header: content-type => text/html;charset=UTF-8
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 0 bytes (0 total)
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 3803 bytes (3803 total)
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 0 bytes (3803 total)
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 3880 bytes (7683 total)
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 0 bytes (7683 total)
+D, [2017-06-27T02:50:03.411413 #42200] DEBUG -- : Read 3288 bytes (10971 total)
+D, [2017-06-27T02:50:03.411913 #42200] DEBUG -- : Read 0 bytes (10971 total)
+D, [2017-06-27T02:50:03.411913 #42200] DEBUG -- : Read 8184 bytes (19155 total)
+D, [2017-06-27T02:50:03.411913 #42200] DEBUG -- : Read 0 bytes (19155 total)
+D, [2017-06-27T02:50:03.411913 #42200] DEBUG -- : Read 1742 bytes (20897 total)
+D, [2017-06-27T02:50:03.412413 #42200] DEBUG -- : Read 0 bytes (20897 total)
+D, [2017-06-27T02:50:03.422914 #42200] DEBUG -- : Read 1926 bytes (22823 total)
+D, [2017-06-27T02:50:03.422914 #42200] DEBUG -- : Read 0 bytes (22823 total)
+D, [2017-06-27T02:50:03.422914 #42200] DEBUG -- : Read 8184 bytes (31007 total)
+D, [2017-06-27T02:50:03.422914 #42200] DEBUG -- : Read 0 bytes (31007 total)
+D, [2017-06-27T02:50:03.517913 #42200] DEBUG -- : Read 8184 bytes (39191 total)
+D, [2017-06-27T02:50:03.517913 #42200] DEBUG -- : Read 0 bytes (39191 total)
+D, [2017-06-27T02:50:03.517913 #42200] DEBUG -- : Read 8184 bytes (47375 total)
+D, [2017-06-27T02:50:03.518413 #42200] DEBUG -- : Read 0 bytes (47375 total)
+D, [2017-06-27T02:50:03.518413 #42200] DEBUG -- : Read 8184 bytes (55559 total)
+D, [2017-06-27T02:50:03.518413 #42200] DEBUG -- : Read 0 bytes (55559 total)
+D, [2017-06-27T02:50:03.646913 #42200] DEBUG -- : Read 8184 bytes (63743 total)
+D, [2017-06-27T02:50:03.646913 #42200] DEBUG -- : Read 0 bytes (63743 total)
+D, [2017-06-27T02:50:03.646913 #42200] DEBUG -- : Read 8184 bytes (71927 total)
+D, [2017-06-27T02:50:03.646913 #42200] DEBUG -- : Read 0 bytes (71927 total)
+D, [2017-06-27T02:50:03.647413 #42200] DEBUG -- : Read 51 bytes (71978 total)
+D, [2017-06-27T02:50:03.647413 #42200] DEBUG -- : Read 0 bytes (71978 total)
+D, [2017-06-27T02:50:03.647413 #42200] DEBUG -- : Read 2731 bytes (74709 total)
+D, [2017-06-27T02:50:03.647413 #42200] DEBUG -- : Read 0 bytes (74709 total)
+D, [2017-06-27T02:50:03.647413 #42200] DEBUG -- : Read 6811 bytes (81520 total)
+D, [2017-06-27T02:50:03.647913 #42200] DEBUG -- : Read 0 bytes (81520 total)
+D, [2017-06-27T02:50:03.647913 #42200] DEBUG -- : Read 8184 bytes (89704 total)
+D, [2017-06-27T02:50:03.647913 #42200] DEBUG -- : Read 0 bytes (89704 total)
+D, [2017-06-27T02:50:03.720496 #42200] DEBUG -- : Read 8184 bytes (97888 total)
+D, [2017-06-27T02:50:03.720496 #42200] DEBUG -- : Read 0 bytes (97888 total)
+D, [2017-06-27T02:50:03.731996 #42200] DEBUG -- : Read 8184 bytes (106072 total)
+D, [2017-06-27T02:50:03.731996 #42200] DEBUG -- : Read 0 bytes (106072 total)
+D, [2017-06-27T02:50:03.731996 #42200] DEBUG -- : Read 6405 bytes (112477 total)
+D, [2017-06-27T02:50:03.731996 #42200] DEBUG -- : Read 0 bytes (112477 total)
+D, [2017-06-27T02:50:03.731996 #42200] DEBUG -- : Read 1247 bytes (113724 total)
+D, [2017-06-27T02:50:03.732496 #42200] DEBUG -- : Read 0 bytes (113724 total)
+D, [2017-06-27T02:50:03.826836 #42200] DEBUG -- : Read 3127 bytes (116851 total)

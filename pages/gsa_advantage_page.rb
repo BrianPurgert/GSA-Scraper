@@ -1,9 +1,10 @@
 # helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
 	include PageObject
-	def ree
-		p 'reeeeee'
-	end
+
+	# def goto url
+	# 	self.browser.goto url
+	# end
 	# User Alerts
 	# Session Terminated
 	

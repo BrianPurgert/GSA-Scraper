@@ -73,6 +73,15 @@ def product_url()
 	puts "#{url}".colorize(String.colors.sample)
 	return url
 end
+#
+# class CSVParser < Mechanize::File
+# 	attr_reader :csv
+#
+# 	def initialize uri = nil, response = nil, body = nil, code = nil
+# 		super uri, response, body, code
+# 		@csv = CSV.parse body
+# 	end
+# end
 
 def initialize_agent
 	proxy       = Proxy_list.sample.partition(":")

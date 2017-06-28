@@ -1,4 +1,4 @@
-require_relative 'adv/gsa_advantage'
+require_relative 'gsa_advantage'
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin

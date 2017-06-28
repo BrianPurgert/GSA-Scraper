@@ -1,4 +1,4 @@
-require_relative 'adv/gsa_advantage'
+require_relative 'gsa_advantage'
 1.times do
 
 
@@ -77,14 +77,18 @@ benchmark '', @count
 			ADV::Categories.each do |category|
 				url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
 				p url
-				gsa_a[i].browser.goto url
-				found = parse_mfr_list(gsa_a[i].mft_table_element.html, list, category)
-				searched gsa_a[i].browser.title,gsa_a[i].browser.url, found
+				# Mechanized ? (gsa_a[i].get url) : (gsa_a[i].browser.goto url)
+				page = gsa_a[i].get(url)
+				puts page.parser.xpath('/html').to_html
+				
+				# gsa_a[i].html
+				# found = parse_mfr_list(gsa_a[i].html, list, category)
+				# searched gsa_a[i].browser.title,gsa_a[i].browser.url, found
 				@count = @count + found
 			end
 		end
 		end
-		gsa_a[i].browser.close
+		 # gsa_a[i].browser.close
 	end
 end
 
