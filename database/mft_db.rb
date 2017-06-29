@@ -37,7 +37,7 @@ rescue Exception => e
 	retry if c <= MYSQL_HOSTS.size
 end
 
-LogDatabase = true
+
 LogDatabase ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
 @DB.extension :pretty_table
 # Sequel.extension :migration

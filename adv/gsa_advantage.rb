@@ -27,26 +27,18 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-# def bp(arr_str,length = [50,50,50,50,50,50,50])
-# 	out_str = ""
-# 	arr_str.each_with_index do |str, i|
-# 		out_str += "|#{(str + ' ' * length[i])[0, length[i]]}|".colorize(String.colors[i])
-# 	end
-# 	puts out_str
+# def vendor_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
+# 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
+# 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
+# 	url = url + "q=28:5#{url_encoded_name}"
+# 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
+# 	url = url + "&c=100"
+# 	url = url + (high_low ? '&s=9' : '&s=6')
+# 	url = url + "&q=1:4#{category}*"
+# 	url = url + "&p=#{page_number}"
+# 	# puts url
+# 	return url
 # end
-
-def vendor_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
-	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
-	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
-	url = url + "q=28:5#{url_encoded_name}"
-	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
-	url = url + "&c=100"
-	url = url + (high_low ? '&s=9' : '&s=6')
-	url = url + "&q=1:4#{category}*"
-	url = url + "&p=#{page_number}"
-	# puts url
-	return url
-end
 
 def search_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
@@ -88,14 +80,14 @@ def initialize_agent
 	puts proxy.inspect
 	url         = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
 	agent = Mechanize.new
-	agent.log = Logger.new ($stdout)
+	# agent.log = Logger.new ($stdout)
 	agent.user_agent_alias = 'Mac Safari'
 	agent.set_proxy proxy[0], proxy[2]
 	# page = agent.get url
 	# page = Mechanize::Page.new URI.parse('http://example.com'), [], driver.page_source, 200, agent
 	# puts page.body
-
-	return agent.get(url)
+	agent.get(url)
+	return agent
 end
 
 def restart_browser(gsa_a)
@@ -126,14 +118,16 @@ end
 
 
 def save_page(html, url, file_name="")
-	html = HtmlBeautifier.beautify(html)
+	 # html = HtmlBeautifier.beautify(html)
 	short_url = ''
-
+file_name = rand(100000000000)
 	if url.include? 'search.do'
+		# split_url = "#{url}".chomp('&p=1')
+		# split_url.each_line('=') { |s| file_name = s if s.include? '28' }
 		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
 		pt_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
-		ph = "R:/s/"+"#{file_name}"+".html"
-		pt = "R:/s/"+"#{file_name}"+".txt"
+		ph = "C:/s/"+"#{file_name}"+".html"
+		pt = "C:/s/"+"#{file_name}"+".txt"
 
 	elsif url.include? 'product_detail.do'
 		split_url = "#{url}".chomp('&cview=true')
@@ -141,10 +135,10 @@ def save_page(html, url, file_name="")
 
 		ph_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
 		pt_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
-		ph = "R:/catalog/"+"#{short_url}"+".html"
-		pt = "R:/catalog/"+"#{short_url}"+".txt"
+		ph = "C:/catalog/"+"#{short_url}"+".html"
+		pt = "C:/catalog/"+"#{short_url}"+".txt"
 	end
-	open(ph_h, 'w') { |f| f.puts html }
+	open(ph, 'w') { |f| f.puts html }
 	return short_url
 end
 

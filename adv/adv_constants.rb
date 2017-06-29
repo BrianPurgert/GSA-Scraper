@@ -1,6 +1,7 @@
 
 IGNORE_CAT        = true
-Mechanized        = false
+Mechanized        = true
+LogDatabase       = false
 Dev_mode          = false
 IS_PROD           = true  # Check out items if true
 

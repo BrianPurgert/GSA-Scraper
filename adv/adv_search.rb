@@ -4,8 +4,10 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
 		url = search_url(mfr[:href_name], n_low,mfr[:category])
 		Mechanized ? (gsa_a[n].get url) : (gsa_a[n].browser.goto url)
-		# Mechanized ? Mechanize::Page.new URI.parse(url) :
-		doc         = Nokogiri::HTML(gsa_a[n].html)
+		save_page(gsa_a[n].page.body, url)
+	
+		html = Mechanized ? (gsa_a[n].page.body) : (gsa_a[n].html)
+		doc         = Nokogiri::HTML(html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
 		product_tables = doc.search('#pagination~ table:not(#pagination2)')
@@ -16,7 +18,7 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 			end
 			pg = pg + 1
 			# color_p "#{url}  #{n_results}", 11
-		
+		sleep 5
 			 # bp [" #{mfr[:href_name]}","pg:#{n_results}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end
@@ -27,23 +29,25 @@ def parse_result(product_table)
 	if fssi
 		sources = '1'
 	else
-		n_source = product_table.css('tbody > tr:nth-child(2) > td:nth-child(2) > table > tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr:nth-child(5) > td > span')
+		n_source = product_table.css('tr:nth-child(5) > td > span')
 		sources  = n_source.text.gsub(/[^0-9]/, '')
 	end
 	product   = product_table.search("a.arial[href*='product_detail.do?gsin']")[0]
 	name      = product.text.strip
 	href_name = product['href']
 	# manufacture part number
-	mpn       = product_table.css("tbody tr > td font.black8pt").text.strip
+	mpn       = product_table.css("td font.black8pt").text.strip
 	# short description
-	desc      = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(1) > td').text.strip
+	desc      = product_table.css("td[style='overflow:hidden; text-overflow: ellipsis; ']").text.strip
 	# feature price
 	price     = product_table.css('span.newOrange.black12pt.arial > strong').text.strip
 	price     = normalize_price(price)
 	# Mfr
-	mfr_span  = product_table.css('tbody > tr:nth-child(2) > td:nth-child(3) > table > tbody > tr:nth-child(2) > td > span.black-text')
+	mfr_span  = product_table.css('span.black-text')
 	mfr       = mfr_span.text.strip
-	@db_queue << [mfr, mpn, name, href_name, desc, price, sources]
+	product = [mfr, mpn, name, href_name, desc, price, sources] # not showing, desc, sources
+	puts product.inspect
+	@db_queue << product
 	return price
 end
 
@@ -61,9 +65,9 @@ end
 	@mfr_queue  = Queue.new
 	@continue   = continue
 	exit unless @continue
-	# Thread.abort_on_exception = true
+	Thread.abort_on_exception = true
 	threads     = []
-	n_thr       = 40          # Number of browsers to run
+	n_thr       = 10          # Number of browsers to run
 	gsa_a       = []
 
 	
@@ -120,7 +124,9 @@ end
 					get_all_products(gsa_a, mfr, n, 900000000, 1)
 					# check_in(mfr[:name],mfr[:category])
 					# puts "Finished: #{mfr[:name]} #{mfr[:category]}"
-					 gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
+					if !Mechanized
+						gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
+					end
 				end
 				  sleep 5
 			  end
