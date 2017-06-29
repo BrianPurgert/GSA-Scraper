@@ -83,9 +83,6 @@ def initialize_agent
 	# agent.log = Logger.new ($stdout)
 	agent.user_agent_alias = 'Mac Safari'
 	agent.set_proxy proxy[0], proxy[2]
-	# page = agent.get url
-	# page = Mechanize::Page.new URI.parse('http://example.com'), [], driver.page_source, 200, agent
-	# puts page.body
 	agent.get(url)
 	return agent
 end
@@ -122,8 +119,6 @@ def save_page(html, url, file_name="")
 	short_url = ''
 file_name = rand(100000000000)
 	if url.include? 'search.do'
-		# split_url = "#{url}".chomp('&p=1')
-		# split_url.each_line('=') { |s| file_name = s if s.include? '28' }
 		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
 		pt_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
 		ph = "C:/s/"+"#{file_name}"+".html"

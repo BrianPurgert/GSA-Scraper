@@ -1,9 +1,9 @@
 
-IGNORE_CAT        = true
-Mechanized        = true
-LogDatabase       = false
-Dev_mode          = false
-IS_PROD           = true  # Check out items if true
+IGNORE_CAT  = true
+Mechanized  = true
+LogDatabase = true
+Dev_mode    = false
+IS_PROD     = true  # Check out items if true
 
 Proxy_list        = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
 Proxy_list1       = YAML::load_file(File.join(__dir__, '../config/proxy1.yml'))

@@ -48,7 +48,7 @@ GEM
       yml_reader (>= 0.6)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    erubi (1.6.0)
+    erubi (1.6.1)
     eventmachine (1.2.3-x64-mingw32)
     eventmachine (1.2.3-x86-mingw32)
     faker (1.7.3)

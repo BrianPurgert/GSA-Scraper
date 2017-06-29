@@ -3,10 +3,11 @@ require_relative 'gsa_advantage'
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
 		url = search_url(mfr[:href_name], n_low,mfr[:category])
+		# todo: catch this
+		# in `fetch': 503 => Net::HTTPServiceUnavailable for http://169.254.0.0/ -- unhandled response (Mechanize::ResponseCodeError)
 		Mechanized ? (gsa_a[n].get url) : (gsa_a[n].browser.goto url)
-		save_page(gsa_a[n].page.body, url)
-	
 		html = Mechanized ? (gsa_a[n].page.body) : (gsa_a[n].html)
+		save_page(html, url)
 		doc         = Nokogiri::HTML(html)
 		pagination  = doc.css("#pagination")
 		next_page   = pagination.text.include? "Next Page >"
@@ -17,8 +18,8 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
-			# color_p "#{url}  #{n_results}", 11
-		sleep 5
+		# color_p "#{url}  #{n_results}", 11
+		sleep 2
 			 # bp [" #{mfr[:href_name]}","pg:#{n_results}","#{@items}"],[45,15,10,130,14,80,80]
 	end while next_page
 end
@@ -46,7 +47,7 @@ def parse_result(product_table)
 	mfr_span  = product_table.css('span.black-text')
 	mfr       = mfr_span.text.strip
 	product = [mfr, mpn, name, href_name, desc, price, sources] # not showing, desc, sources
-	puts product.inspect
+	# puts product.inspect
 	@db_queue << product
 	return price
 end
@@ -65,10 +66,10 @@ end
 	@mfr_queue  = Queue.new
 	@continue   = continue
 	exit unless @continue
-	Thread.abort_on_exception = true
-	threads     = []
-	n_thr       = 10          # Number of browsers to run
-	gsa_a       = []
+Thread.abort_on_exception = false
+	threads              = []
+n_thr                     = 60 # Number of browsers to run
+	gsa_a                = []
 
 	
 	threads << Thread.new do
