@@ -1,13 +1,14 @@
-
+DLPages     = false
 IGNORE_CAT  = true
 Mechanized  = true
 LogDatabase = true
+LogWeb      = false
 Dev_mode    = false
 IS_PROD     = true  # Check out items if true
 
 Proxy_list        = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
-Proxy_list1       = YAML::load_file(File.join(__dir__, '../config/proxy1.yml'))
-Socks_list        = YAML::load_file(File.join(__dir__, '../config/socks5_proxy.yml'))
+# Proxy_list1       = YAML::load_file(File.join(__dir__, '../config/proxy1.yml'))
+# Socks_list        = YAML::load_file(File.join(__dir__, '../config/socks5_proxy.yml'))
 Socks_port        = 61336
 
 Catalog_hudson    = '//192.168.1.104/gsa_price/'

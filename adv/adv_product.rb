@@ -1,7 +1,8 @@
 require_relative 'gsa_advantage'
 require 'benchmark'
 
-
+# TODO remake this page
+# TODO Grab links like /advantage/catalog/product_detail.do?contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
 n_url_thr = 100
 n_thr = 3
 n_total = n_thr*n_url_thr

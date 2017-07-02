@@ -1,8 +1,5 @@
-# require 'page-object'
-# require 'watir'
 require 'yaml'
-# require 'page-object/page_factory'
-# require_relative 'features/support/gsaelibrary_page'
+
 require 'axlsx'
 require 'nokogiri'
 require 'open-uri'
@@ -30,8 +27,8 @@ wb.add_worksheet(name: "Contract End Dates") do |sheet|
 	
 	sheet.add_row ["Contractors"]
 	sheet.add_row ["Company", "Contract End Date", "Source", "Email"]
-
-	("A".."B").each_with_index do |letter, index|
+	
+	("A".."Z").each_with_index do |letter, index|
 		url = "#{ElibMain}#{ContractorList}#{letter}"
 		@page_links = []
 		

@@ -76,14 +76,19 @@ end
 # end
 
 def initialize_agent
-	proxy       = Proxy_list.sample.partition(":")
-	puts proxy.inspect
-	url         = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
-	agent = Mechanize.new
+	proxy      = Proxy_list.sample.partition(":")
+	user_agent = Mechanize::AGENT_ALIASES.keys.sample
+	url        = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
+	agent      = Mechanize.new
+	LogWeb ? (agent.log = Logger.new ($stdout)) : (p 'No logging')
 	# agent.log = Logger.new ($stdout)
-	agent.user_agent_alias = 'Mac Safari'
+	
+	agent.user_agent_alias = user_agent
 	agent.set_proxy proxy[0], proxy[2]
-	agent.get(url)
+	response = agent.get(url)
+	#407 "Proxy Authentication Required"
+	puts "#{proxy[0]} #{response.code}"
+	
 	return agent
 end
 
@@ -115,13 +120,16 @@ end
 
 
 def save_page(html, url, file_name="")
+	if DLPages
 	 # html = HtmlBeautifier.beautify(html)
+		puts 'saving page'
 	short_url = ''
-file_name = rand(100000000000)
+
 	if url.include? 'search.do'
-		ph_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".html"
-		pt_h = Catalog_hudson+ "/catalog/"+"#{file_name}"+".txt"
-		ph = "C:/s/"+"#{file_name}"+".html"
+		url.chomp!('&c=100&s=9&p=1')
+		file_name = url.split(':')
+		
+		ph = "C:/s/"+"#{file_name[1]}#{file_name.last}"+".html"
 		pt = "C:/s/"+"#{file_name}"+".txt"
 
 	elsif url.include? 'product_detail.do'
@@ -135,6 +143,7 @@ file_name = rand(100000000000)
 	end
 	open(ph, 'w') { |f| f.puts html }
 	return short_url
+	end
 end
 
 Bench_time         = [Time.now]

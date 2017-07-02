@@ -1,6 +1,7 @@
 # Database file
 # Sequel ORM
-# Why? https://twin.github.io/evaluating-ruby-libraries/
+# Str: jdbc:mysql://gcs-data.mysql.database.azure.com:3306/?user=BrianPurgert@gcs-data
+# Str: BrianPurgert@gcs-data0@gcs-data0.mysql.database.azure.com:3306
 require 'sequel'
 require 'mysql2'
 require 'colorize'
@@ -20,17 +21,16 @@ basedir     = File.join(__dir__,'./helpers/')
 helpers     = Dir.glob(basedir+"*.sql")
 c = 0
 
-
+#Scraping_data_from_gsaadvantage.gov
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
 	@DB = Sequel.connect(
-			adapter:       'mysql2',
-			host:          ENV['MYSQL_HOST'],
-			database:      'mft_data',
-			user:          ENV['MYSQL_USER'],
-			password:      ENV['MYSQL_PASS'])
-	
+	adapter:  "mysql2",
+	host:     ENV['MYSQL_HOST'],
+	database: 'mft_data',
+	user:     ENV['MYSQL_USER'],
+	password: ENV['MYSQL_PASS'])
 rescue Exception => e
 	puts "#{e.message}".colorize(:red)
 	c += 1
@@ -42,12 +42,12 @@ LogDatabase ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
 @DB.extension :pretty_table
 # Sequel.extension :migration
 
-	# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
-	# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
-	# todo: sequel extension      http://shrinerb.com/
-	# ------------------------------------------------------------------ #
-	#     Create Tables if they need to be
-	# ------------------------------------------------------------------ #
+# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
+# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
+# todo: sequel extension      http://shrinerb.com/
+# ------------------------------------------------------------------ #
+#     Create Tables if they need to be
+# ------------------------------------------------------------------ #
 
 helpers.each do |sql|
 	contents = File.open(sql, "rb")
@@ -142,6 +142,7 @@ end
 	end
 
 	def insert_mfr_parts(mfr_parts_data)
+		puts "importing #{mfr_parts_data.size} items"
 		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
 	end
 

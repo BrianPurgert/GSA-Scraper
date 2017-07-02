@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="mft_data0@gcs-data.mysql.database.azure.com" uuid="5b14eaba-98f8-4076-962c-0e58e8834825">
+    <data-source source="LOCAL" name="gcs-data0" uuid="5b14eaba-98f8-4076-962c-0e58e8834825">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
@@ -15,7 +15,7 @@
         <property name="yearIsDateType" value="false" />
       </driver-properties>
     </data-source>
-    <data-source source="LOCAL" name="@gcs-data.mysql.database.azure.com" uuid="0d648f5a-ef33-403b-85a5-2e91a259f06a">
+    <data-source source="LOCAL" name="gcs-data" uuid="0d648f5a-ef33-403b-85a5-2e91a259f06a">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>

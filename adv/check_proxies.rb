@@ -2,7 +2,7 @@ require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
 require 'spreadsheet'
-require_relative 'pages/es/gsa_advantage_page'
+require_relative '../pages/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
@@ -17,7 +17,7 @@ gsa_advantage      = []
 @mfr_name          = []
 N_threads          = 10
 N_threads_plus_one = N_threads+1
-Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list         = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
 # Watir.default_timeout = 90
 
 def search_url(mpn, mft)
