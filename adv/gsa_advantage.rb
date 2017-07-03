@@ -8,13 +8,12 @@ require 'page-object'
 require 'page-object/page_factory'
 require 'rubygems'
 require 'watir'
-# require 'watir-nokogiri'
 require 'yaml'
 require 'logger'
 require 'mechanize'
 require_relative 'adv_constants'
-require_relative '../database/mft_db'
-require_relative '../pages/gsa_advantage_page'
+require_relative File.dirname(__FILE__) + '/../database/mft_db'
+require_relative File.dirname(__FILE__) + '/../pages/gsa_advantage_page'
 
 
 def color_p(str,i=-1)
@@ -99,10 +98,10 @@ end
 
 def initialize_browser
 	begin
-		Mechanized ? (return initialize_agent) : (return initialize_browser_s)
+		MECHANIZED ? (return initialize_agent) : (return initialize_browser_s)
 	rescue Exception => e
 		puts e.message
-		Mechanized ? (return initialize_agent) : (return initialize_browser_s)
+		MECHANIZED ? (return initialize_agent) : (return initialize_browser_s)
 	end
 end
 

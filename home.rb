@@ -1,5 +1,5 @@
 require 'sinatra'
-require_relative 'database/spreadsheet/report'
+require_relative 'report/report'
 require_relative 'adv/gsa_advantage'
 
 # JUNK ============================================================

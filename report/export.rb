@@ -2,10 +2,9 @@ require_relative '../../adv/gsa_advantage'
 require 'axlsx'
 
 
-
 def view(table)
 	result = @DB[:manufacture_parts].join(table, :manufacture_part => :mpn)
-	@DB.create_view(:price_comparisons,result)
+	@DB.create_view(:price_comparisons, result)
 end
 
 
@@ -26,23 +25,23 @@ end
 
 
 def excel(table)
-	result         = compare_products(table)
-	p              = Axlsx::Package.new
-	wb             = p.workbook
-	styles         = wb.styles
-	    col_header = styles.add_style :bg_color => "FFDFDEDF", :b => true, :alignment => { :horizontal => :center }
-            wb.add_worksheet(:name => "Overview") do |sheet|
-	                  sheet.add_row [
-	                                'Manufacture Name',
-	                                'Manufacture Part',
-	                                 'Product',
-	                                 'Your Price',
-	                                 'Lowest Price',
-	                                 'URL',
-	                                 'Sources',
-	                                 'description',
-	                                ], style: [col_header, col_header, col_header, col_header, col_header, col_header, col_header, col_header]
-	                  
+	result     = compare_products(table)
+	p          = Axlsx::Package.new
+	wb         = p.workbook
+	styles     = wb.styles
+	col_header = styles.add_style :bg_color => "FFDFDEDF", :b => true, :alignment => {:horizontal => :center}
+	wb.add_worksheet(:name => "Overview") do |sheet|
+		sheet.add_row [
+		              'Manufacture Name',
+		              'Manufacture Part',
+		              'Product',
+		              'Your Price',
+		              'Lowest Price',
+		              'URL',
+		              'Sources',
+		              'description',
+		              ], style: [col_header, col_header, col_header, col_header, col_header, col_header, col_header, col_header]
+		
 		result.each do |row|
 			sheet.add_row([
 			              row[:manufacture_name],
@@ -55,8 +54,8 @@ def excel(table)
 			              row[:desc]
 			              ])
 		end
-      p.serialize "./output/#{table.to_s}-PCP.xlsx"
-  end
+		p.serialize "./output/#{table.to_s}-PCP.xlsx"
+	end
 end
 
 	

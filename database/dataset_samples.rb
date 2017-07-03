@@ -1,4 +1,4 @@
-require_relative './spreadsheet/import'
+require_relative '../report/import'
 # http://sequel.jeremyevans.net/rdoc/classes/Sequel/Dataset.html
 def run_sample
 	
@@ -11,6 +11,11 @@ def run_sample
 	
 end
 
+def clean_copy_parts
+	pp @DB.schema(:manufactures).inspect
+	pp @DB.schema(:manufacture_parts)
+	@DB[:manufacture_parts].order(:last_updated).reverse.distinct(:href_name)
+end
 
 def sample_having
 	# Returns a copy of the dataset with the HAVING conditions changed. See #where for argument types.

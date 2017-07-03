@@ -1,16 +1,33 @@
 require_relative 'gsa_advantage'
 
+@reading   = 0
+@items     = 0
+@throttle  = 5
+@db_queue  = Queue.new
+@mfr_queue = Queue.new
+
+threads = []
+n_thr   = 50
+gsa_a   = []
+
+
 def get_html(gsa_a, n, url)
-	Mechanized ? (gsa_a[n].get url) : (gsa_a[n].browser.goto url)
-	puts url
-	Mechanized ? (gsa_a[n].page.body) : (gsa_a[n].html)
+	if MECHANIZED then
+		page = gsa_a[n].get url
+		puts "Agent #{n} received Code: #{page.code}" unless page.code == 200
+		# in `fetch': 503 => Net::HTTPServiceUnavailable for http://169.254.0.0/ -- unhandled response (Mechanize::ResponseCodeError)
+		page.body
+	else
+		gsa_a[n].browser.goto url
+		gsa_a[n].html
+	end
 end
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
+		sleep @throttle
 		url  = search_url(mfr[:href_name], n_low, mfr[:category])
-		# todo: catch this
-		# in `fetch': 503 => Net::HTTPServiceUnavailable for http://169.254.0.0/ -- unhandled response (Mechanize::ResponseCodeError)
+		
 		html = get_html(gsa_a, n, url)
 		save_page(html, url)
 		doc            = Nokogiri::HTML(html)
@@ -23,10 +40,14 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
-		# color_p "#{url}  #{n_results}", 11
-		sleep 4
-	
 	end while next_page
+end
+
+
+# TODO controller
+def controller
+	@throttle = @DB[:controller].filter(key: 'throttle').select(:value).first
+	sleep 20
 end
 
 
@@ -94,37 +115,27 @@ def add_manufactures(n_total)
 	end
 end
 
-	@reading              = 0
-	@items                = 0
-	@db_queue   = Queue.new
-	@mfr_queue  = Queue.new
-	@continue   = continue
-	exit unless @continue
-Thread.abort_on_exception = false
-	threads              = []
-n_thr                     = 160 # Number of browsers to run
-	gsa_a                = []
+# ------------------------------------- #
 
-	
+@continue = continue
+exit unless @continue
+
 	threads << Thread.new do
 		while @continue do
-			if @mfr_queue.size < (n_thr*3)
-				add_manufactures(n_thr*5)
+			if @mfr_queue.size < (n_thr*2)
+				add_manufactures(n_thr*6)
 			end
-			sleep 4
+			sleep 1 # TODO hard coded sleep
 		end
 	end
 	
 
 	threads << Thread.new do
-		i = 0
 		while @continue do
-			if  @db_queue.size > 10000
+			color_p "DB Queue #{@db_queue.size}", 12
+			if @db_queue.size > 1000
 				insert_mfr_parts(take(@db_queue))
-				color_p "Seconds #{i}", 12
-				i = 0
 			else
-				i = i + 1
 				sleep 1
 			end
 			
@@ -142,32 +153,34 @@ n_thr                     = 160 # Number of browsers to run
 
 	def normalize_price(last_price)
 		n_low = last_price[1..-1].tap { |s| s.delete!(',') }
-		return n_low.to_f.round(2)
+		n_low.to_f.round(2)
 	end
 
-	
-	n_thr.times do |n|
-		 # sleep 1
-		threads << Thread.new do
-			  gsa_a[n] = initialize_browser
-			  i = 0
-			  while @continue
-				until @mfr_queue.empty?
-					i += 1
-					mfr = @mfr_queue.shift
-					puts "Start: #{mfr[:name]} #{mfr[:category]}"
-					get_all_products(gsa_a, mfr, n, 900000000, 1)
-					# check_in(mfr[:name],mfr[:category])
-					puts "Finished: #{mfr[:name]} #{mfr[:category]}"
-					if !Mechanized
-						gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
-					end
-				end
-				  sleep 5
-			  end
+
+def search(gsa_a, n)
+	i = 0
+	while @continue
+		until @mfr_queue.empty?
+			i   += 1
+			mfr = @mfr_queue.shift
+			# puts "Start: #{mfr[:name]} #{mfr[:category]}"
+			get_all_products(gsa_a, mfr, n, 900000000, 1)
+			# check_in(mfr[:name],mfr[:category])
+			# puts "Finished: #{mfr[:name]} #{mfr[:category]}"
+			unless MECHANIZED
+				gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
 			end
+		end
+		puts "Queue is Empty"
 	end
-	
+end
+
+n_thr.times do |n|
+	threads << Thread.new do
+		gsa_a[n] = initialize_browser
+		search(gsa_a, n)
+	end
+end
 
 
 threads.each { |thr| thr.join }

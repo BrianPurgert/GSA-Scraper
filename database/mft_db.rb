@@ -2,6 +2,7 @@
 # Sequel ORM
 # Str: jdbc:mysql://gcs-data.mysql.database.azure.com:3306/?user=BrianPurgert@gcs-data
 # Str: BrianPurgert@gcs-data0@gcs-data0.mysql.database.azure.com:3306
+
 require 'sequel'
 require 'mysql2'
 require 'colorize'
@@ -143,7 +144,7 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		puts "importing #{mfr_parts_data.size} items"
-		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data)
+		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 200})
 	end
 
 	def check_in(mfr,cat)
@@ -151,11 +152,11 @@ end
 		# safe_stop
 	end
 
-	def continue
-			@continue = true
+	def continue_exec
+		@continue = true
 	end
 
-	def continue_exec
+def continue
 		stop = @DB[:controller].filter(key: 'stop').select(:value).first
 		print 'Controller: '
 		if stop[:value]==1
@@ -187,19 +188,19 @@ end
 		return mfr_part_href
 	end
 
-	def load_table_mfr
-	@mfr_table = []
-	result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
-	result.each do |row|
-		@mfr_table  << row
-	end
-	@mfr_table.each do |mfr|
-		print "#{mfr['name']}\t".colorize(:white)
-		print "#{mfr['href_name']}\t".colorize(:magenta)
-		print "#{mfr['last_updated']}\t".colorize(:blue)
-		puts "#{mfr['item_count']}\t".colorize(:green)
-	end
-end
+# def load_table_mfr
+# @mfr_table = []
+# result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
+# result.each do |row|
+# 	@mfr_table  << row
+# end
+# @mfr_table.each do |mfr|
+# 	print "#{mfr['name']}\t".colorize(:white)
+# 	print "#{mfr['href_name']}\t".colorize(:magenta)
+# 	print "#{mfr['last_updated']}\t".colorize(:blue)
+# 	puts "#{mfr['item_count']}\t".colorize(:green)
+# end
+# end
 
 
 

@@ -1,14 +1,14 @@
-require_relative './import'
-require_relative './export'
+require_relative File.dirname(__FILE__) + '/./import'
+require_relative File.dirname(__FILE__) + '/./export'
 # Dir["*.rb"].each { |file| require_relative(file) }
-basedir                     = File.join(__dir__,'test/')
-files                       = Dir.glob(basedir+"*.xlsx")
-csv_files                   = Dir.glob(basedir+"*.csv")
-xls_files                   = Dir.glob(basedir+"*.xls")
+basedir   = File.join(__dir__, 'test/')
+files     = Dir.glob(basedir+"*.xlsx")
+csv_files = Dir.glob(basedir+"*.csv")
+xls_files = Dir.glob(basedir+"*.xls")
 puts Dir.entries(basedir).inspect
 # todo name tables
 @tables = []
-tables = [:client1,:client2,:client3,:client4,:client5,:client6,:client7,:client8,:client9]
+tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
 
 
 def all_at_once_like_a_motherfukin_boss(file_input_path)
@@ -16,7 +16,7 @@ def all_at_once_like_a_motherfukin_boss(file_input_path)
 	# data Join on mpn
 	comparison_dataset = @DB[:manufacture_parts].left_join()
 	# create new table from dataset
-	@DB.create_table!(:comparison,:as => comparison_dataset)
+	@DB.create_table!(:comparison, :as => comparison_dataset)
 	return price_comparison_output
 end
 
@@ -29,7 +29,7 @@ end
 def import_spreadsheets(files, tables)
 	puts "Import Spreadsheets? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
-		threads     = []
+		threads = []
 		files.each_with_index do |file, num|
 			threads << Thread.new { import_products file, tables[num] }
 		end
@@ -40,7 +40,7 @@ end
 def export_price_comparisons(files, tables)
 	puts "Generate Price Comparisons? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
-		threads     = []
+		threads = []
 		files.each_with_index do |file, num|
 			threads << Thread.new { excel tables[num] }
 		end
@@ -48,6 +48,6 @@ def export_price_comparisons(files, tables)
 	end
 end
 
- list_files(files)
- import_spreadsheets(files, tables)
- export_price_comparisons(files, tables)
+list_files(files)
+import_spreadsheets(files, tables)
+export_price_comparisons(files, tables)
