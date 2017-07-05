@@ -6,7 +6,6 @@ require 'open-uri'
 require 'net_http_ssl_fix'
 # require 'open_uri_redirections'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
-require 'fastercsv'
 @Elibq = Queue.new
 
 ElibMain       = "https://www.gsaelibrary.gsa.gov/ElibMain/"
