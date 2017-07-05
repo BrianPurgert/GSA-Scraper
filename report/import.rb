@@ -1,4 +1,4 @@
-require_relative '../../adv/gsa_advantage'
+require_relative '../adv/gsa_advantage'
 require 'roo'
 require 'prettyprint'
 require 'pp'

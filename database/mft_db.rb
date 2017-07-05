@@ -14,15 +14,8 @@ require 'logger'
 ENV['MYSQL_HOST'] = 'gcs-data.mysql.database.azure.com'
 ENV['MYSQL_USER'] = 'BrianPurgert@gcs-data'
 ENV['MYSQL_PASS'] = 'GoV321CoN'
-MYSQL_HOSTS = %w(gcs-data0.mysql.database.azure.com localhost 192.168.1.104 70.61.131.182)
-MYSQL_USER  =  %w(BrianPurgert@gcs-data0 mft_data)
-MYSQL_PASS  = 'GoV321CoN'
 
-basedir     = File.join(__dir__,'./helpers/')
-helpers     = Dir.glob(basedir+"*.sql")
-c = 0
-
-#Scraping_data_from_gsaadvantage.gov
+helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
@@ -34,12 +27,11 @@ begin
 	password: ENV['MYSQL_PASS'])
 rescue Exception => e
 	puts "#{e.message}".colorize(:red)
-	c += 1
-	retry if c <= MYSQL_HOSTS.size
+
 end
 
 
-LogDatabase ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
+LOG_DATABASE ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
 @DB.extension :pretty_table
 # Sequel.extension :migration
 
@@ -74,9 +66,12 @@ end
 		Integer     :found
 	end
 
+
 def create_distinct_manufactures
-@DB.create_table!(:search_manufactures,:as => @DB[:manufactures].distinct(:href_name))
+	@DB.create_table?(:search_manufactures, :as => @DB[:manufactures].distinct(:href_name))
 end
+
+create_distinct_manufactures
 
 def create_distinct_products
 	# todo: XSB
@@ -144,7 +139,7 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		puts "importing #{mfr_parts_data.size} items"
-		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 200})
+		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 500})
 	end
 
 	def check_in(mfr,cat)

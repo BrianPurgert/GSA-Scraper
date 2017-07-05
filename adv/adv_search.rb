@@ -1,13 +1,21 @@
 require_relative 'gsa_advantage'
 
+class AdvSearch
+	# @param [String] url
+	def initialize(url)
+		@url  = url
+		@path = url.gsub
+	end
+end
+
 @reading   = 0
 @items     = 0
-@throttle  = 5
+@throttle  = 1
 @db_queue  = Queue.new
 @mfr_queue = Queue.new
 
 threads = []
-n_thr   = 50
+n_thr   = 200
 gsa_a   = []
 
 
@@ -15,12 +23,14 @@ def get_html(gsa_a, n, url)
 	if MECHANIZED then
 		page = gsa_a[n].get url
 		puts "Agent #{n} received Code: #{page.code}" unless page.code == 200
-		# in `fetch': 503 => Net::HTTPServiceUnavailable for http://169.254.0.0/ -- unhandled response (Mechanize::ResponseCodeError)
-		page.body
+		# 503 => Net::HTTPServiceUnavailable
+		html = page.body
 	else
 		gsa_a[n].browser.goto url
-		gsa_a[n].html
+		html = gsa_a[n].html
 	end
+	save_page(html, url) if DOWNLOAD
+	html
 end
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
@@ -29,7 +39,6 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 		url  = search_url(mfr[:href_name], n_low, mfr[:category])
 		
 		html = get_html(gsa_a, n, url)
-		save_page(html, url)
 		doc            = Nokogiri::HTML(html)
 		pagination     = doc.css("#pagination")
 		next_page      = pagination.text.include? "Next Page >"
@@ -70,15 +79,25 @@ def product_image(product_table)
 	product_table.css("img[alt='Click to view product details']")['src']
 end
 
+# 38 possible symbols [href*='keyName=SYMBOLS#']
 def product_symbols(product_table)
 	product_table.search("a[href*='SYMBOLS#']").each { |symbol| symbol['href'].split('#').last }
 end
 
+def contractor(url)
+
+end
+
 def parse_result(product_table)
-	# result = {}
-	# result[:indicators] = business_indicators(product_table)
-	# result[:image] = product_image(product_table)
-	# result[:symbols] = product_symbols(product_table)
+	# Determine what type of page we are parsing
+	# Search Page?
+	# Product Page?
+	
+	result              = {}
+	result[:indicators] = business_indicators(product_table)
+	result[:image]      = product_image(product_table)
+	result[:symbols]    = product_symbols(product_table)
+	result[:contractor] = contractor(product_table)
 	#SYMBOLS#fssi #disaster
 	
 	fssi = product_table.text.include? "GSA Global"
@@ -120,41 +139,18 @@ end
 @continue = continue
 exit unless @continue
 
-	threads << Thread.new do
-		while @continue do
-			if @mfr_queue.size < (n_thr*2)
-				add_manufactures(n_thr*6)
-			end
-			sleep 1 # TODO hard coded sleep
-		end
+def parse_results(html)
+	main_alt       = Nokogiri::HTML.fragment(html)
+	product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
+	product_tables.each_with_index do |product_table, i|
+		parse_result(product_table)
 	end
-	
+end
 
-	threads << Thread.new do
-		while @continue do
-			color_p "DB Queue #{@db_queue.size}", 12
-			if @db_queue.size > 1000
-				insert_mfr_parts(take(@db_queue))
-			else
-				sleep 1
-			end
-			
-		end
-				insert_mfr_parts(take(@db_queue))
-	end
-
-	def parse_results(html)
-		 main_alt = Nokogiri::HTML.fragment(html)
-		 product_tables = main_alt.search('#pagination~ table:not(#pagination2)')
-		 product_tables.each_with_index do |product_table, i|
-			 parse_result(product_table)
-		 end
-	end
-
-	def normalize_price(last_price)
-		n_low = last_price[1..-1].tap { |s| s.delete!(',') }
-		n_low.to_f.round(2)
-	end
+def normalize_price(last_price)
+	n_low = last_price[1..-1].tap { |s| s.delete!(',') }
+	n_low.to_f.round(2)
+end
 
 
 def search(gsa_a, n)
@@ -164,8 +160,10 @@ def search(gsa_a, n)
 			i   += 1
 			mfr = @mfr_queue.shift
 			# puts "Start: #{mfr[:name]} #{mfr[:category]}"
+			
 			get_all_products(gsa_a, mfr, n, 900000000, 1)
-			# check_in(mfr[:name],mfr[:category])
+			# search by contractor
+			
 			# puts "Finished: #{mfr[:name]} #{mfr[:category]}"
 			unless MECHANIZED
 				gsa_a[n] = restart_browser gsa_a[n] if i % 5 == 0
@@ -175,6 +173,31 @@ def search(gsa_a, n)
 	end
 end
 
+
+threads << Thread.new do
+	while @continue do
+		if @mfr_queue.size < (n_thr*2)
+			add_manufactures(n_thr*6)
+		end
+		sleep 1 # TODO hard coded sleep
+	end
+end
+
+
+threads << Thread.new do
+	while @continue do
+		color_p "DB Queue #{@db_queue.size}", 12
+		if @db_queue.size > 2000
+			insert_mfr_parts(take(@db_queue))
+		else
+			sleep 1
+		end
+	
+	end
+	insert_mfr_parts(take(@db_queue))
+end
+
+
 n_thr.times do |n|
 	threads << Thread.new do
 		gsa_a[n] = initialize_browser
@@ -182,13 +205,12 @@ n_thr.times do |n|
 	end
 end
 
-
 threads.each { |thr| thr.join }
-	display_statistics
+display_statistics
 
 gsa_a.each do |b|
 	begin
-	b.close
+		b.close
 	rescue
 		puts 'Browser already closed'
 	end

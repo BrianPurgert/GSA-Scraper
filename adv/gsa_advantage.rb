@@ -26,27 +26,32 @@ def color_p(str,i=-1)
 	puts "#{str}".colorize(out_color)
 end
 
-# def vendor_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
-# 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
-# 	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
-# 	url = url + "q=28:5#{url_encoded_name}"
-# 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
-# 	url = url + "&c=100"
-# 	url = url + (high_low ? '&s=9' : '&s=6')
-# 	url = url + "&q=1:4#{category}*"
-# 	url = url + "&p=#{page_number}"
-# 	# puts url
-# 	return url
-# end
 
+# GS-27F-035BA
 def search_url(url_encoded_name, current_lowest_price,category,page_number=1,high_low=true)
+	# https://www.gsaadvantage.gov/advantage/s/search.do?q=0:0 GS-27F-0012U &db=0&searchType=1 V797P-4109B
+	# https://www.gsaadvantage.gov/advantage/s/search.do?q=0:0 GS-27F-0012U &db=0&searchType=0
+	# https://www.gsaadvantage.gov/advantage/s/search.do?q=19:2 GS-21F-0072Y&s=6&c=100&searchType=1
 	# https://www.gsaadvantage.gov/advantage/s/search.do?q=28:53M&q=1:4ADV.ELE*&q=14:7900000000&c=100&s=9&p=1
-	url = "https://www.gsaadvantage.gov/advantage/s/search.do?"
-	url = url + "q=28:5#{url_encoded_name}"
+	# https://www.gsaadvantage.gov/advantage/s/search.do?q=24:2 RJ%27S%20SUPPLY%20COMPANY,%20LLC &s=0&c=25&searchType=1
+	
+	url         = "#{GSA_ADVANTAGE}/advantage/s/search.do?"
+	search_in   = 'manufacture'
+	search_type = '1'
+	case search_in
+		when 'manufacture'
+			url = url + 'q=28:5'
+		when 'contract'
+			url = url + 'q=19:2'
+		when 'contractor'
+			url = url + 'q=24:2'
+	end
+	url = url + "#{url_encoded_name}"
 	url = url + "&q=14:7#{current_lowest_price}"                # show price lower than current_lowest_price
 	url = url + "&c=100"
 	url = url + (high_low ? '&s=9' : '&s=6')
 	url = url + (IGNORE_CAT ? '' : "&q=1:4#{category}*")
+	# url = url + "searchType=#{search_type}"
 	url = url + "&p=#{page_number}"
 	# puts url
 	# todo save to db
@@ -64,28 +69,18 @@ def product_url()
 	puts "#{url}".colorize(String.colors.sample)
 	return url
 end
-#
-# class CSVParser < Mechanize::File
-# 	attr_reader :csv
-#
-# 	def initialize uri = nil, response = nil, body = nil, code = nil
-# 		super uri, response, body, code
-# 		@csv = CSV.parse body
-# 	end
-# end
+
 
 def initialize_agent
-	proxy      = Proxy_list.sample.partition(":")
+	proxy      = PROXY_LIST.sample.partition(":")
 	user_agent = Mechanize::AGENT_ALIASES.keys.sample
 	url        = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
 	agent      = Mechanize.new
-	LogWeb ? (agent.log = Logger.new ($stdout)) : (p 'No logging')
-	# agent.log = Logger.new ($stdout)
+	LOGWEB ? (agent.log = Logger.new ($stdout)) : (p 'No logging')
 	
 	agent.user_agent_alias = user_agent
 	agent.set_proxy proxy[0], proxy[2]
 	response = agent.get(url)
-	#407 "Proxy Authentication Required"
 	puts "#{proxy[0]} #{response.code}"
 	
 	return agent
@@ -106,10 +101,10 @@ def initialize_browser
 end
 
 def initialize_browser_s
-		r_proxy       = Proxy_list.sample
+	r_proxy      = PROXY_LIST.sample
 		options = Selenium::WebDriver::Chrome::Options.new(args: ["headless", "disable-gpu","proxy-server=#{r_proxy}"])
 		browser = Watir::Browser.start 'https://www.gsaadvantage.gov/advantage/search/headerSearch.do', :chrome, options: options
-		gsa_a = GsaAdvantagePage.new(browser)
+		gsa_a   = GsaAdvantagePage.new(browser)
 		unless gsa_a.title.include? 'Welcome to GSA Advantage!'
 			raise 'Welcome to GSA Advantage! not in title'
 		end
@@ -119,7 +114,6 @@ end
 
 
 def save_page(html, url, file_name="")
-	if DLPages
 	 # html = HtmlBeautifier.beautify(html)
 		puts 'saving page'
 	short_url = ''
@@ -132,17 +126,14 @@ def save_page(html, url, file_name="")
 		pt = "C:/s/"+"#{file_name}"+".txt"
 
 	elsif url.include? 'product_detail.do'
-		split_url = "#{url}".chomp('&cview=true')
-		split_url.each_line('=') { |s| short_url = s if s.include? '11' }
-
-		ph_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".html"
-		pt_h = Catalog_hudson+ "/catalog/"+"#{short_url}"+".txt"
-		ph = "C:/catalog/"+"#{short_url}"+".html"
-		pt = "C:/catalog/"+"#{short_url}"+".txt"
+		short_url = gsin(url)
+		
+		ph_h = HUDSON_LOCAL+ "/catalog/"+"#{short_url}"+".html"
+		ph   = "C:/catalog/"+"#{short_url}"+".html"
+	
 	end
 	open(ph, 'w') { |f| f.puts html }
 	return short_url
-	end
 end
 
 Bench_time         = [Time.now]

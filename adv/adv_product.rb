@@ -2,7 +2,8 @@ require_relative 'gsa_advantage'
 require 'benchmark'
 
 # TODO remake this page
-# TODO Grab links like /advantage/catalog/product_detail.do?contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
+# TODO Extract links /advantage/catalog/product_detail.do?contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
+# TODO split product_detail{ contractNumber: GS-21F-0010W , itemNumber: 5017-11, mfrName: HUTCHINS ALLIANCE COATINGS INC.}
 n_url_thr = 100
 n_thr = 3
 n_total = n_thr*n_url_thr
@@ -36,10 +37,3 @@ end
 # "hello".start_with?("heaven", "hell")
 # "  hello  ".rstrip   #=> "  hello"
 # "  hello  ".lstrip   #=> "hello  "
-
-
-
-#execute_script(script, *args) ⇒ Object
-#alert ⇒ Watir::Alert
-#close ⇒ Object (also: #quit)
-#after_hooks ⇒ Object rea

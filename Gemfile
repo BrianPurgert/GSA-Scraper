@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 # gem 'rspec'
 gem 'sinatra'
-# gem 'thin'
+gem 'thin'
 # gem 'erubi'
 # gem 'roda'
 # gem 'forme'

@@ -1,0 +1,4 @@
+class ContractCompare
+
+end
+

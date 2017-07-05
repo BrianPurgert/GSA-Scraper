@@ -1,9 +1,12 @@
 require_relative 'gsa_advantage'
 1.times do
-
-
-
-threads     = []
+	
+	'1+SOURCE+SOLUTIONS%2C+LLC'
+	'1 SOURCE SOLUTIONS, LLC'
+	'1+SOURCE+SOLUTIONS%2C+LLC'
+	
+	
+	threads     = []
 gsa_a       = []
 config      = [6]
 @vnd_queue      = Queue.new
@@ -36,9 +39,9 @@ def parse_mfr_list(html, list_type, category)
 	list = Nokogiri::HTML.fragment(html)
 	items = list.search('table > tbody > tr > td > span')
 	items.each_with_index do |item, i|
-		mfr_link = item.search("a[href*='refineSearch.do']")[0]
-		name_mfr = mfr_link.text.strip
-		href_mfr = RX_mfr.match(mfr_link['href'])
+		mfr_link   = item.search("a[href*='refineSearch.do']")[0]
+		name_mfr   = mfr_link.text.strip
+		href_mfr   = REGEX_QUERY.match(mfr_link['href'])
 		n_products = item.css(".gray8pt").text.strip.delete('()')
 
 		# bp ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],[40,40,5,6]
@@ -53,7 +56,7 @@ end
 
 def test_mfr_list(gsa_a)
 	gsa_a.mft_table_element.links.each do |link|
-		href_mfr = RX_mfr.match(link.href)
+		href_mfr = REGEX_QUERY.match(link.href)
 		# link.flash
 		link.flash
 		name_mfr = link.text
