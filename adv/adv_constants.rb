@@ -1,5 +1,6 @@
 # ============= Environment Variables ============= #
 ENV['MYSQL_HOST']         = 'gcs-data.mysql.database.azure.com'
+ENV['MYSQL_HOST_ALT']     = 'gcs-data0.mysql.database.azure.com'
 ENV['MYSQL_USER']         = 'BrianPurgert@gcs-data'
 ENV['MYSQL_PASS']         = 'GoV321CoN'
 

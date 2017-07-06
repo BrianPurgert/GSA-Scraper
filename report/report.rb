@@ -1,5 +1,7 @@
 require_relative File.dirname(__FILE__) + '/./import'
 require_relative File.dirname(__FILE__) + '/./export'
+
+
 # Dir["*.rb"].each { |file| require_relative(file) }
 basedir   = File.join(__dir__, 'test/')
 files     = Dir.glob(basedir+"*.xlsx")
@@ -18,18 +20,10 @@ puts Dir.entries(basedir).inspect
 tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
 
 
-def all_at_once_like_a_motherfukin_boss(file_input_path)
-	# file_input_path to dataset
-	# data Join on mpn
-	comparison_dataset = @DB[:manufacture_parts].left_join()
-	# create new table from dataset
-	@DB.create_table!(:comparison, :as => comparison_dataset)
-	return price_comparison_output
-end
-
 def list_files(files)
 	files.each_with_index do |file, num|
 		puts "#{num}\t#{file}".colorize(:green)
+		#    %s() # turns foo into a symbol (:foo)
 	end
 end
 
@@ -38,7 +32,7 @@ def import_spreadsheets(files, tables)
 	if gets.to_s.upcase.include? 'Y'
 		threads = []
 		files.each_with_index do |file, num|
-			threads << Thread.new { import_products file, tables[num] }
+			threads << Thread.new { import_products file }
 		end
 		threads.each { |thr| thr.join }
 	end
