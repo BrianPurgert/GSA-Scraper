@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 # gem 'rspec'
+gem 'yard'
 gem 'sinatra'
 gem 'thin'
 # gem 'erubi'
@@ -13,8 +14,6 @@ gem 'mysql2', '~> 0.4.6'
 gem 'sequel', '~> 4.47'
 gem 'htmlbeautifier'
 gem 'rake', '~> 12.0'
-# gem install mysql2 --with-mysql-dir[=C:\Program Files\MySQL\MySQL Connector.C 6.1]
-# gem 'mysql2', github: 'brianmario/mysql2'
 gem 'colorize', '~> 0.8.1'
 gem 'rest-client', '~> 1.8'
 gem 'chromedriver-helper', '~> 1.1'

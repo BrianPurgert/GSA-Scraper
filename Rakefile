@@ -8,16 +8,17 @@ require 'rake'
 desc 'Default Tasks'
 task(default: [:s2])
 
-source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
-	fl.exclude("~*")
-	fl.exclude(/^scratch\//)
-	fl.exclude(/^output\//)
-	fl.exclude do |f|
-		`git ls-files #{f}`.empty?
-	end
-end
-
-# task default: :html
+# source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
+# 	fl.exclude("~*")
+# 	fl.exclude(/^scratch\//)
+# 	fl.exclude(/^output\//)
+# 	fl.exclude do |f|
+# 		`git ls-files #{f}`.empty?
+# 	end
+# end
+#
+#
+#  task abc: :html
 # task html: source_files.ext(".html")
 #
 # rule ".html" => ".md" do |t|

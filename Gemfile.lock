@@ -125,6 +125,7 @@ GEM
     watir (6.3.0)
       selenium-webdriver (~> 3.0)
     webrobots (0.1.2)
+    yard (0.9.9)
     yml_reader (0.7)
 
 PLATFORMS
@@ -150,6 +151,7 @@ DEPENDENCIES
   sinatra
   thin
   watir (~> 6.3)
+  yard
 
 BUNDLED WITH
    1.15.1

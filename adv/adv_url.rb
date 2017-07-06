@@ -32,8 +32,8 @@ end
 require 'pp'
 
 test_urls = %w(
-https://www.gsaadvantage.gov/advantage/s/search.do?q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=1&s=6
-https://www.gsaadvantage.gov/advantage/s/search.do?db=0&q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=0&s=8
+https://www.gsaadvantage.gov/advantage/s/search.do?q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=1&c=100s=6
+https://www.gsaadvantage.gov/advantage/s/search.do?db=0&q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=0&c=100&s=8
 /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
 /advantage/catalog/product_detail.do?contractNumber=GS-21F-0072Y&itemNumber=PC1500BKD&mfrName=DURACELL+PRO+DIV+OF+P+%26+G
 https://www.gsaadvantage.gov/advantage/s/vnd.do?q=1:4ADV.BUI*&listFor=C

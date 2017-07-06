@@ -76,7 +76,9 @@ def initialize_agent
 	user_agent = Mechanize::AGENT_ALIASES.keys.sample
 	url        = "https://www.gsaadvantage.gov/advantage/search/headerSearch.do"
 	agent      = Mechanize.new
-	LOGWEB ? (agent.log = Logger.new ($stdout)) : (p 'No logging')
+	if LOGWEB
+		(agent.log = Logger.new ($stdout))
+	end
 	
 	agent.user_agent_alias = user_agent
 	agent.set_proxy proxy[0], proxy[2]

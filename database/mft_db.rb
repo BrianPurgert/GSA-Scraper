@@ -10,28 +10,32 @@ require 'colorized_string'
 require 'logger'
 
 
-
-ENV['MYSQL_HOST'] = 'gcs-data.mysql.database.azure.com'
-ENV['MYSQL_USER'] = 'BrianPurgert@gcs-data'
-ENV['MYSQL_PASS'] = 'GoV321CoN'
-
 helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
 	@DB = Sequel.connect(
-	adapter:  "mysql2",
-	host:     ENV['MYSQL_HOST'],
-	database: 'mft_data',
-	user:     ENV['MYSQL_USER'],
-	password: ENV['MYSQL_PASS'])
+		adapter:  "mysql2",
+		host:     ENV['MYSQL_HOST'],
+		database: 'mft_data',
+		user:     ENV['MYSQL_USER'],
+		password: ENV['MYSQL_PASS']
+	)
 rescue Exception => e
 	puts "#{e.message}".colorize(:red)
+	puts "Connecting to #{ENV['MYSQL_HOST_ALT']}"
+	@DB = Sequel.connect(
+		adapter:  "mysql2",
+		host:     ENV['MYSQL_HOST_ALT'],
+		database: 'mft_data',
+		user:     ENV['MYSQL_USER'],
+		password: ENV['MYSQL_PASS']
+	)
 
 end
 
 
-LOG_DATABASE ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
+@DB.loggers << Logger.new($stdout) if LOG_DATABASE
 @DB.extension :pretty_table
 # Sequel.extension :migration
 
@@ -44,7 +48,7 @@ LOG_DATABASE ? (@DB.loggers << Logger.new($stdout)) : (p 'No logging')
 
 helpers.each do |sql|
 	contents = File.open(sql, "rb")
-	@DB.run contents.read
+	# @DB.run contents.read
 end
 
 def clean_copy_parts
@@ -90,6 +94,13 @@ end
 # @DB[:manufactures].distinct(:href_name).each do |row|
 # 	@DB[:search_manufactures].insert(name: row[:name], href_name: row[:href_name],check_out: '0',priority: '0')
 # end
+
+def removing_the_url_from_gsin
+	 @DB[:manufacture_parts].run("
+	      UPDATE `manufacture_parts`
+		SET href_name = REPLACE(href_name, '/advantage/catalog/product_detail.do?gsin=', '')
+		WHERE href_name LIKE '/advantage/catalog/product_detail.do?gsin=%';")
+end
 
 	def searched(title,url,found)
 		items = @DB[:searches]
@@ -139,7 +150,7 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		puts "importing #{mfr_parts_data.size} items"
-		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 500})
+		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 2000})
 	end
 
 	def check_in(mfr,cat)

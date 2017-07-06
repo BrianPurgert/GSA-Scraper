@@ -10,19 +10,21 @@ end
 
 @reading   = 0
 @items     = 0
-@throttle  = 1
+@throttle  = 7
 @db_queue  = Queue.new
 @mfr_queue = Queue.new
 
 threads = []
-n_thr   = 200
+n_thr   = 50
 gsa_a   = []
 
 
 def get_html(gsa_a, n, url)
 	if MECHANIZED then
 		page = gsa_a[n].get url
-		puts "Agent #{n} received Code: #{page.code}" unless page.code == 200
+		if page.code == 200
+			color_p "Agent #{n} received Code: #{page.code}", 7
+		end
 		# 503 => Net::HTTPServiceUnavailable
 		html = page.body
 	else
@@ -30,12 +32,12 @@ def get_html(gsa_a, n, url)
 		html = gsa_a[n].html
 	end
 	save_page(html, url) if DOWNLOAD
-	html
+	return html
 end
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
-		sleep @throttle
+		
 		url  = search_url(mfr[:href_name], n_low, mfr[:category])
 		
 		html = get_html(gsa_a, n, url)
@@ -49,6 +51,7 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 			    n_low = parse_result(product_table)
 			end
 			pg = pg + 1
+		sleep @throttle
 	end while next_page
 end
 
@@ -93,13 +96,12 @@ def parse_result(product_table)
 	# Search Page?
 	# Product Page?
 	
-	result              = {}
-	result[:indicators] = business_indicators(product_table)
-	result[:image]      = product_image(product_table)
-	result[:symbols]    = product_symbols(product_table)
-	result[:contractor] = contractor(product_table)
-	#SYMBOLS#fssi #disaster
-	
+	# result              = {}
+	# result[:indicators] = business_indicators(product_table)
+	# result[:image]      = product_image(product_table)
+	# result[:symbols]    = product_symbols(product_table)
+	# result[:contractor] = contractor(product_table)
+	# pp result
 	fssi = product_table.text.include? "GSA Global"
 	if fssi
 		sources = '1'
@@ -120,7 +122,8 @@ def parse_result(product_table)
 	# Mfr
 	mfr_span  = product_table.css('span.black-text')
 	mfr       = mfr_span.text.strip
-	product   = [mfr, mpn, name, href_name, desc, price, sources]
+	gsin = href_name.split('=').last
+	product   = [mfr, mpn, name, gsin, desc, price, sources]
 	# puts product.inspect
 	@db_queue << product
 	return price
@@ -187,10 +190,10 @@ end
 threads << Thread.new do
 	while @continue do
 		color_p "DB Queue #{@db_queue.size}", 12
-		if @db_queue.size > 2000
+		if @db_queue.size > 3000
 			insert_mfr_parts(take(@db_queue))
 		else
-			sleep 1
+			sleep 10
 		end
 	
 	end
