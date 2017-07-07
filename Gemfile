@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # gem 'rspec'
-gem 'yard'
+# gem 'yard'
 gem 'sinatra'
 gem 'thin'
 # gem 'erubi'

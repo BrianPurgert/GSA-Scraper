@@ -66,8 +66,8 @@ GEM
     mimemagic (0.3.2)
     mini_portile2 (2.2.0)
     mustermann (1.0.0)
-    mysql2 (0.4.6-x64-mingw32)
-    mysql2 (0.4.6-x86-mingw32)
+    mysql2 (0.4.7-x64-mingw32)
+    mysql2 (0.4.7-x86-mingw32)
     net-http-digest_auth (1.4.1)
     net-http-persistent (2.9.4)
     net_http_ssl_fix (0.0.8)
@@ -105,7 +105,7 @@ GEM
     selenium-webdriver (3.4.3)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
-    sequel (4.47.0)
+    sequel (4.48.0)
     sinatra (2.0.0)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -125,7 +125,6 @@ GEM
     watir (6.3.0)
       selenium-webdriver (~> 3.0)
     webrobots (0.1.2)
-    yard (0.9.9)
     yml_reader (0.7)
 
 PLATFORMS
@@ -151,7 +150,6 @@ DEPENDENCIES
   sinatra
   thin
   watir (~> 6.3)
-  yard
 
 BUNDLED WITH
    1.15.1

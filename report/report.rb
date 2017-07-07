@@ -11,12 +11,7 @@ puts Dir.entries(basedir).inspect
 # todo name tables
 @tables = []
 
-#    %r() # is another way to write a regular expression.
-#    %q() # is another way to write a single-quoted string (and can be multi-line, which is useful)
-#    %Q() # gives a double-quoted string
-#    %x() # is a shell command
-#    %i() # gives an array of symbols (Ruby >= 2.0.0)
-#    %s() # turns foo into a symbol (:foo)
+
 tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
 
 
@@ -30,6 +25,7 @@ end
 def import_spreadsheets(files, tables)
 	puts "Import Spreadsheets? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
+		puts "#{files.size} files importing"
 		threads = []
 		files.each_with_index do |file, num|
 			threads << Thread.new { import_products file }
