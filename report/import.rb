@@ -57,7 +57,7 @@ end
 
 
 
-def build_table(import)
+def gsa_basic_table(import)
 	ss          = import[:spreadsheet]
 	table       = import[:table].to_s
 	
@@ -101,15 +101,15 @@ def build_table(import)
     #   DB.add_column :items, :name, :text, :unique => true, :null => false
     #   DB.add_column :items, :category, :text, :default => 'ruby'
 	
-	# create_join_table(:cat_id=>{:table=>:cats, :type=>:Bignum}, :dog_id=>:dogs)
+	create_join_table(:cat_id=>{:table=>:cats, :type=>:Bignum}, :dog_id=>:dogs)
 	
-    #   create_join_table(:cat_id=>:cats, :dog_id=>:dogs)
-    #   # CREATE TABLE cats_dogs (
-    #   #  cat_id integer NOT NULL REFERENCES cats,
-    #   #  dog_id integer NOT NULL REFERENCES dogs,
-    #   #  PRIMARY KEY (cat_id, dog_id)
-    #   # )
-    #   # CREATE INDEX cats_dogs_dog_id_cat_id_index ON cats_dogs(dog_id, cat_id)
+      create_join_table(:cat_id=>:cats, :dog_id=>:dogs)
+      # CREATE TABLE cats_dogs (
+      #  cat_id integer NOT NULL REFERENCES cats,
+      #  dog_id integer NOT NULL REFERENCES dogs,
+      #  PRIMARY KEY (cat_id, dog_id)
+      # )
+      # CREATE INDEX cats_dogs_dog_id_cat_id_index ON cats_dogs(dog_id, cat_id)
 	
 
 	
@@ -120,7 +120,7 @@ end
 def import_products(path)
 	begin
 		import = open_spreadsheet(path)
-		build_table import
+		build_table(import)
 		import_client_prices table, set
 	# rescue Exception => e
 	# 	puts e.message

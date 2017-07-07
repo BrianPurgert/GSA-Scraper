@@ -15,7 +15,7 @@ class FedBizOpps
 		# yday = Time.now - (3600 * 24)
 		# puts Time.now - 1.day
 		#
-			puts "#{Base}#{Feed}#{}"
+			puts "#{Base}#{Feed}#{date}"
 		end
 		
 

@@ -17,7 +17,7 @@ end
 threads = []
 n_thr   = 50
 gsa_a   = []
-#
+
 
 def get_html(gsa_a, n, url)
 	if MECHANIZED then
@@ -96,12 +96,12 @@ def parse_result(product_table)
 	# Search Page?
 	# Product Page?
 	
-	# result              = {}
-	# result[:indicators] = business_indicators(product_table)
-	# result[:image]      = product_image(product_table)
-	# result[:symbols]    = product_symbols(product_table)
-	# result[:contractor] = contractor(product_table)
-	# pp result
+	 # result              = {}
+	 # result[:indicators] = business_indicators(product_table)
+	 # result[:image]      = product_image(product_table)
+	 # result[:symbols]    = product_symbols(product_table)
+	 # result[:contractor] = contractor(product_table)
+	 # puts result.inspect
 	fssi = product_table.text.include? "GSA Global"
 	if fssi
 		sources = '1'
@@ -124,7 +124,7 @@ def parse_result(product_table)
 	mfr       = mfr_span.text.strip
 	gsin = href_name.split('=').last
 	product   = [mfr, mpn, name, gsin, desc, price, sources]
-	# puts product.inspect
+	puts product.inspect
 	@db_queue << product
 	return price
 end
@@ -193,7 +193,7 @@ threads << Thread.new do
 		if @db_queue.size > 3000
 			insert_mfr_parts(take(@db_queue))
 		else
-			sleep 10
+			sleep 1
 		end
 	
 	end
