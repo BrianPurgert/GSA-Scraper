@@ -43,14 +43,12 @@ end
 # todo: sequel extension      https://github.com/earaujoassis/sequel-seed
 # todo: sequel extension      http://shrinerb.com/
 # ------------------------------------------------------------------ #
-#     Create Tables if they need to be
+#     Create Tables they need to be
 # ------------------------------------------------------------------ #
 require_relative 'sip/sip_import'
+# helpers.each { |sql|  @DB.run File.open(sql, "rb").read }
 
-helpers.each do |sql|
-	contents = File.open(sql, "rb")
-	# @DB.run contents.read
-end
+
 
 def clean_copy_parts
 	pp @DB.schema(:manufactures).inspect

@@ -78,10 +78,31 @@
 
 #COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 #------------------------------------------------------------------------------
-@DB.create_table? :IACCXPRO do #IACCXPRO
-	primary_key :id
-	String :name
-end
+
+
+		@DB.create_table!(:IACCXPRO) do       # common database type used
+			Integer :a0                         # integer
+			String :a1                          # varchar(255)
+			String :a2, :size=>50               # varchar(50)
+			String :a3, :fixed=>true            # char(255)
+			String :a4, :fixed=>true, :size=>50 # char(50)
+			String :a5, :text=>true             # text
+			File :b                             # blob
+			Fixnum :c                           # integer
+			Bignum :d                           # bigint
+			Float :e                            # double precision
+			BigDecimal :f                       # numeric
+			BigDecimal :f2, :size=>10           # numeric(10)
+			BigDecimal :f3, :size=>[10, 2]      # numeric(10, 2)
+			Date :g                             # date
+			DateTime :h                         # timestamp
+			Time :i                             # timestamp
+			Time :i2, :only_time=>true          # time
+			Numeric :j                          # numeric
+			TrueClass :k                        # boolean
+			FalseClass :l                       # boolean
+		end
+
 # Link for accessories to products
 #
 # CONTNUM      Text   12    Yes   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.

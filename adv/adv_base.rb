@@ -21,7 +21,7 @@ letters.each {|l| @letter_queue << l}
 
 
 threads << Thread.new do
-	while @letter_queue.empty? && @mfr_queue.empty? && @ do
+	until @letter_queue.empty? && @mfr_queue.empty? && @vnd_queue.empty? do
 		until @mfr_queue.empty?
 			insert_manufactures(take(@mfr_queue))
 			@reading = 0
@@ -46,7 +46,7 @@ def parse_mfr_list(html, list_type, category)
 		puts href_mfr
 		n_products = item.css(".gray8pt").text.strip.delete('()')
 
-		# bp ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],[40,40,5,6]
+		color_p ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],16
 		if list_type == "vnd.do?"
 			@vnd_queue << [name_mfr.to_s,href_mfr.to_s,category,n_products.to_i]
 		else
@@ -76,18 +76,18 @@ benchmark '', @count
 	threads << Thread.new do
 		gsa_a[i] = initialize_browser
 		until @letter_queue.empty?
-		letter = @letter_queue.pop
-		ADV::Lists.each do |list|
-			ADV::Categories.each do |category|
-				url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
-				# puts url
-				# Mechanized ? (gsa_a[i].get url) : (gsa_a[i].browser.goto url)
-					html = get_html(gsa_a, i, url)
-					found = parse_mfr_list(html,list,category)
-					# searched ' ',url, found
-				@count = @count + found
+				letter = @letter_queue.pop
+			ADV::Lists.each do |list|
+				ADV::Categories.each do |category|
+					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
+					# puts url
+					# Mechanized ? (gsa_a[i].get url) : (gsa_a[i].browser.goto url)
+						html = get_html(gsa_a, i, url)
+						found = parse_mfr_list(html,list,category)
+						# searched ' ',url, found
+					@count = @count + found
+				end
 			end
-		end
 		end
 		 # gsa_a[i].browser.close
 	end
