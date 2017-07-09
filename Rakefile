@@ -11,7 +11,7 @@ task(default: [:s2])
 # source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
 # 	fl.exclude("~*")
 # 	fl.exclude(/^scratch\//)
-# 	fl.exclude(/^output\//)
+# 	fl.exclude(/^export\//)
 # 	fl.exclude do |f|
 # 		`git ls-files #{f}`.empty?
 # 	end

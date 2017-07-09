@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'sequel'
-require 'adv/adv_constants'
+require 'adv/adv_scrape'
 
 
 # JUNK ============================================================

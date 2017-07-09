@@ -54,7 +54,7 @@ def excel(table)
 			              row[:desc]
 			              ])
 		end
-		p.serialize "./output/#{table.to_s}-PCP.xlsx"
+		p.serialize "./export/#{table.to_s}-PCP.xlsx"
 	end
 end
 

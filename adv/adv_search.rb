@@ -19,21 +19,6 @@ n_thr   = 50
 gsa_a   = []
 
 
-def get_html(gsa_a, n, url)
-	if MECHANIZED then
-		page = gsa_a[n].get url
-		if page.code == 200
-			color_p "Agent #{n} received Code: #{page.code}", 7
-		end
-		# 503 => Net::HTTPServiceUnavailable
-		html = page.body
-	else
-		gsa_a[n].browser.goto url
-		html = gsa_a[n].html
-	end
-	save_page(html, url) if DOWNLOAD
-	return html
-end
 
 def get_all_products(gsa_a, mfr, n, n_low, pg)
 	begin
@@ -56,7 +41,6 @@ def get_all_products(gsa_a, mfr, n, n_low, pg)
 end
 
 
-# TODO controller
 def controller
 	@throttle = @DB[:controller].filter(key: 'throttle').select(:value).first
 	sleep 20
