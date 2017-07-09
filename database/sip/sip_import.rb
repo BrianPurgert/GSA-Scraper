@@ -1,36 +1,94 @@
-# IMPORT FILES SETUP AND TEST REQUIREMENTS
+# This File is a modified version of the IMPORT.txt file found in the SIP(Schedule Input Program)
+# Instructions  about using the actual program SIP-Instructions https://vsc.gsa.gov/sipuser/files/SIP-Instructions.pdf
 #
-# THE IBPA TABLE CAN NOW BE IMPORTED WITHIN SIP IMPORT!!!
-#
-# If a field is a number it must conform the setup ie. 8.2 must
-# look like '12345.78'.  Only numbers and a period at the proper place can
-# be allowed. fields without a decimal or decimal = 0 should not have a
-# decimal in the string ie. 8.0 must look like '12345678'.
-#
-# If a field is required, a value must be entered.
-#
-# *****MFGNAME field was added to iprice, iqtyvol,.imsg, iaccxpro, ibpa, icolors, iphoto, and ioptions tables*****
-#
+# GSAAdvantage & GSAeLibrary mapping to SIP
+# www.gsaelibrary.gsa.gov
+#    /ElibMain
+#         /sinDetails.do?
+#              executeQuery=YES
+#              scheduleNumber=71
+#              flag=
+#              filter=
+#              specialItemNumber=489+157
+#         /contractorInfo.do?
+#              contractNumber=GS-03F-0033S
+#              contractorName=ALPHA+SAFE+%26+VAULT+INC
+#              executeQuery=YES
+#         /advRedirect.do?
+#              contract=GS-03F-0033S
+#              sin=489+103
+#              src=elib
+#              app=cat
+#         /contractClauses.do?
+#              scheduleNumber=71
+#              contractNumber=GS-03F-0033S
+#              contractorName=ALPHA+SAFE+%26+VAULT+INC
+#              duns=163632537
+#              source=ci
+#              view=clauses
+# www.gsaadvantage.gov
+#    /advantage
+#         /main
+#              /elib.do?
+#                    contract=GS-03F-0033S
+#                    sin=489+154
+#                    src=elib
+#                    app=cat
+#                    pg=srch
+#         /s
+#              /search.do?
+#                   db=0
+#                   searchType=1
+#                   q=19%3A5GS-03F-0033S
+#                   q=20%3A5489+154
+#                   src=elib
+#              /search.do?
+# 				q=19:5GS-03F-0033S
+# 				q=20:5489+154
+# 				db=0
+# 				searchType=0
+# 			/vnd.do?
+# 				q=28:5DOLPHIN+COMPONENTS+CORP
+# 				c=100
+#                   s=9
+# 				p=1
+# 				listFor=All
+#              /mfr.do?
+#                   q=1:4ADV.*
+#                   listFor=C
+#         /contractor
+#              /contractor_detail.do?
+#                   mapName=/s/search/
+#                   cat=ADV
+#                   contractNumber=GS-03F-0033S
+#         /catalog
+#              /product_detail.do?
+#                   contractNumber=GS-03F-0033S
+#                   itemNumber=SF702-FH
+#                   mfrName=ALPHA+SAFE%2FSKILCRAFT
+#              /product_detail.do?
+#                   gsin=11000034769215
+
+
 # If a field is a boolean, it must be 'Y', 'N', 'T', or 'F'.
-#
 # If a field is a date, it must be in the format 'MM/DD/YY' or 'MM/DD/YYYY'
-#
 # If a field is a character field, the system will automatically change all the alpha characters to upper case.  The only exception should be the WWW address, E-mail address, and Product/Accessory Description.
-#
-# * Note for importing excel files: ' " ' can not be used in import data. Cell formatting is not required.
-#
+# * Note for importing excel files: ' " ' can not be used in import data.
 # * Note: The ' ~ ' character at the end of each file is required for text files only. It does not apply to excel or dbf files.
 
 #COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 #------------------------------------------------------------------------------
-# IACCXPRO   Link for accessories to products
+@DB.create_table? :IACCXPRO do #IACCXPRO
+	primary_key :id
+	String :name
+end
+# Link for accessories to products
 #
-#  1 - 12   CONTNUM      Text   12    Yes   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-#  13- 52   MFGPART      Text   40    Yes   Manufacturer part number. Must be found in Product table. Cannot equal accpart.
-#  53- 92   PROD_MFR     Text   40    Yes   Product Manufacturer name. Must be found in Product table.
-#  93- 132  ACCPART      Text   40    Yes   Accessory part number. Must be found in Product table. Cannot equal mfgpart.
-#  133-172  ACC_MFR      Text   40    Yes   Accessory Manufacturer name. Must be found in Product table.
-#  173      '~'                       Yes
+# CONTNUM      Text   12    Yes   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+# MFGPART      Text   40    Yes   Manufacturer part number. Must be found in Product table. Cannot equal accpart.
+# PROD_MFR     Text   40    Yes   Product Manufacturer name. Must be found in Product table.
+# ACCPART      Text   40    Yes   Accessory part number. Must be found in Product table. Cannot equal mfgpart.
+# ACC_MFR      Text   40    Yes   Accessory Manufacturer name. Must be found in Product table.
 #
 #
 #  COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -91,7 +149,7 @@
 #  13- 52   MFGPART      Text   40    Yes   Manufacturer part number. Must be found in Product table.
 #  53- 92   MFGNAME      Text   40    Yes   Manufacturer name. Must be found in Product table.
 #  93-132   COLOR        Text   40    Yes   Color. Must be unique.
-#  133      '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -121,7 +179,7 @@
 # 216-217   LEADTIME     Text   2     Yes   Code to explain C_DELIV. 'AF' for time delivered after receipt of order, 'AE' for time shipped after receipt, 'AX' for award date to completion date.
 # 218-297   A_EMAIL      Text   80    Yes   Contract administrator e-mail address.
 # 298-377   REF_FILE     Text   80    No    File name of reference file which can be attached to contract to describe products under it.
-# 378       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -142,7 +200,7 @@
 # 326-405   V_EMAIL      Text   80    Yes   Email address that can accept GSA Advantage purchase order.
 # 406-435   PASSWORD     Text   30    Yes   Vendor support center provided password. Given out by the GSA help desk.
 # 436-444   DUNS_NO      Text   9     Yes   DUNS number. Must be 9 digits.
-# 445       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -171,7 +229,7 @@
 # 181-260   OPT_DESC     Text    80   Yes     Option description.
 # 261-300   OPT_MFG      Text    40   Yes     Option manufacturer.
 # 301-301   IS_DELETED   Y/N     1    No      If options is deletable and if Opt_Code is "I".
-# 302       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -187,9 +245,8 @@
 # 137-146  TPRSTOP      Date   10    No    Temporary price end date. Required if TEMPRICE has a value.
 # 147-163  MLP          Numb   17.4  Yes   Manufacturer list price.
 # 164-165  ZONE_NUM     Text   2     Yes   Zone number to which price applies. Zones are assigned at IZONE. '00' If there are no zones.
-# 166      '~'                       Yes
-#
-#
+
+
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 # ------------------------------------------------------------------------------
 # IPROD - Product Information Table
@@ -277,7 +334,7 @@
 # 460-460   IS_QTY       Text   1     Yes   Yes/no field. ‘Y’ if discounts are based on the quantity of the product purchased. ‘N’ if discounts are based on the total purchase price of the product.
 # 461-461   IS_TEMP      Text   1     Yes   Yes/no field. Is this a temporary price? Must be 'Y' or 'N'.
 # 462-463   ZONE_NUM     Text   2     Yes   Zone number. Zone to which the price applies. (Zones are assigned at IZONE.) '00' if there are no zones.
-# 464       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -295,7 +352,7 @@
 # 163-192   R_PHONE      Text   30    Yes   Telephone number for order address. Must be numbers.
 # 193-222   R_FAX        Text   30    Yes   Fax number for order address. Must be numbers.
 # 223-302   R_EMAIL      Text   80    Yes   Send orders to this email address.
-# 303       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -307,7 +364,7 @@
 #  38-54    CHARGE       Numb   17.4  Yes   Special term charge.
 #  55-134   SPECDESC     Text   80    No    Special term description.
 # 135-136   S_PER        Text   2     Yes   Unit of special term measurement. SIP help(SIP contents/Import data/SIP lookup tables/unit of issue table).
-# 137       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -368,7 +425,7 @@
 # 113-114   WI           Numb   2     No    Wisconsin zone number. Required if you have zones.
 # 115-116   WV           Numb   2     No    West Virginia zone number. Required if you have zones.
 # 117-118   WY           Numb   2     No    Wyoming zone number. Required if you have zones.
-# 119       '~'                       Yes
+
 #
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
@@ -394,7 +451,7 @@
 # 175-254   URL          Text   80    No    URL having Section 508 accessibility info for this product
 # 255-294   SCANCODE     Text   40    No    Scan code related to GSA Parallel Contracting program.
 # 295-300   HAZMAT       Text    6    No    Item has hazardous material. Enter United Nations Identification Number (UNID). First two characters must start with UN or NA or enter “MSDS” in the first 4 positions.
-# 301       '~'                       Yes
+
 #
 # COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 # ------------------------------------------------------------------------------
@@ -407,4 +464,3 @@
 # 173-252   PHOTO2       Text   80    No    Filename of second photo.
 # 253-332   PHOTO3       Text   80    No    Filename of third photo.
 # 333-412   PHOTO4       Text   80    No    filename of fourth photo.
-# 413-413   '~'                       Yes

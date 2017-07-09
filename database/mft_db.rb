@@ -45,6 +45,7 @@ end
 # ------------------------------------------------------------------ #
 #     Create Tables if they need to be
 # ------------------------------------------------------------------ #
+require_relative 'sip/sip_import'
 
 helpers.each do |sql|
 	contents = File.open(sql, "rb")
