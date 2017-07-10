@@ -44,7 +44,7 @@ basedir   = File.join(__dir__, "/import/")
 
 
 tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
-files = Dir.glob(File.join(__dir__, './import/')+"*.xls")
+files = Dir.glob(File.join(__dir__, './import/')+"*.xl*")
 
 
 list_files(files)

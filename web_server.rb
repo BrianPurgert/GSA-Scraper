@@ -1,14 +1,22 @@
 require 'rubygems'
 require 'sinatra'
 require 'sequel'
-require 'adv/adv_scrape'
+require File.expand_path(File.dirname(__FILE__) + '/config/adv_scrape')
 
-
+# t
 # JUNK ============================================================
 require 'mysql2'
 require 'logger'
 
-DB = Sequel.
+DB = Sequel.connect(
+	adapter:  "mysql2",
+	host:     ENV['MYSQL_HOST'],
+	database: 'gsa',
+	user:     ENV['MYSQL_USER'],
+	password: ENV['MYSQL_PASS']
+)
+@DB.loggers << Logger.new($stdout)
+@DB.extension :pretty_table
 
 DB.create_table :links do
 	primary_key :id

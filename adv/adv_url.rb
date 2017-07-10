@@ -8,10 +8,10 @@ class AdvURL
 	
 	def build
 		query  = @url.split('/').last
-		@page  = query.split('?').first
-		@parms = query.split('?').last
-		@parms.split('&').each do |part|
-			puts part
+		@object_type  = query.split('?').first
+		query_string  = query.split('?').last
+		query_string.split('&').each do |part|
+			puts "#{part}\n\n"
 		end
 		# /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
 	end
@@ -32,6 +32,8 @@ end
 require 'pp'
 
 test_urls = %w(
+contractNumber=GS-21F-161AA&itemNumber=PC1400&mfrName=DURACELL&bpaNumber=GS-23F-BA016"
+/advantage/catalog/product_detail.do?contractNumber=GS-02F-0023X&itemNumber=DURPC1400&mfrName=DURACELL+U.S.A.
 https://www.gsaadvantage.gov/advantage/s/search.do?q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=1&c=100s=6
 https://www.gsaadvantage.gov/advantage/s/search.do?db=0&q=24%3A5C%26H+DISTRIBUTORS%2C+LLC&searchType=0&c=100&s=8
 /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y

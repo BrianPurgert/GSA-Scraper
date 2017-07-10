@@ -23,7 +23,7 @@ begin
 	)
 rescue Exception => e
 	puts "#{e.message}".colorize(:red)
-	puts "Connecting to #{ENV['MYSQL_HOST_ALT']}"
+	puts "------------------- Connecting to #{ENV['MYSQL_HOST_ALT']}".colorize(:red)
 	@DB = Sequel.connect(
 		adapter:  "mysql2",
 		host:     ENV['MYSQL_HOST_ALT'],
@@ -33,6 +33,7 @@ rescue Exception => e
 	)
 
 end
+
 
 
 @DB.loggers << Logger.new($stdout) if LOG_DATABASE
@@ -139,6 +140,8 @@ end
 		up_next
 	end
 
+
+
 	def insert_contractors(mfrs)
 		@DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
 	end
@@ -161,7 +164,7 @@ end
 		@continue = true
 	end
 
-def continue
+	def continue
 		stop = @DB[:controller].filter(key: 'stop').select(:value).first
 		print 'Controller: '
 		if stop[:value]==1
@@ -174,38 +177,26 @@ def continue
 		
 	end
 	
-	def mfr_time(name)
-		escaped       = @client.escape("#{name}")
-		insert_string = "UPDATE mft_data.manufactures SET last_search=NOW() WHERE name='#{escaped}'"
-		puts insert_string.colorize(:green)
-		@client.query("#{insert_string}")
-	end
+	# def mfr_time(name)
+	# 	escaped       = @client.escape("#{name}")
+	# 	insert_string = "UPDATE mft_data.manufactures SET last_search=NOW() WHERE name='#{escaped}'"
+	# 	puts insert_string.colorize(:green)
+	# 	@client.query("#{insert_string}")
+	# end
 
-	def get_mfr_part(amount = 1)
-		row_list = []
-	
-		result = @client.query("SELECT * FROM `mft_data`.`mfr_parts` ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true)
-		result.each do |row|
-			row_list << row
-		end
-		mfr_part_href = row_list.map!{|link| link[:href_name]}
-		check_out_parts(amount)
-		return mfr_part_href
-	end
+	# def get_mfr_part(amount = 1)
+	# 	row_list = []
+	#
+	# 	result = @client.query("SELECT * FROM `mft_data`.`mfr_parts` ORDER BY last_updated LIMIT #{amount};", :symbolize_keys => true)
+	# 	result.each do |row|
+	# 		row_list << row
+	# 	end
+	# 	mfr_part_href = row_list.map!{|link| link[:href_name]}
+	# 	check_out_parts(amount)
+	# 	return mfr_part_href
+	# end
 
-# def load_table_mfr
-# @mfr_table = []
-# result = @client.query('SELECT * FROM `mft_data`.`mfr` ORDER BY last_updated;')
-# result.each do |row|
-# 	@mfr_table  << row
-# end
-# @mfr_table.each do |mfr|
-# 	print "#{mfr['name']}\t".colorize(:white)
-# 	print "#{mfr['href_name']}\t".colorize(:magenta)
-# 	print "#{mfr['last_updated']}\t".colorize(:blue)
-# 	puts "#{mfr['item_count']}\t".colorize(:green)
-# end
-# end
+
 
 
 

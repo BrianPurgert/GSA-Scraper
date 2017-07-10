@@ -5,8 +5,8 @@ ENV['MYSQL_USER']         = 'BrianPurgert@gcs-data'
 ENV['MYSQL_PASS']         = 'GoV321CoN'
 
 # ===================================== Execution Configurations
-Thread.abort_on_exception = false
-
+Thread.abort_on_exception = true
+require 'yaml'
 PROXY_LIST                = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
 
 # ===================================== Constants
