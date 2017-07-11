@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iprice</OriginalElement>
+  <nodes>
+    <node x="2693.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.icolors</node>
+    <node x="327.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.manufactures</node>
+    <node x="634.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.contractors</node>
+    <node x="2047.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iphoto</node>
+    <node x="283.0" y="3108.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.imols</node>
+    <node x="1324.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.search_manufactures</node>
+    <node x="0.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.manufacture_parts</node>
+    <node x="1684.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.imsg</node>
+    <node x="0.0" y="0.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.izone</node>
+    <node x="1826.0" y="1317.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.icontr</node>
+    <node x="2165.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.acuity</node>
+    <node x="923.0" y="1317.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iqtyvol</node>
+    <node x="941.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iprice</node>
+    <node x="0.0" y="3108.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.ifabrics</node>
+    <node x="2549.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iremitor</node>
+    <node x="1722.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.ioptions</node>
+    <node x="0.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.addition_offer_or_option</node>
+    <node x="1283.0" y="0.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iprod</node>
+    <node x="2390.0" y="2802.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.ispecter</node>
+    <node x="0.0" y="1317.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.ibpa</node>
+    <node x="1232.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.icorpet</node>
+    <node x="702.0" y="2220.0">0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iaccxpro</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.793230769230769" x="967.6484379789458" y="2178.632348802278" />
+  <SelectedNodes>
+    <node>0d648f5a-ef33-403b-85a5-2e91a259f06a.TABLE:mft_data.iprice</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Key columns</Category>
+    <Category>Columns</Category>
+  </Categories>
+</Diagram>
+
