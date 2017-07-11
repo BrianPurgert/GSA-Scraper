@@ -10,7 +10,9 @@ def import_spreadsheets(files, tables)
 		puts "#{files.size} files importing"
 		threads = []
 		files.each_with_index do |file, num|
+			color_p "----------------------  #{file.inspect}"
 			threads << Thread.new { import_products(file,tables[num]) }
+			sleep 3000000 # lol delete this shit later
 		end
 		threads.each { |thr| thr.join }
 	end

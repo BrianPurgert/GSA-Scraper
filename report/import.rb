@@ -10,39 +10,13 @@ Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
 Header_PRICE   = /(.*)Price(.*)/ix
 
 
-	def import_client_prices(table, set)
-		puts "Importing into #{table}"
-		set.each do |row|
-			row_manufacture = row[:manufacture_name]
-			row_part_number = row[:manufacture_part]
-			 color_p"#{row_manufacture} : #{row_part_number}",7
-		end
-		
-		if set[0].size      == 2
-			[row[:manufacture_name].to_s,row[:manufacture_part].to_s]
-		elsif set[0].size   == 3
-			[row[:manufacture_name].to_s,row[:manufacture_part].to_s,row[:gsa_price].to_f.round(2)]
-		end
-		
-		set.collect! do |row|
-		
-		end
-		  table.import([:manufacture_name, :manufacture_part, :gsa_price], set)
-		prioritize(table)
-	end
 
 
-	def open_spreadsheet(file_path)
-		color_p "\t\tSpreadsheet Open (#{file_path}", 8
-		spreadsheet = AnySheet.new(file_path)
-		
-	
-		puts "#{spreadsheet.info}".colorize(:green)
-		return spreadsheet
-	end
+
 
 	def create_client_table(name, extra_columns = [])
-		 @DB.create_table! name do
+		color_p "#{name.class}  #{name.to_s}   #{name.inspect}   #{name}"
+		  @DB.create_table! name do
 			primary_key :id
 			String :manufacture_name, null: true
 			String :manufacture_part, null: true
@@ -56,24 +30,6 @@ Header_PRICE   = /(.*)Price(.*)/ix
 			 Float  :client_price, null: true
 		end
 	end
-
-
-	def parse_prices(spreadsheet)
-		# first_row = spreadsheet.first_row
-		spreadsheet.each { |sheet| puts sheet.inspect }
-		
-			
-			# return spreadsheet.parse(clean: true, header_search: [Header_MFR,Header_PART])
-			sleep 40
-		# rescue Exception => e
-		# 		puts e.message
-		# end
-		
-	end
-
-     def comparison_results
-		
-     end
 
 
 def find_duplicates
@@ -101,17 +57,53 @@ end
 
 def import_products(path,table_name)
 		# begin
-			spreadsheet = open_spreadsheet(path)
-			table = @DB[table_name]
-			set = parse_prices(spreadsheet)
-			create_client_table table_name, ['a', 'b', 'c']
-			import_client_prices table, set
+
+	puts "#{Pathname.new(path).extname}" # determine sheet type
+	sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR,Header_PART])  # workbook = RubyXL::Parser.parse("path/to/Excel/file.xlsx")
+	
+	if path.upcase.include? "IPROD"
+		puts 'Going to import into IPROD'
+		color_p sheet_data.class
+		sleep 5
+		schedule_product_rows = []
+		schedule_product_columns = []
+		columns = @DB[:IPROD].columns.to_a
+		pp columns
+		# convert Column Array of Hashes and clean up the data some
+		sheet_data.collect! do |import_column|
+			puts import_column
+			columns.collect do |database_column|
+				import_column[database_column]
+			end
+			# [import_column[:manufacture_name].to_s,import_column[:manufacture_part].to_s,import_column[:gsa_price].to_f.round(2)]
+			
+		end
+		
+		
+		puts "--------------------------------------------"
+		# pp sheet_data
+		
+		
+	
+		exit
+		
+		 @DB[:IPROD].import(@DB[:IPROD].columns!, sheet_data)
+	end
+	
+	pp sheet_data
+	
+	# @DB.create_table!(table_name, :as => sheet_data) # @DB[:manufactures].distinct(:href_name)
+	
+	@DB[table_name].print
+	
+	# table = @DB[table_name]
+	# set = parse_prices(spreadsheet)
+	# create_client_table table_name,['a', 'b', 'c']
+	# import_client_prices table, set
 		# rescue Exception => e
 		# 	puts e.message
 		# end
-		
-		
-	end
+end
 
 
 
