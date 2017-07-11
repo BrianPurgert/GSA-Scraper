@@ -3,7 +3,6 @@ require 'roo'
 require 'prettyprint'
 require 'pp'
 require 'roo-xls'
-require_relative File.expand_path(File.dirname(__FILE__) + '/any_sheet')
 
 Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
 Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
@@ -21,8 +20,6 @@ Header_PRICE   = /(.*)Price(.*)/ix
 			String :manufacture_name, null: true
 			String :manufacture_part, null: true
 			Float :gsa_price         ,null: true
-			
-		
 			# foreign_key :mpn,:manufacture_parts #mft_data.manufacture_parts.manufacture_parts_mfr_mpn_index
 			String :url, null: true
 			 String :vendor_name, null: true
@@ -55,49 +52,27 @@ def prioritize(table)
 	end
 end
 
-def import_products(path,table_name)
-		# begin
-
-	puts "#{Pathname.new(path).extname}" # determine sheet type
-	sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR,Header_PART])  # workbook = RubyXL::Parser.parse("path/to/Excel/file.xlsx")
+def import_products(path)
 	
 	if path.upcase.include? "IPROD"
-		puts 'Going to import into IPROD'
-		color_p sheet_data.class
-		sleep 5
-		schedule_product_rows = []
-		schedule_product_columns = []
-		columns = @DB[:IPROD].columns.to_a
-		pp columns
-		# convert Column Array of Hashes and clean up the data some
-		sheet_data.collect! do |import_column|
-			puts import_column
-			columns.collect do |database_column|
-				import_column[database_column]
-			end
-			# [import_column[:manufacture_name].to_s,import_column[:manufacture_part].to_s,import_column[:gsa_price].to_f.round(2)]
-			
-		end
+		color_p "IPROD | Import products from: #{Pathname.new(path).basename}"
+		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR,Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
+		@DB[:IPROD].multi_insert(sheet_data)
 		
 		
-		puts "--------------------------------------------"
-		# pp sheet_data
+		# columns = @DB[:IPROD].columns.to_a # @DB[:IPROD].import(@DB[:IPROD].columns!, sheet_data)
+		# color_p "#{sheet_data.class}   #{sheet_data[0].class}\nReference Columns\n#{columns}", 13
+		# sheet_data.collect! do |import_column|
+		# 	columns.collect do |database_column|
+		# 		import_column[database_column]
+		# 	end
+		# 	# [import_column[:manufacture_name].to_s, import_column[:manufacture_part].to_s, import_column[:gsa_price].to_f.round(2)]
+		# end
 		
-		
-	
-		exit
-		
-		 @DB[:IPROD].import(@DB[:IPROD].columns!, sheet_data)
 	end
 	
-	pp sheet_data
-	
-	# @DB.create_table!(table_name, :as => sheet_data) # @DB[:manufactures].distinct(:href_name)
-	
-	@DB[table_name].print
-	
 	# table = @DB[table_name]
-	# set = parse_prices(spreadsheet)
+	
 	# create_client_table table_name,['a', 'b', 'c']
 	# import_client_prices table, set
 		# rescue Exception => e
@@ -106,15 +81,11 @@ def import_products(path,table_name)
 end
 
 
-
 #   DB.add_index :posts, :title
 #   DB.add_index :posts, [:author, :title], :unique => true
-#
-# rename_table_sql(name, new_name)
 # Options:
 # :ignore_errors :: Ignore any DatabaseErrors that are raised
 # :name :: Name to use for index instead of default
-
 
 #   DB.add_column :items, :name, :text, :unique => true, :null => false
 #   DB.add_column :items, :category, :text, :default => 'ruby'

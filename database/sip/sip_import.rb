@@ -91,6 +91,7 @@
 
 #COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 #------------------------------------------------------------------------------
+# http://www.rubydoc.info/github/jeremyevans/sequel
 # http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
 
 

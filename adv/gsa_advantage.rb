@@ -14,10 +14,21 @@ require_relative File.dirname(__FILE__) + '/../database/mft_db'
 require_relative File.dirname(__FILE__) + '/../pages/gsa_advantage_page'
 
 
+# :black   => 0, :light_black    => 60,
+# :red     => 1, :light_red      => 61,
+# :green   => 2, :light_green    => 62,
+# :yellow  => 3, :light_yellow   => 63,
+# :blue    => 4, :light_blue     => 64,
+# :magenta => 5, :light_magenta  => 65,
+# :cyan    => 6, :light_cyan     => 66,
+# :white   => 7, :light_white    => 67,
+# :default => 9
+
 def color_p(str,i=-1)
+
 	case i
 		when -1
-			out_color = String.colors.sample
+			out_color = [:light_cyan,:green, :yellow,:light_yellow].sample
 		else
 			out_color = String.colors[i]
 	end

@@ -1,5 +1,5 @@
 require_relative '../report/import'
-# http://sequel.jeremyevans.net/rdoc/classes/Sequel/Dataset.html
+# http://www.rubydoc.info/github/jeremyevans/sequel
 def run_sample
 	
 	sample_table_join

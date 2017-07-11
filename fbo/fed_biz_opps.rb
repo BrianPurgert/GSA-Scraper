@@ -1,7 +1,7 @@
-# https://www.fbo.gov/?&static=interface
-# FBO Electronic Interface: Overview
-
+# Start here:       https://opendata.stackexchange.com/questions/4164/fedbizopps-raw-data-api
+# ftp works at the root directory ftp://ftp.fbo.gov/
 # FedBizOpps data:  ftp://ftp.fbo.gov/FBOFeed20091012
+
 
 class FedBizOpps
 	
