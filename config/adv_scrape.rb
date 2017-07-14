@@ -36,6 +36,7 @@ module ADV
 	SUB_CAT     = "a[href*='/advantage/s/search.do?q=1:4ADV.']"
 	CAT         = "a[href*='/advantage/department/main.do?cat=ADV.']"       # a[href*='cat=']
 	Lists          =  ["vnd.do?", "mfr.do?"]
+	
 	# 0	Building & Industrial
 	# 1	Electronics & Technology
 	# 2	Facilities & Supplies

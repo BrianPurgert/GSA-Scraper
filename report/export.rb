@@ -12,7 +12,7 @@ def compare_products(table)
 	puts "Manufacture parts join #{table}"
 	# manufacture_parts = @DB[:manufacture_parts].reverse(:last_updated).distinct(:mpn)
 	manufacture_parts = @DB[:manufacture_parts] #.select(:, :b)
-	result            = @DB[table].left_outer_join(manufacture_parts, :mfr => :manufacture_name, :mpn => :manufacture_part)
+	result            = @DB[table].left_outer_join(manufacture_parts, :mfr => :MFGNAME, :mpn => :MFGPART)
 	# result = @DB[table].left_join(:manufacture_parts,:manufacture_name => :mfr, :manufacture_part => :mpn)
 	
 	# Todo create table from that dataset

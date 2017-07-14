@@ -1,12 +1,8 @@
+# don't use page object
+
 # helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
 	include PageObject
-
-	# def goto url
-	# 	self.browser.goto url
-	# end
-	# User Alerts
-	# Session Terminated
 	
 	page_url('https://www.gsaadvantage.gov/advantage/search/headerSearch.do')
      
@@ -26,7 +22,6 @@ class GsaAdvantagePage
 		spans(:ms_sources, css: 'table tbody > tr:nth-child(2) > td:nth-child(1) > table > tbody > tr > td > span')
 		div(:main_alt, id: 'main-alt')
 	
-     
      # /advantage/catalog/product_detail.do? gsin=11000019481346 mfrName=3M
 		div(:main, id: 'main')
 		link(:contractor_highlight_link, css: 'table.pricehighlight > tbody > tr:nth-child(2) > td > a')

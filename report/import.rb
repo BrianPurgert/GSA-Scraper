@@ -55,6 +55,9 @@ end
 def import_products(path)
 	
 	if path.upcase.include? "IPROD"
+		# TODO: column_schema_to_ruby_type(schema)   # Use this to clean up the spreadsheet data even more
+		#TODO: add index info after... Sequel/Schema/AlterTableGenerator
+		
 		color_p "IPROD | Import products from: #{Pathname.new(path).basename}"
 		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR,Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
 		@DB[:IPROD].multi_insert(sheet_data)
@@ -72,7 +75,6 @@ def import_products(path)
 	end
 	
 	# table = @DB[table_name]
-	
 	# create_client_table table_name,['a', 'b', 'c']
 	# import_client_prices table, set
 		# rescue Exception => e

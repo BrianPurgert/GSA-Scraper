@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../GCS-Price-Comparison-Program/.idea/GCS-Price-Comparison-Program.iml" filepath="$PROJECT_DIR$/../GCS-Price-Comparison-Program/.idea/GCS-Price-Comparison-Program.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/GSA-Advantage-Scraper.iml" filepath="$PROJECT_DIR$/.idea/GSA-Advantage-Scraper.iml" />
     </modules>
   </component>

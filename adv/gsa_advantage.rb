@@ -125,7 +125,12 @@ end
 
 def get_html(gsa_a, n, url)
 	if MECHANIZED then
-		page = gsa_a[n].get url
+		begin
+			page = gsa_a[n].get url
+		rescue
+			gsa_a[n] = initialize_browser
+			page = gsa_a[n].get url
+		end
 		if page.code == 200
 			color_p "Agent #{n} received Code: #{page.code}", 7
 		end

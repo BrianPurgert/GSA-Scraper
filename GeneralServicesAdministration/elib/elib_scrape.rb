@@ -33,10 +33,9 @@ wb.add_worksheet(name: "Contract End Dates") do |sheet|
 		
 		doc = Nokogiri::HTML(open(url))
 		contractors = doc.css("a[href*='contractorInfo.do']")
-		contractors.each { |contractor| @page_links << contractor['href'] }
-		
-		puts @page_links
-	threads = []
+		contractors.map! { |contractor| @page_links << contractor['href'] }
+	
+		threads = []
 		
 
 		# mcsv.to_csv(@page_links)

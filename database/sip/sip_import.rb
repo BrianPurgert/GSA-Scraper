@@ -1,5 +1,7 @@
-# This File is a modified version of the IMPORT.txt file found in the SIP(Schedule Input Program)
-# Instructions  about using the actual program SIP-Instructions https://vsc.gsa.gov/sipuser/files/SIP-Instructions.pdf
+# This File was made using IMPORT.txt found in the SIP template folder after installing
+# About the Schedule Input Program https://vsc.gsa.gov/sipuser/files/SIP-Instructions.pdf
+# TODO: split this into multiple files
+#
 #
 # GSAAdvantage & GSAeLibrary mapping to SIP
 # www.gsaelibrary.gsa.gov
@@ -59,7 +61,7 @@
 #         /contractor
 #              /contractor_detail.do?
 #                   mapName=/s/search/
-#                   cat=ADV
+#                  cat=ADV
 #                   contractNumber=GS-03F-0033S
 #         /catalog
 #              /product_detail.do?
@@ -69,14 +71,6 @@
 #              /product_detail.do?
 #                   gsin=11000034769215
 
-
-# If a field is a boolean, it must be 'Y', 'N', 'T', or 'F'.
-# If a field is a date, it must be in the format 'MM/DD/YY' or 'MM/DD/YYYY'
-# If a field is a character field, the system will automatically change all the alpha characters to upper case.  The only exception should be the WWW address, E-mail address, and Product/Accessory Description.
-# * Note for importing excel files: ' " ' can not be used in import data.
-# * Note: The ' ~ ' character at the end of each file is required for text files only. It does not apply to excel or dbf files.
-
-
 # Mfr Part No.:	DURPC1300
 # Contractor Part No.:	DURPC1300
 # Manufacturer:	DURACELL U.S.A.
@@ -85,28 +79,42 @@
 # Made In:	UNITED STATES OF AMERICA
 #
 # Volume Discount Available Volume Discounts:
-#                                  3000 - 4999 2.5%
+#   3000 - 4999 2.5%
 # 5000 - 999999 3.5%
 
-
-#COLUMNS     FIELD      TYPE   SIZE  REQ'D      DESCRIPTION
 #------------------------------------------------------------------------------
 # http://www.rubydoc.info/github/jeremyevans/sequel
 # http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
+# --------------------------------------------------
+ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
 
 
-# ====================================================================================================================== #
-#  |     FIELD      |      TYPE      |     SIZE          |   REQ'D        |       DESCRIPTION
-# ====================================================================================================================== #
+def delete_tables
+	puts "Delete SIP Tables? (Y/N)".colorize(:green)
+	if gets.to_s.upcase.include? 'Y'
+		ImportTables.each { |i_table| @DB.drop_table?(i_table) }
+	end
+end
+# delete_tables
 
+
+
+
+@DB.create_table?(:ICOLORS) do
+	column :CONTNUM      ,String,           size: 12               ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40               ,null: false      #   Manufacturer part number. Must be found in Product table.
+	column :MFGNAME      ,String,           size: 40               ,null: false      #   Manufacturer name. Must be found in Product table.
+end
+
+# ======================================================================================================================
 # Link for accessories to products -------------------------------------------------------------------------------------
 
 @DB.create_table?(:IACCXPRO) do
-	column :CONTNUM    ,String,        size: 12           ,null: false          # CONTNUM
-	column :MFGPART    ,String,        size: 40           ,null: false          # Manufacturer part number. Must be found in Product table. Cannot equal accpart.
-	column :PROD_MFR   ,String,        size: 40           ,null: false          # Product Manufacturer name. Must be found in Product table.
-	column :ACCPART    ,String,        size: 40           ,null: false          # Accessory part number. Must be found in Product table. Cannot equal mfgpart.
-	column :ACC_MFR    ,String,        size: 40           ,null: false          # Accessory Manufacturer name. Must be found in Product table.
+	column :CONTNUM    ,String,   size: 12    ,null: false          # CONTNUM
+	column :MFGPART    ,String,   size: 40    ,null: false          # Manufacturer part number. Must be found in Product table. Cannot equal accpart.
+	column :PROD_MFR   ,String,   size: 40    ,null: false          # Product Manufacturer name. Must be found in Product table.
+	column :ACCPART    ,String,   size: 40    ,null: false          # Accessory part number. Must be found in Product table. Cannot equal mfgpart.
+	column :ACC_MFR    ,String,   size: 40    ,null: false          # Accessory Manufacturer name. Must be found in Product table.
 end
 
 

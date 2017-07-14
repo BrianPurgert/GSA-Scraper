@@ -35,6 +35,9 @@ def clean_table(table)
 	@DB.create_table!(:t1, :as => @DB[table].distinct)#:temp=>true
 	@DB.create_table!(table, :as => @DB[:t1])
 end
+ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
+
+
 
 require_relative File.dirname(__FILE__) + '/./import'
 require_relative File.dirname(__FILE__) + '/./export'
@@ -56,8 +59,8 @@ files = Dir.glob(File.join(__dir__, './import/')+"*.xl*")
 
 
 list_files(files)
-import_spreadsheets(files)
 
+import_spreadsheets(files)
 clean_table(:IPROD)
 puts "clean"
 export_price_comparisons(files)

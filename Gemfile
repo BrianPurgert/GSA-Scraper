@@ -21,6 +21,7 @@ gem 'thin'
 # gem 'rubyzip'
 gem 'in_threads', '~> 1.4'
 gem 'mysql2', '~> 0.4.6'
+gem 'sqlite3'
 gem 'sequel', '~> 4.47'
 gem 'htmlbeautifier'
 
