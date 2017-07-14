@@ -1,4 +1,3 @@
-require_relative File.expand_path(File.dirname(__FILE__) + '/../adv/gsa_advantage')
 require 'roo'
 require 'prettyprint'
 require 'pp'
@@ -11,17 +10,15 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 
 
-
-
 	def create_client_table(name, extra_columns = [])
 		color_p "#{name.class}  #{name.to_s}   #{name.inspect}   #{name}"
 		  @DB.create_table! name do
 			primary_key :id
 			String :manufacture_name, null: true
 			String :manufacture_part, null: true
-			Float :gsa_price         ,null: true
-			# foreign_key :mpn,:manufacture_parts #mft_data.manufacture_parts.manufacture_parts_mfr_mpn_index
-			String :url, null: true
+			 Float :gsa_price         ,null: true
+			 # foreign_key :mpn,:manufacture_parts #mft_data.manufacture_parts.manufacture_parts_mfr_mpn_index
+			 String :url, null: true
 			 String :vendor_name, null: true
 			 Float  :lowest_price, null: true
 			 Float  :client_price, null: true
@@ -53,25 +50,21 @@ def prioritize(table)
 end
 
 def import_products(path)
-	
-	if path.upcase.include? "IPROD"
-		# TODO: column_schema_to_ruby_type(schema)   # Use this to clean up the spreadsheet data even more
-		#TODO: add index info after... Sequel/Schema/AlterTableGenerator
-		
+	if path.upcase.include? 'IPROD'
+
 		color_p "IPROD | Import products from: #{Pathname.new(path).basename}"
-		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR,Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
+		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
 		@DB[:IPROD].multi_insert(sheet_data)
-		
 		
 		# columns = @DB[:IPROD].columns.to_a # @DB[:IPROD].import(@DB[:IPROD].columns!, sheet_data)
 		# color_p "#{sheet_data.class}   #{sheet_data[0].class}\nReference Columns\n#{columns}", 13
+		
 		# sheet_data.collect! do |import_column|
 		# 	columns.collect do |database_column|
 		# 		import_column[database_column]
 		# 	end
 		# 	# [import_column[:manufacture_name].to_s, import_column[:manufacture_part].to_s, import_column[:gsa_price].to_f.round(2)]
 		# end
-		
 	end
 	
 	# table = @DB[table_name]

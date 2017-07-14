@@ -18,20 +18,20 @@ CATALOG_LT = Sequel.sqlite
 
 CATALOG.extension(:pretty_table)
 CATALOG_LT.extension(:pretty_table)
-CATALOG_LT.plugin :many_through_many
 
 
-CATALOG_LT.create_table? :gsin do
 
+CATALOG_LT.create_table?(:gsin)do
+	primary_key :id
 end
 
-class GSIN < Sequel::Model
-	one_to_many :product, :key=>:id
-end
-
-class Product < Sequel::Model
-	many_to_one :GSIN, :key=>
-end
+# class GSIN < Sequel::Model
+# 	one_to_many :product, :key=>:id
+# end
+#
+# class Product < Sequel::Model
+# 	many_to_one :GSIN
+# end
 
 
 CATALOG_LT.create_table? :products do
@@ -51,7 +51,7 @@ CATALOG_LT.create_table? :products do
 end
 
 CATALOG_LT[:products].print
-@DB[:manufacture_parts].eve
+@DB[:manufacture_parts].select(10)
 
 
 # TODO Extract links /advantage/catalog/product_detail.do?contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.

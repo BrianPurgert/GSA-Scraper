@@ -35,10 +35,11 @@ def clean_table(table)
 	@DB.create_table!(:t1, :as => @DB[table].distinct)#:temp=>true
 	@DB.create_table!(table, :as => @DB[:t1])
 end
+
 ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
 
 
-
+require_relative File.dirname(__FILE__) + '/../adv/gsa_advantage'
 require_relative File.dirname(__FILE__) + '/./import'
 require_relative File.dirname(__FILE__) + '/./export'
 

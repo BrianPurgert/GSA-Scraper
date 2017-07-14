@@ -71,12 +71,12 @@
 #              /product_detail.do?
 #                   gsin=11000034769215
 
-# Mfr Part No.:	DURPC1300
+# Mfr Part No.:	     DURPC1300
 # Contractor Part No.:	DURPC1300
-# Manufacturer:	DURACELL U.S.A.
-# Contract No.:	GS-02F-0023X (ends: Nov 7, 2020)
-# MAS Schedule/SIN:	75/75 200
-# Made In:	UNITED STATES OF AMERICA
+# Manufacturer:	     DURACELL U.S.A.
+# Contract No.:	     GS-02F-0023X (ends: Nov 7, 2020)
+# MAS Schedule/SIN:	     75/75 200
+# Made In:	          UNITED STATES OF AMERICA
 #
 # Volume Discount Available Volume Discounts:
 #   3000 - 4999 2.5%
@@ -86,8 +86,6 @@
 # http://www.rubydoc.info/github/jeremyevans/sequel
 # http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
 # --------------------------------------------------
-ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
-
 
 def delete_tables
 	puts "Delete SIP Tables? (Y/N)".colorize(:green)
