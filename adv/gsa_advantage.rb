@@ -10,6 +10,7 @@ require 'rubygems'
 require 'watir'
 require 'mechanize'
 require_relative '../config/adv_scrape'
+require_relative 'adv_parse'
 require_relative File.dirname(__FILE__) + '/../database/mft_db'
 require_relative File.dirname(__FILE__) + '/../pages/gsa_advantage_page'
 

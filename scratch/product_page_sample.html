@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7,EmulateIE9">
+    <title>Product Detail</title>
+    <-- CSS -->
+    <link rel="stylesheet" href="/images/adv13/css/pg_blocks.css" type="text/css"/>
+    <link rel="stylesheet" href="/images/adv13/css/dhtmlwindow.css" type="text/css"/>
+    <link href="/images/adv13/css/print.css" rel="stylesheet" type="text/css" media="print"/>
+    <link href="/images/adv13/css/shell_constrained_960px.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/navbar.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/fonts.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/links.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/style_elements.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/searchresults.css" rel="stylesheet" type="text/css" media="screen"/>
+    <link href="/images/adv13/css/home_menus.css" rel="stylesheet" type="text/css"/>
+    <link href="/images/adv13/css/graphics.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/images/adv13/css/messagecenter.css" type="text/css"/>
+
+    <--ADDED STYLESHEETS-->
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/bootstrap/css/bootstrap-no-forms.css"/>
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/bootstrap/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/bootstrap/css/bjqs.css">
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/bootstrap/css/demo.css">
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/searchbar.css">
+    <link rel="stylesheet" type="text/css" href="/images/adv13/css/font-awesome.min.css">
+    <-- /END ADDED -->
+    <script src="/images/adv13/js/jquery.min.js"></script>
+
+    <script src="/images/adv13/js/SpryMenuBar.js" type="text/javascript"></script>
+
+    <script src="/images/adv13/js/tabs.js" type="text/javascript"></script>
+    <link href="/images/adv13/css/tabs.css" rel="stylesheet" type="text/css" media="screen"/>
+
+
+    <--[if lt IE 9]>
+    <style>
+
+        input[type='image'] {
+            margin-bottom: -1px !important;
+            margin-top: 0px !important;
+            top: 8px;
+            position: relative;
+            display: inline;
+        }
+
+        .advanced {
+            position: relative !important;
+            top: 20px !important;
+            left: 5px !important;
+            padding-left: 8px;
+        }
+
+        .menu-popup {
+            background-color: transparent;
+
+            z-index: 9999;
+
+        }
+
+        .menu-popup li {
+            display: table;
+            /*min-height:28px !important;
+            height:auto !important;
+            line-height:28px !important;*/
+            border: solid 1px #ccc !important;
+
+            clear: both !important;
+        }
+
+        .menu-popup li a {
+            display: block;
+
+            height: auto !important;
+            line-height: auto !important;
+            clear: both !important;
+            background-color: #fff;
+
+        }
+
+        .menu-border {
+            display: block !important;
+
+            border-bottom: solid 1px #ccc !important;
+
+            clear: both !important;
+
+        }
+
+        .menu-border .sub {
+            line-height: 40px !important;
+            margin-top: 10px !important;
+            clear: both !important;
+            position: relative !important;
+            top: 0 !important;
+            background-color: #f90 !important;
+            border: solid 1px #ccc !important;
+        }
+
+        .menu-border li {
+            line-height: 40px !important;
+            margin-bottom: 10px !important;
+
+            background-color: #fff !important;
+
+        }
+
+        .no-border {
+
+            clear: both !important;
+            margin-bottom: 0px !important;
+
+        }
+    </style>
+    <![endif]-->
+</head>
+
+<body>
+
+<div id="skipcontent"><a href="#content">Skip to content</a></div>
+<div id="printhead"><img src="/images/adv13/images/gui/print_logo.jpg" width="174" height="59" alt="GSA Advantage!"/></div>
+<div id="wrapper">
+    <div id="container-fluid">
+        <div class="container-fluid">
+            <-- HEADER -->
+
+
+            <-- The following code is to collect web site statistics as part of Federal wide initiative -->
+
+            <script language="javascript" id="_fed_an_ua_tag" src="/images/adv12/js/Universal-Federated-Analytics.1.04.js?agency=GSA"></script>
+
+
+            <div class="row-fluid adj-margin-top">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse !important;">
+                    <tr>
+                        <td width="240" height="60" align="left"><a href="/advantage/main/home.do"><img src="/images/adv13/images/refresh/gui/gsa-adv-logo.png" alt="GSA Advantage!" width="237" height="50"
+                                                                                                        border="0"/></a></td>
+                        <td>
+                            <div class="row-fluid">
+                                <ul class=" unstyled nav-pills pull-right graylink">
+
+                                    <li class="dropdown adj-align-left">
+                                        <a class="dropdown-toggle"
+                                           data-toggle="dropdown"
+                                           href="#">My Account <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/advantage/profile/update_profile.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="My Account">My Account</a></li>
+                                            <li><a href="/advantage/orders/my_orders.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Order Status/History">Order Status & History</a></li>
+                                            <li><a href="/advantage/parkcart/my_parkcart.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Parked Carts">Parked Carts</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <li><span class="gray-text">|</span></li>
+                                    <li class="dropdown adj-align-left"><a class="dropdown-toggle"
+                                                                           data-toggle="dropdown"
+                                                                           href="#">NSN Ordering <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/advantage/fedstrip/fedstrip_init.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="FEDSTRIP">FEDSTRIP</a></li>
+                                            <li><a href="/advantage/ordering/quick_ordering.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="NSN Quick Ordering">NSN Quick Ordering</a></li>
+                                            <li><a href="/advantage/orders/requisition_status.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Requisition Status">Requisition Status</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><span class="gray-text">|</span></li>
+                                    <li class="dropdown adj-align-left pull-right"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Get Quotes <b class="caret"></b></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/advantage/login/eBuyLogin.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="eBuy - Get Quotes"><img
+                                                    src="/images/adv13/images/refresh/redesign-art/gsa-icon.jpg"/> <strong class="newOrange">eBuy</strong> - online quotes</a></li>
+                                            <li><a href="/advantage/main/elib.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="eLibrary - GSA Contracts"><img
+                                                    src="/images/adv13/images/refresh/redesign-art/gsa-icon.jpg" alt="GSA"/> <strong class="newOrange">eLibrary</strong> - online market research</a></li>
+                                            <li><a href="https://reverseauctions.gsa.gov" target="_blank" title="GSA Reverse Auctions"><img src="/images/adv13/images/refresh/redesign-art/gsa-icon.jpg" alt="GSA"/> <strong
+                                                    class="newOrange">Reverse Auctions</strong> - online competition</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><span class="gray-text">|</span></li>
+                                    <li><a href="/advantage/information/page.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?keyName=NEW_CUST_ASSISTANCE" title="Help">Help</a></li>
+                                    <li><span class="gray-text">|</span></li>
+                                    <li><a href="/advantage/profile/directregistration.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Register">Register</a></li>
+                                    <li><span class="gray-text">|</span></li>
+                                    <li><a href="/advantage/main/login.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Login">Login</a></li>
+                                </ul>
+
+
+                            </div>
+                            <div class="row-fluid">
+                                <div class=" span6 adj-align-left gray-text adj-margin-top adj-margin-pull-left-40"><--A service of the U.S. General Services Administration-->&nbsp;</div>
+                                <div class=" span6 adj-align-right adj-margin-top gray-text"><--Welcome <strong class="newOrange">Butch Roach</strong>&nbsp;-->A service of the U.S. General Services Administration</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <--End of header -->
+            <-- END OF HEADER -->
+            <-- Product_search_bar -->
+
+
+            <html>
+            <head>
+                <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
+                <noscript></noscript>
+                <script type="text/javascript" src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+                <noscript></noscript>
+                <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"/>
+            </head>
+            </html>
+
+
+            <-- Search Block -->
+
+            <div class="row-fluid">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="container">
+                            <div class="row-fluid adj-align-left">
+                                <div class="span12">
+                                    <ul class="nav adj-margin-left">
+                                        <li class="dropdown adj-align-left"><a class="dropdown-toggle"
+                                                                               data-toggle="dropdown" href="#">
+                                            <div class="small-print adj-margin-pull-up-8">Shop by<br/>
+                                                <strong>Category</strong> <b class="caret"></b></div>
+                                        </a>
+                                            <ul class="dropdown-menu adj-width-600">
+                                                <li>
+                                                    <div class="container-fluid">
+                                                        <div class="row-fluid">
+                                                            <div class="span6">
+
+                                                                <h4 class="adj-margin-left-20 newOrange arial">Products</h4>
+                                                                <ul class="unstyled cat-font">
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.BUI">Building & Industrial</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.ELE">Electronics & Technology</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.FAC">Facilities & Supplies</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.FUR">Furniture & Furnishings</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.LAW">Law Enforcement, Fire & Security</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.OEQ">Office Equipment</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.OFF">Office Supplies</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.FSSI">Office Supplies & Equipment FSSI</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.SCI">Scientific & Medical</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.TOO">Tools, Paint & Recreational</a>
+                                                                    </li>
+
+
+                                                                    <li><a href="/advantage/department/main.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?cat=ADV.VEH">Vehicles & Equipment</a>
+                                                                    </li>
+
+
+                                                                </ul>
+                                                            </div>
+                                                            <div class="span6 border-left">
+                                                                <h4 class="adj-margin-left-20 arial newOrange">Services</h4>
+
+
+                                                                <?xml version="1.0" encoding="UTF-8"?>
+                                                                <ul class="unstyled cat-font">
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.858*" class="MenuBarItemSubmenu">About Buying
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.380*" class="MenuBarItemSubmenu">Energy
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.424*" class="MenuBarItemSubmenu">Environmental
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.35*" class="MenuBarItemSubmenu">Facility
+                                                                        Management Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.54*" class="MenuBarItemSubmenu">Furniture
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.874*" class="MenuBarItemSubmenu">Human Capital
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.70*" class="MenuBarItemSubmenu">Office
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.862*" class="MenuBarItemSubmenu">Professional
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.534*" class="MenuBarItemSubmenu">Security
+                                                                        &amp; Law Enforcement</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.548*" class="MenuBarItemSubmenu">Technology
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.856*" class="MenuBarItemSubmenu">Training
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.607*" class="MenuBarItemSubmenu">Transportation
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.593*" class="MenuBarItemSubmenu">Travel
+                                                                        Services</a></li>
+                                                                    <li><a href="/advantage/s/search.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?db=1&amp;q=1:4ELIB.SRV.473*" class="MenuBarItemSubmenu">Vehicle
+                                                                        Buy/Lease Services</a></li>
+                                                                </ul>
+
+
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <ul class="nav">
+                                        <li><img src="/images/adv13/images/refresh/gui/titles/search.png" alt="Search" class="adj-margin-left adj-margin-right adj-margin-top-3"/></li>
+                                        <li>
+                                            <-- search drop down begin -->
+                                            <div class="input-prepend input-append">
+                                                <form name="advSearchResultsForm" method="post" action="/advantage/search/headerSearch.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5"><input type="hidden"
+                                                                                                                                                                                                 name="org.apache.struts.taglib.html.TOKEN"
+                                                                                                                                                                                                 value="0a714f3b0fbe2b256399d108fa6194eb">
+                                                    <div class="nav-searchbar-inner search-query-fluid">
+
+            <span style="width: auto;" id="nav-search-in" class="nav-sprite nav-facade-active">
+              <span style="width: auto; overflow: visible;" id="nav-search-in-content" data-value="Office Supplies &amp; Equipment FSSI">
+
+			  <-- SET THE LABEL DISPLAY VALUE HERE AND TARGET "id="displaylabel" the div tags can be removed if not needed -->
+			  <div id="displaylabel">
+			Products
+			  </div>
+
+			  </span>
+              <span class="nav-down-arrow nav-sprite"></span>
+
+              <label class="hidden" for="searchin">Search In</label>
+				<select name="cat" style="top: 0px;" class="searchSelect" id="searchDropdownBox"><option value="PRODUCTS" selected="selected" class="gsa-dd">Products</option>
+<option value="SERVICES" class="gsa-dd">Services</option>
+<option value="BPAS" class="gsa-dd">BPAs</option>
+<option value="ADV.BUI" class="gsa-dd">Building &amp; Industrial</option>
+<option value="ADV.ELE" class="gsa-dd">Electronics &amp; Technology</option>
+<option value="ADV.FAC" class="gsa-dd">Facilities &amp; Supplies</option>
+<option value="ADV.FUR" class="gsa-dd">Furniture &amp; Furnishings</option>
+<option value="ADV.JANSAN" class="gsa-dd">Janitorial and Sanitation Supplies</option>
+<option value="ADV.LAW" class="gsa-dd">Law Enforcement, Fire &amp; Security</option>
+<option value="ADV.MRO" class="gsa-dd">Maintenance, Repair and Operations</option>
+<option value="ADV.OEQ" class="gsa-dd">Office Equipment</option>
+<option value="ADV.OFF" class="gsa-dd">Office Supplies</option>
+<option value="ADV.FSSI" class="gsa-dd">Office Supplies &amp; Equipment FSSI</option>
+<option value="ADV.SCI" class="gsa-dd">Scientific &amp; Medical</option>
+<option value="ADV.TOO" class="gsa-dd">Tools, Paint &amp; Recreational</option>
+<option value="ADV.VEH" class="gsa-dd">Vehicles &amp; Equipment</option>
+
+
+
+
+							<OPTGROUP LABEL="Special Categories">
+     							<option value="ADV.ENV" class="gsa-dd">Environmental Products</option>
+<option value="ADV.SELECT" class="gsa-dd">GSA AdvantageSelect</option>
+<option value="ADV.DR" class="gsa-dd">Disaster Relief Products</option>
+<option value="ADV.JWOD" class="gsa-dd">Ability One  Products</option>
+
+							</OPTGROUP></select>
+
+            </span>
+
+                                                        <div class="nav-searchfield-outer nav-sprite">
+                                                            <div class="nav-searchfield-inner nav-sprite">
+                                                                <div style="padding-left:after[#displatag];" class="nav-searchfield-width">
+                                                                    <div id="nav-iss-attach">
+                                                                        <p> input name="field-keywords" type="text" class="search-query-fluid" id="twotabsearchtextbox" style="padding-right: 1px; border:none !important;" title="Search For" autocomplete="off" value="" </p>
+                                                                        <label class="hidden" for="field-keywords">Enter search keyword</label>
+                                                                        <input type="text" name="text" value="" style="padding-right: 1px; border:none !important;" class="search-query-fluid" id="twotabsearchtextbox">
+
+                                                                    </div>
+                                                                </div>
+                                                                <--[if IE ]>
+                                                                <div class='nav-ie-min-width' style='width: 360px'></div><![endif]-->
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="nav-submit-button nav-sprite">
+                                                            <input value="Go" class="nav-submit-input" title="Go" type="submit">
+                                                        </div>
+                                                    </div>
+                                                    <-- </form> -->
+                                                </form>
+                                            </div>
+
+                                        <li>
+
+
+                                            <form name="advAdvancedSearchProductsForm" method="post" action="/advantage/s/advncdSearchPrdsEnter.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5"><input type="hidden"
+                                                                                                                                                                                                          name="org.apache.struts.taglib.html.TOKEN"
+                                                                                                                                                                                                          value="0a714f3b0fbe2b256399d108fa6194eb">
+                                                <--<input type="image" name="" src="/images/adv12/images/gui/advanced_search_tab.jpg" border="0" alt="Advanced Search"> -->
+                                                <input type="image" name="" src="/images/adv13/images/gui/buttons/functions/asearch-but.png" border="0" class="advanced" alt="Advanced Search">
+                                            </form>
+                                        </li>
+                                    </ul>
+
+                                    <ul class="nav pull-right adj-margin-right">
+                                        <li class="cart"><a href="/advantage/cart/shopping_cart.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Shopping Cart">
+                                            <div class="newOrange  adj-margin-bottom-5 adj-center adj-margin-left-5">0</div>
+                                        </a></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var optSlct = $('#nav-search-in').find("option:selected").text();
+                //var optSlct ='Products';
+                rsizeText();
+                if (optSlct != 'Products') {
+                    $('#displaylabel').html(optSlct);
+                    rsizeText();
+                }
+            });
+            var facade = $("#nav-search-in");
+            var searchBox = $(".nav-searchfield-width");
+            var srchBoxParent = (function (elem) {
+                if (elem.hasClass("nav-searchfield-width-fluid")) {
+                    return elem;
+                } else {
+                    if (elem.parent().size() > 0) {
+                        return arguments.callee(elem.parent());
+                    } else {
+                        return searchBox.parent();
+                    }
+                }
+            }(searchBox));
+            var rsizeText = function () {
+                srchBoxParent.css({"padding-left": facade.width()});
+                searchBox.css("padding-left", parseInt(searchBox.css("padding-left"), 0) ? 0 : 1);
+            }
+            $('#searchDropdownBox').change(function () {
+                var slctOpt = this.options[this.selectedIndex];
+                $('#displaylabel').html(slctOpt.text);
+                rsizeText();
+                searchBox.focus();
+
+            });
+
+            $("#twotabsearchtextbox").autocomplete({
+                source: function (request, response) {
+                    request.term = request.term.replace(/^\s+/g, "");
+                    if (request.term.length >= 3) {
+                        $.ajax({
+                            url: "/advantage/autocomplete",
+                            type: "POST",
+                            data: {term: request.term},
+                            dataType: "json",
+
+                            success: function (data) {
+                                response(data);
+                            }
+                        });
+                    }
+                },
+                messages: {
+                    noResults: 'No autocomplete suggestions are available for the typed query',
+                    results: function (amount) {
+                        return amount + ( amount > 1 ? " autocomplete suggestions are" : " autocomplete suggestion is" ) +
+                            " available, use up and down arrow keys to navigate.";
+                    }
+                }
+            });
+        </script>
+
+
+        <--end of Product_search_bar-->
+        <-- InstanceBeginEditable name="breadcrumb" -->
+
+
+        <-- InstanceBeginEditable name="breadcrumb" -->
+
+        <div class="row-fluid">
+            <div id="breadcrumb">
+                <a href="/advantage/main/home.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Home">Home</a> &gt; <strong>Product Detail</strong>
+            </div>
+        </div>
+
+        <-- End breadcrumb -->
+
+
+        <-- InstanceEndEditable -->
+        <-- Body  begins here -->
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <-- head add info not existing in classicLayout-->
+        <head>
+            <link href="/images/adv12/css/detail_tabs.css" rel="stylesheet" type="text/css" media="screen"/>
+            <link href="/images/adv13/css/tabs.css" rel="stylesheet" type="text/css" media="screen"/>
+            <script src="/images/adv12/js/show_more.js" type="text/javascript"></script>
+            <script src="/images/adv12/js/tabs.js" type="text/javascript"></script>
+            <script src="/images/adv12/js/SpryMenuBar.js" type="text/javascript"></script>
+            <link href="/images/adv12/css/show_more.css" rel="stylesheet" type="text/css" media="screen"/>
+            <script type="text/javascript" src="/images/adv12/js/jquery-latest.js"></script>
+            <script type="text/javascript" src="/images/adv12/js/jquery.shorten.1.0.js"></script>
+            <script>
+
+                //DHTML Window script- Copyright Dynamic Drive (http://www.dynamicdrive.com)
+                //For full source code, documentation, and terms of usage,
+                //Visit http://www.dynamicdrive.com/dynamicindex9/dhtmlwindow.htm
+
+                var dragapproved = false
+                var minrestore = 0
+                var initialwidth, initialheight
+                var ie5 = document.all && document.getElementById
+                var ns6 = document.getElementById && !document.all
+
+                function iecompattest() {
+                    return (!window.opera && document.compatMode && document.compatMode != "BackCompat") ? document.documentElement : document.body
+                }
+
+                function drag_drop(e) {
+                    if (ie5 && dragapproved && event.button == 1) {
+                        document.getElementById("dwindow").style.left = tempx + event.clientX - offsetx + "px"
+                        document.getElementById("dwindow").style.top = tempy + event.clientY - offsety + "px"
+                    }
+                    else if (ns6 && dragapproved) {
+                        document.getElementById("dwindow").style.left = tempx + e.clientX - offsetx + "px"
+                        document.getElementById("dwindow").style.top = tempy + e.clientY - offsety + "px"
+                    }
+                }
+
+                function initializedrag(e) {
+                    offsetx = ie5 ? event.clientX : e.clientX
+                    offsety = ie5 ? event.clientY : e.clientY
+                    document.getElementById("dwindowcontent").style.display = "none" //extra
+                    tempx = parseInt(document.getElementById("dwindow").style.left)
+                    tempy = parseInt(document.getElementById("dwindow").style.top)
+
+                    dragapproved = true
+                    document.getElementById("dwindow").onmousemove = drag_drop
+                }
+
+                function loadwindow(url, width, height) {
+                    if (!ie5 && !ns6)
+                        window.open(url, "", "width=width,height=height,scrollbars=0")
+                    else {
+                        document.getElementById("dwindow").style.display = ''
+                        document.getElementById("dwindow").style.width = initialwidth = width + "px"
+                        document.getElementById("dwindow").style.height = initialheight = height + "px"
+                        document.getElementById("dwindow").style.left = "30px"
+                        document.getElementById("dwindow").style.top = ns6 ? window.pageYOffset * 1 + 30 + "px" : iecompattest().scrollTop * 1 + 30 + "px"
+                        document.getElementById("cframe").src = url
+                    }
+                }
+
+                function maximize() {
+                    if (minrestore == 0) {
+                        minrestore = 1 //maximize window
+                        document.getElementById("maxname").setAttribute("src", "restore.gif")
+                        document.getElementById("dwindow").style.width = ns6 ? window.innerWidth - 20 + "px" : iecompattest().clientWidth + "px"
+                        document.getElementById("dwindow").style.height = ns6 ? window.innerHeight - 20 + "px" : iecompattest().clientHeight + "px"
+                    }
+                    else {
+                        minrestore = 0 //restore window
+                        document.getElementById("maxname").setAttribute("src", "max.gif")
+                        document.getElementById("dwindow").style.width = initialwidth
+                        document.getElementById("dwindow").style.height = initialheight
+                    }
+                    document.getElementById("dwindow").style.left = ns6 ? window.pageXOffset + "px" : iecompattest().scrollLeft + "px"
+                    document.getElementById("dwindow").style.top = ns6 ? window.pageYOffset + "px" : iecompattest().scrollTop + "px"
+                }
+
+                function closeit() {
+                    document.getElementById("dwindow").style.display = "none"
+                }
+
+                function stopdrag() {
+                    dragapproved = false;
+                    document.getElementById("dwindow").onmousemove = null;
+                    document.getElementById("dwindowcontent").style.display = "" //extra
+                }
+
+
+                /* closes lookup window */
+                var my_window;
+                function closeNewimageWindow() {
+                    if (my_window != null) {
+                        my_window.close();
+                    }
+                }
+
+                function openLargeImagesWindow(photoViewer) {
+                    closeNewimageWindow();
+                    my_window = window.open(photoViewer, "my_window", "width=1000,height=600,status=1,scrollbars=yes,resizable=yes");
+                }
+
+            </script>
+            <-- InstanceEndEditable -->
+        </head>
+        <-- end head -->
+
+        <-- <body onload="MM_preloadImages('/images/adv12/images/buttons/go_button_over.jpg','/images/adv12/images/buttons/but_my_cart_over.jpg','/images/adv12/images/buttons/go_button_over.jpg','/images/adv12/images/gui/buttons/gsa_logo_over.jpg','/images/adv12/images/gui/buttons/functions/but_add_to_cart_over.gif')"> -->
+        <body>
+
+        <--main-->
+        <div id="main">
+            <a name="content" id="content"></a><-- InstanceBeginEditable name="content" -->
+            <-- most outline table start of main -->
+
+            <table width=100% cellspacing=0 cellpadding=0 border=0>
+                <tr valign="top">
+                    <th></th>
+                </tr>
+            </table>
+
+
+            <-- start 1st outline table -->
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="center" valign="top">
+                        <div style="margin-top: 10px"></div>
+                        <-- start 2nd outline table -->
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <-- 2nd outline table & three outline tr -->
+                            <-- 1st row in 2nd table -->
+                            <tr>
+                                <td width="5">&nbsp;</td>
+                                <td colspan="2">
+                                    <-- 3nd table -->
+                                    <-- basic information is from ProdVO in adv service and MasterProduct in masterproduct service-->
+
+                                    <-- unitVO for selected product -->
+
+
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="3" align="center">
+                                        <tr>
+                                            <td width="210" align="left" valign="top">
+                                                <-- a default image, display an image from external mp if available esle display a image from vendor else blank.gif -->
+                                                <-- images starts-->
+
+
+                                                <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                    <tr>
+                                                        <td>
+                                                            <table border="0" bordercolor="#cccccc" cellspacing="0" cellpadding="2" align="center">
+                                                                <tr>
+                                                                    <td align="center" valign="top" width="200" height="200"><img src="/images/products/GS-21F-0033V/SCS_PHOTO_12791763.JPG" alt="Product Image"
+                                                                                                                                  name="main_img" border="0" class="greybox" id="main_img"/></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="center">
+                                                            <a href="javascript:openLargeImagesWindow('/advantage/catalog/photo_viewer.do')" class="blue8pt">Enlarge/More Views >></a>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+
+                                                <-- images end -->
+                                                <br>
+                                                <table width="100%" border="0" cellpadding="3" cellspacing="0" class="pricehighlight" valign="top">
+                                                    <-- unit price,unit and QtyPerPack -->
+
+
+                                                    <tr>
+                                                        <td align="center" valign="top">
+                                                            <-- start productSaleVO present -->
+                                                            <-- if saleExists, display regular price first, then display sales price -->
+
+                                                            <-- END productSaleVO present-->
+
+                                                            <-- start productSaleVO not present -->
+
+                                                            <span class="black10pt">
+                                                                                   <strong>$39.87</strong>
+                                                                             </span>
+
+
+                                                            <span class="blue10pt"><a href='/advantage/information/page.do?keyName=UNIT_DEFINITIONS&uom=#EA'>EA</a></span>
+
+                                                            <span class="black10pt"></span>
+
+
+                                                            <-- end productSaleVO not present -->
+
+
+                                                        </td>
+                                                    </tr>
+
+
+                                                    <-- unit price, unit details and QtyPerPack ends -->
+
+
+                                                    <tr valign="top">
+                                                        <td align="center" class="redprice">sold and shipped by<br>
+
+                                                            <a href="/advantage/contractor/contractor_detail.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?mapName=/catalog/product_detail&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314"
+                                                               class="blue8pt" title="Link to contractor info">PELICAN SALES INC.<br/></a>
+
+                                                        </td>
+                                                    </tr>
+
+
+                                                    <-- WebAddress Detail -->
+
+                                                    <tr valign="top">
+                                                        <td align="center" class="blue9pt">
+                                                            <font size="2"><a href="http://www.pelican-sales.com" title="Link to contractor's website" target="_blank">visit contractor's website</a>&nbsp;<img width="19"
+                                                                                                                                                                                                                height="13"
+                                                                                                                                                                                                                src="/images/adv12/images/icons/vendlink.gif"
+                                                                                                                                                                                                                border="0"
+                                                                                                                                                                                                                alt="Contractor Site"/></font><br>
+                                                        </td>
+                                                    </tr>
+
+                                                    <-- WebAddress Detail -->
+                                                </table>
+                                                <br/>
+
+                                                <-- options/accessories start -->
+
+                                                <-- options/accessories end -->
+                                            </td>
+                                            <td width="2" align="center" valign="top" class="greyVertRuleCenter">&nbsp;</td>
+                                            <td valign="top">
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="black8pt">
+                                                    <tr>
+                                                        <td align="left" valign="top">&nbsp;</td>
+
+                                                        <td align="left" valign="top">
+                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="black8pt">
+                                                                <tr>
+                                                                    <td align="left" valign="top">
+                                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                            <-- Display product name if present -->
+                                                                            <tr>
+                                                                                <td>
+
+
+                                                                                    <FONT size=2><strong>15050 SCKT 3/8 FMALE SQDRV 7/16 FM</strong></FONT>
+
+
+                                                                                    <-- Display product name if present ends here -->
+                                                                                    <-- Display Govt Name -->
+                                                                                </td>
+                                                                                <td align="right">&nbsp;</td>
+                                                                                <-- Display Govt Name ends -->
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+
+                                                                    <-- 3rd in 3rd table, prod basic infor and tabs -->
+                                                                    <-- end basic and tab table -->
+                                                                </tr>
+                                                            </table>
+
+                                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                                <tr>
+                                                                    <td width="621" valign="top" class="greyHorzRule">&nbsp;</td>
+                                                                    <td width="10" valign="top" class="greyHorzRule">&nbsp;</td>
+                                                                    <td width="310" align="left" valign="top" class="greyHorzRule">&nbsp;</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td width="100%" align="left" valign="top">
+                                                                        <table width="100%" border="0" cellpadding="1" cellspacing="0" class="black8pt">
+                                                                            <-- display mfr# from external mp if available else display mfr# from vendor -->
+
+
+                                                                            <tr>
+                                                                                <td width="22%" align="left" nowrap="nowrap" class="black8pt"><strong>Mfr Part No.: </strong></td>
+                                                                                <td width="78%" align="left" class="black8pt">071-ZN-314</td>
+
+                                                                            </tr>
+
+
+                                                                            <-- Check nsn exists -->
+
+                                                                            <-- Check nsn exists -->
+
+                                                                            <-- Display Vendor Part Number if present,if gsa, this field nonexist -->
+
+
+                                                                            <-- show upc, the same rule as mfr# -->
+
+
+                                                                            <-- display manufacture name if available fm external mp, otherwise from vendor  -->
+                                                                            <-- show n/a if item is not a vendor item -->
+
+
+                                                                            <tr>
+                                                                                <td align="left" nowrap="nowrap" class="black8pt"><strong>Manufacturer:</strong></td>
+                                                                                <td align="left" class="black8pt">APEX UTICA</td>
+                                                                            </tr>
+
+
+                                                                            <-- stock inventory status only displayed for stock items -->
+
+
+                                                                            <-- check NFES#/only for stock item -->
+
+
+                                                                            <-- Display Contract Part Number if present, contractor is null if gsa -->
+
+
+                                                                            <tr>
+                                                                                <td align="left" nowrap="nowrap" class="black8pt"><strong>Contract No.:</strong></td>
+                                                                                <td align="left" class="black8pt">
+
+                                                                                    GS-21F-0033V
+
+
+                                                                                    <-- ContractorVO Contract End Date present -->
+
+                                                                                    (ends: Feb 1, 2019)
+
+
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <-- Add exist field in ProductDetailVO -->
+
+
+                                                                            <tr>
+                                                                                <td align="left" nowrap="nowrap" class="black8pt"><strong>MAS Schedule/SIN:</strong></td>
+                                                                                <td align="left" class="black8pt">
+                                                                                    51V/105 002
+
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <-- Bpa Detail -->
+
+
+                                                                            <-- Bpa Detail end-->
+
+                                                                            <-- Warranty Detail -->
+
+                                                                            <tr>
+                                                                                <td align="left" nowrap="nowrap" class="black8pt"><strong>Warranty:</strong></td>
+                                                                                <td align="left" class="black8pt">STANDARD MANUFACTURER WARRANTY</td>
+                                                                            </tr>
+
+                                                                            <-- Warranty Detail ends -->
+
+                                                                            <-- Country of origin Detail -->
+
+
+                                                                            <tr>
+                                                                                <td align="left" nowrap="nowrap" class="black8pt"><strong>Made In:</strong></td>
+                                                                                <td align="left" class="black8pt">UNITED STATES OF AMERICA</td>
+                                                                            </tr>
+
+                                                                            <-- Country of origin Detail ends -->
+
+                                                                            <-- Weight Detail -->
+
+                                                                            <-- Weight Detail ends -->
+
+
+                                                                            <-- Shipping Option Detail -->
+
+
+                                                                            <-- Shipping Option Detail ends -->
+                                                                        </table>
+                                                                        <br>
+
+
+                                                                        <-- Volume Discount Exists -->
+
+
+                                                                        <-- Volume Discount Exists Ends -->
+
+                                                                        <-- If volumen discount does not exists, then order discount is displayed just above the env icons (or left side) -->
+
+                                                                        <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                                                            <tr>
+
+                                                                            </tr>
+                                                                        </table>
+
+                                                                        <br/>
+                                                                        <-- EnvMessages if present -->
+                                                                        <table border="0" cellpadding="3" cellspacing="0" valign="top">
+
+
+                                                                            <tr>
+                                                                                <td vAlign="top" colSpan="3">
+                                                                                    <a href='/advantage/information/page.do?keyName=SYMBOLS'><img src="/images//adv12/images/new_icons/disast_purch.png"
+                                                                                                                                                  alt="Disaster Purchasing items" width="29" height="18" border="0"></a>
+                                                                                    Disaster Purchasing items
+
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                            <--SCR 73995 Changes-->
+                                                                            <!---->
+
+                                                                            <tr>
+                                                                                <td vAlign="top" colSpan="3">
+
+                                                                                </td>
+                                                                            </tr>
+
+
+                                                                        </table>
+                                                                        <-- End of EnvMessage block -->
+
+                                                                        <div id="TabbedPanels1" class="TabbedPanels">
+                                                                            <-- inside all xslt -->
+                                                                            <ul class="TabbedPanelsTabGroup">
+                                                                                <-- specs & pubs from external catalog -->
+                                                                                <li class="TabbedPanelsTab" tabindex="1">Desc</li>
+
+
+                                                                            </ul>
+                                                                            <div class="TabbedPanelsContentGroup">
+                                                                                <div class="TabbedPanelsContent">
+                                                                                    <-- Tab one content start -->
+                                                                                    <table width="100%" border="0" cellspacing="0" style="table-layout:fixed;" cellpadding="2">
+                                                                                        <-- verdor prod desc -->
+
+                                                                                        <tr>
+                                                                                            <td align="left" valign="top">
+
+
+                                                                                                <div style="word-wrap: break-word">
+                                                                                                    15050 SCKT 3/8 FMALE SQDRV 7/16 FM - Order Increment: 1EA - Pelican Sales, Inc. P: 888-554-9569 | E:
+                                                                                                    Sales@pelican-sales.com.
+                                                                                                </div>
+                                                                                                </br>
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                        <-- addtional desc from external catalog -->
+
+
+                                                                                    </table>
+                                                                                    <div style="margin-top: 10px"></div>
+                                                                                </div>
+
+                                                                                <-- Advantage Select tab -->
+
+                                                                                <-- end of advantage Select tab -->
+
+                                                                            </div>
+                                                                            <-- end TabbedPanels1 -->
+                                                                        </div>
+                                                                    </td>
+
+                                                                    <td valign="top" width="">&nbsp;</td>
+
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+
+                                    <--  end 3rd table -->
+                                </td>
+                                <td width="10">&nbsp;</td>
+                            </tr>
+
+                            <--  end 1st row in 2nd table -->
+                            <--  2nd tr start -->
+                            <form name="addToCartForm" method="post" action="/advantage/cart/addCart.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5"><input type="hidden" name="org.apache.struts.taglib.html.TOKEN"
+                                                                                                                                                               value="0a714f3b0fbe2b256399d108fa6194eb">
+
+                                <input type="hidden" name="fromPage" value="ProductDetail"/>
+                                <input type="hidden" name="baseOid" value="0">
+                                <tr>
+                                    <td>&nbsp;</td>
+                                    <td colspan="2">
+                                        <div id="sectionheader">
+                                            <table width="100%">
+                                                <tr>
+                                                    <td height="25" colspan="5" align="left" valign="top"><span class="burg11pt"><strong>Compare Available Sources</strong></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td width="6%" align="center" valign="middle" nowrap="nowrap" class="redprice">
+                                                        <strong>Quantity:</strong>
+                                                        <input type="text" name="quantity" maxlength="8" size="3" value="">
+                                                    </td>
+                                                    <td width="7%" align="center" valign="middle" class="redprice">
+                                                        <input type="image" src="/images/adv12/images/gui/buttons/functions/but_add_to_cart.gif" alt="Add to Cart" name="addtocart" width="83" height="23" border="0"
+                                                               align="absmiddle" id="addtocart">
+                                                        <div class="clearfix">&nbsp;</div>
+                                                    </td>
+                                                    <td width="0%" align="left" valign="bottom">&nbsp;</td>
+                                                    <td width="87%" colspan="2" align="left" valign="bottom"><strong>Instructions:</strong> Select price below, enter qty at left, then Add to Cart. To view another
+                                                        contractor description, simply select the Contractor in the list below.
+                                                        <br><span class="black8pt"><img src="/images/adv12/images/new_icons/discount.gif" alt="Volume Discount Available" width="12" height="12" border="0"/>&nbsp;</span>Indicates
+                                                        when volume discounts are offered.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+
+                                        <table width="100%">
+                                            <tr>
+                                                <td align="left">
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
+                                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="greybox">
+                                            <tr>
+                                                <--price/unit head -->
+                                                <td align="center" bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <td align="center" bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <td colspan="3" align="center" nowrap="nowrap" bgcolor="#D2DBE4" class="tableheader">
+                                                    <strong>
+
+                                                        <a href="/advantage/catalog/product_detail.do?type=price&dir=asc&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314">Price/Unit <img
+                                                                src="/images/adv12/images/gui/buttons/sort_arrows.gif" alt="Sort" width="11" height="32" border="0" align="absmiddle"/></a>
+
+                                                    </strong>
+                                                </td>
+
+
+                                                <-- contractor head -->
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" bgcolor="#D2DBE4" class="tableheader">
+
+                                                    <a href="/advantage/catalog/product_detail.do?type=contractor&dir=asc&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314">Contractor <img
+                                                            src="/images/adv12/images/gui/buttons/sort_arrows.gif" alt="Sort" width="11" height="32" border="0" align="absmiddle"/></a>
+
+                                                </th>
+
+                                                <-- businessindicator head -->
+
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" bgcolor="#D2DBE4" class="tableheader">Socio</th>
+
+
+                                                <-- green indicator head -->
+
+
+                                                <-- photo head  -->
+
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" bgcolor="#D2DBE4" class="tableheader">Photo</th>
+
+
+                                                <-- Delivery head -->
+
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" bgcolor="#D2DBE4" class="tableheader">
+
+                                                    <a href="/advantage/catalog/product_detail.do?type=delivery&dir=asc&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314">Deliv Days <img
+                                                            src="/images/adv12/images/gui/buttons/sort_arrows.gif" alt="Sort" width="11" height="32" border="0" align="absmiddle"/></a>
+
+                                                </th>
+
+
+                                                <-- min head -->
+
+
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" nowrap="nowrap" bgcolor="#D2DBE4" class="tableheader">
+
+                                                    <a href="/advantage/catalog/product_detail.do?type=min&dir=asc&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314">Min <img
+                                                            src="/images/adv12/images/gui/buttons/sort_arrows.gif" alt="Sort" width="11" height="32" border="0" align="absmiddle"/></a>
+
+                                                </th>
+
+
+                                                <-- FOB/shipping head -->
+
+                                                <td bgcolor="#D2DBE4" class="tableheader">&nbsp;</td>
+                                                <th align="center" bgcolor="#D2DBE4" class="tableheader">
+
+                                                    <a href="/advantage/catalog/product_detail.do?type=FOB&dir=asc&oid=1146286664&contractNumber=GS-21F-0033V&itemNumber=071-ZN-314">FOB/Shipping<img
+                                                            src="/images/adv12/images/gui/buttons/sort_arrows.gif" alt="Sort" width="11" height="32" border="0" align="absmiddle"/></a>
+
+                                                </th>
+
+
+                                                <-- 508 Information Detail -->
+
+                                                <-- 508 Information Detail ends -->
+
+                                            </tr>
+
+
+                                            <-- Check if products list exists -->
+
+
+                                            <-- products Iteration -->
+
+
+                                            <tr>
+
+
+                                                <-- Radio button display -->
+
+
+                                                <td bgcolor="#DEF79B">
+
+                                                    <-- productContractorVO Object present -->
+
+                                                    <-- Product Not Selected -->
+
+                                                    <--  Product Selected -->
+
+                                                    <input type="radio" name="cartKey" checked="checked" value="GS-21F-0033V&amp;071-ZN-314&amp;APEX+UTICA"/>
+
+
+                                                    <-- productContractorVO Object present Ends -->
+                                                </td>
+                                                <-- Radio button display Ends -->
+
+                                                <-- Unit Price & Unit Detail-->
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- unit price -->
+                                                <td align="right" valign="middle" nowrap="nowrap" bgcolor="#DEF79B">
+                                                    <-- Pricing program Object present -->
+
+                                                    <-- Sale Exists -->
+
+
+                                                    <strong>$39.87</strong>
+
+
+                                                    <-- Sale Exists ends-->
+                                                    <-- sale not exists -->
+
+                                                    <-- sale not exists ends -->
+
+                                                    <-- Pricing program Object present ends -->
+                                                </td>
+                                                <-- unit price end -->
+                                                <td width="2" align="left" valign="middle" bgcolor="#DEF79B">&nbsp;</td>
+                                                <--  unit detail -->
+                                                <td align="left" valign="middle" nowrap="nowrap" bgcolor="#DEF79B">
+
+                                                    <-- Unit property present -->
+
+                                                    <a href='/advantage/information/page.do?keyName=UNIT_DEFINITIONS&uom=#EA'>EA</a>
+
+                                                    <-- Unit property present ends -->
+
+                                                    <-- QtyPerPack property present -->
+
+                                                    <-- QtyPerPack property present ends -->
+                                                </td>
+                                                <-- unit detail end -->
+                                                <-- Unit Price & Unit Detail Ends -->
+
+                                                <-- bpa/sale/volume discount/zone price/min -->
+                                                <-- any of three exists,grey vertical line -->
+
+                                                <-- bpa/sale/volume discount/zone price/min end -->
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- Contractor display -->
+
+
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+
+
+                                                    <-- Product Not Selected -->
+
+                                                    <--  Product Not Selected ends -->
+
+                                                    <--  Product Selected -->
+
+                                                    <font size="2"><b><a href='/advantage/catalog/product_detail.do?contractNumber=GS-21F-0033V&amp;itemNumber=071-ZN-314&amp;mfrName=APEX+UTICA'>PELICAN SALES INC.</a></b></font>
+
+                                                    <-- Product Selected Ends -->
+
+                                                </td>
+                                                <-- Contractor display Ends -->
+
+                                                <-- Business indicator symbols display -->
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+                                                    <-- ContractorVO Object present -->
+
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>s</a></font>
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>d</a></font>
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>w</a></font>
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>wo</a></font>
+
+
+                                                    <-- ContractorVO Object present ends -->
+
+                                                    <-- ContractorVO Object not present -->
+
+                                                    <--contractorVO Object not present ends -->
+                                                </td>
+
+                                                <-- Business indicator symbols display ends -->
+
+                                                <-- Green,only display one tree even more trees exist-->
+
+                                                <-- default image from vendor -->
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+                                                    <a href="/advantage/catalog/photo_viewer.do?path=/images/products/GS-21F-0033V/i/SCS_PHOTO_12791763_40x40.JPG&type=source" target="_blank"><img
+                                                            src="/images/products/GS-21F-0033V/i/SCS_PHOTO_12791763_40x40.JPG" alt="Product Image" width="40" height="40" border="0" class="greybox"/></a>
+                                                </td>
+
+
+                                                <-- Delivery Detail -->
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+
+                                                    <font size="2">30 days delivered ARO</font>
+
+                                                    <font size="2"></font>
+
+
+                                                </td>
+
+
+                                                <-- Delivery Detail Ends -->
+
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+
+
+                                                    <font size=2>$100.00</font>
+
+
+                                                    <font size="2">&nbsp;</font>
+                                                </td>
+
+
+                                                <td valign="middle" bgcolor="#DEF79B" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#DEF79B">
+                                                    <-- FOB Object present -->
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=FOB_DEFINITION'>D-CONUS/O-AK,PR,HI</a></font>
+
+                                                    <-- FOB Object present Ends -->
+
+                                                </td>
+
+
+                                                <-- 508 Information Detail -->
+
+                                                <-- 508 Information Detail ends -->
+                                            </tr>
+
+
+                                            <tr>
+                                                <td align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td align="right" valign="middle" nowrap="nowrap" class="greyHorzRule"></td>
+                                                <td align="left" valign="middle" class="greyHorzRule"></td>
+                                                <td align="left" valign="middle" nowrap="nowrap" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="left" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                            </tr>
+
+
+                                            <tr>
+
+
+                                                <-- Radio button display -->
+
+
+                                                <td bgcolor="#FFFFFF">
+
+                                                    <-- productContractorVO Object present -->
+
+                                                    <-- Product Not Selected -->
+
+                                                    <input type="radio" name="cartKey" value="GS-21F-0020U&amp;071-ZN-314&amp;APEX+UTICA"/>
+
+                                                    <--  Product Selected -->
+
+
+                                                    <-- productContractorVO Object present Ends -->
+                                                </td>
+                                                <-- Radio button display Ends -->
+
+                                                <-- Unit Price & Unit Detail-->
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- unit price -->
+                                                <td align="right" valign="middle" nowrap="nowrap" bgcolor="#FFFFFF">
+                                                    <-- Pricing program Object present -->
+
+                                                    <-- Sale Exists -->
+
+
+                                                    <strong>$41.88</strong>
+
+
+                                                    <-- Sale Exists ends-->
+                                                    <-- sale not exists -->
+
+                                                    <-- sale not exists ends -->
+
+                                                    <-- Pricing program Object present ends -->
+                                                </td>
+                                                <-- unit price end -->
+                                                <td width="2" align="left" valign="middle" bgcolor="#FFFFFF">&nbsp;</td>
+                                                <--  unit detail -->
+                                                <td align="left" valign="middle" nowrap="nowrap" bgcolor="#FFFFFF">
+
+                                                    <-- Unit property present -->
+
+                                                    <a href='/advantage/information/page.do?keyName=UNIT_DEFINITIONS&uom=#EA'>EA</a>
+
+                                                    <-- Unit property present ends -->
+
+                                                    <-- QtyPerPack property present -->
+
+                                                    <-- QtyPerPack property present ends -->
+                                                </td>
+                                                <-- unit detail end -->
+                                                <-- Unit Price & Unit Detail Ends -->
+
+                                                <-- bpa/sale/volume discount/zone price/min -->
+                                                <-- any of three exists,grey vertical line -->
+
+                                                <-- bpa/sale/volume discount/zone price/min end -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- Contractor display -->
+
+
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+
+                                                    <-- Product Not Selected -->
+
+                                                    <font size="2"><a href='/advantage/catalog/product_detail.do?contractNumber=GS-21F-0020U&amp;itemNumber=071-ZN-314&amp;mfrName=APEX+UTICA'>MJL ENTERPRISES,
+                                                        LLC</a></font>
+
+                                                    <--  Product Not Selected ends -->
+
+                                                    <--  Product Selected -->
+
+                                                    <-- Product Selected Ends -->
+
+                                                </td>
+                                                <-- Contractor display Ends -->
+
+                                                <-- Business indicator symbols display -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+                                                    <-- ContractorVO Object present -->
+
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>s</a></font>
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>dv</a></font>
+
+
+                                                    <-- ContractorVO Object present ends -->
+
+                                                    <-- ContractorVO Object not present -->
+
+                                                    <--contractorVO Object not present ends -->
+                                                </td>
+
+                                                <-- Business indicator symbols display ends -->
+
+                                                <-- Green,only display one tree even more trees exist-->
+
+                                                <-- default image from vendor -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+                                                    <a href="/advantage/catalog/photo_viewer.do?path=/images/products/GS-21F-0020U/i/071ZN312EPS_40x40.JPG&type=source" target="_blank"><img
+                                                            src="/images/products/GS-21F-0020U/i/071ZN312EPS_40x40.JPG" alt="Product Image" width="40" height="40" border="0" class="greybox"/></a>
+                                                </td>
+
+
+                                                <-- Delivery Detail -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+                                                    <font size="2">30 days delivered ARO</font>
+
+                                                    <font size="2"></font>
+
+
+                                                </td>
+
+
+                                                <-- Delivery Detail Ends -->
+
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+
+                                                    <font size=2>$130.00</font>
+
+
+                                                    <font size="2">&nbsp;</font>
+                                                </td>
+
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+                                                    <-- FOB Object present -->
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=FOB_DEFINITION'>D-CONUS/O-AK,PR,HI</a></font>
+
+                                                    <-- FOB Object present Ends -->
+
+                                                </td>
+
+
+                                                <-- 508 Information Detail -->
+
+                                                <-- 508 Information Detail ends -->
+                                            </tr>
+
+
+                                            <tr>
+                                                <td align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td align="right" valign="middle" nowrap="nowrap" class="greyHorzRule"></td>
+                                                <td align="left" valign="middle" class="greyHorzRule"></td>
+                                                <td align="left" valign="middle" nowrap="nowrap" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="left" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                                <td height="5" align="center" valign="middle" class="greyHorzRule"></td>
+                                            </tr>
+
+
+                                            <tr>
+
+
+                                                <-- Radio button display -->
+
+
+                                                <td bgcolor="#FFFFFF">
+
+                                                    <-- productContractorVO Object present -->
+
+                                                    <-- Product Not Selected -->
+
+                                                    <input type="radio" name="cartKey" value="GS-21F-0096V&amp;071-ZN-314&amp;APEX+UTICA"/>
+
+                                                    <--  Product Selected -->
+
+
+                                                    <-- productContractorVO Object present Ends -->
+                                                </td>
+                                                <-- Radio button display Ends -->
+
+                                                <-- Unit Price & Unit Detail-->
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- unit price -->
+                                                <td align="right" valign="middle" nowrap="nowrap" bgcolor="#FFFFFF">
+                                                    <-- Pricing program Object present -->
+
+                                                    <-- Sale Exists -->
+
+
+                                                    <strong>$46.21</strong>
+
+
+                                                    <-- Sale Exists ends-->
+                                                    <-- sale not exists -->
+
+                                                    <-- sale not exists ends -->
+
+                                                    <-- Pricing program Object present ends -->
+                                                </td>
+                                                <-- unit price end -->
+                                                <td width="2" align="left" valign="middle" bgcolor="#FFFFFF">&nbsp;</td>
+                                                <--  unit detail -->
+                                                <td align="left" valign="middle" nowrap="nowrap" bgcolor="#FFFFFF">
+
+                                                    <-- Unit property present -->
+
+                                                    <a href='/advantage/information/page.do?keyName=UNIT_DEFINITIONS&uom=#EA'>EA</a>
+
+                                                    <-- Unit property present ends -->
+
+                                                    <-- QtyPerPack property present -->
+
+                                                    <-- QtyPerPack property present ends -->
+                                                </td>
+                                                <-- unit detail end -->
+                                                <-- Unit Price & Unit Detail Ends -->
+
+                                                <-- bpa/sale/volume discount/zone price/min -->
+                                                <-- any of three exists,grey vertical line -->
+
+                                                <-- bpa/sale/volume discount/zone price/min end -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <-- Contractor display -->
+
+
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+
+                                                    <-- Product Not Selected -->
+
+                                                    <font size="2"><a href='/advantage/catalog/product_detail.do?contractNumber=GS-21F-0096V&amp;itemNumber=071-ZN-314&amp;mfrName=APEX+UTICA'>CECO SALES</a></font>
+
+                                                    <--  Product Not Selected ends -->
+
+                                                    <--  Product Selected -->
+
+                                                    <-- Product Selected Ends -->
+
+                                                </td>
+                                                <-- Contractor display Ends -->
+
+                                                <-- Business indicator symbols display -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+                                                    <-- ContractorVO Object present -->
+
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>s</a></font>
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=BUSINESS_IND'>h</a></font>
+
+
+                                                    <-- ContractorVO Object present ends -->
+
+                                                    <-- ContractorVO Object not present -->
+
+                                                    <--contractorVO Object not present ends -->
+                                                </td>
+
+                                                <-- Business indicator symbols display ends -->
+
+                                                <-- Green,only display one tree even more trees exist-->
+
+                                                <-- default image from vendor -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+
+
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">&nbsp;</td>
+
+
+                                                <-- Delivery Detail -->
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+                                                    <font size="2">10 days delivered ARO</font>
+
+                                                    <font size="2"></font>
+
+
+                                                </td>
+
+
+                                                <-- Delivery Detail Ends -->
+
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+
+
+                                                    <font size=2>$1.00</font>
+
+
+                                                    <font size="2">&nbsp;</font>
+                                                </td>
+
+
+                                                <td valign="middle" bgcolor="#FFFFFF" class="greyVertRuleCenter">&nbsp;</td>
+                                                <td align="center" valign="middle" bgcolor="#FFFFFF">
+                                                    <-- FOB Object present -->
+
+                                                    <font size="2"><a href='/advantage/information/page.do?keyName=FOB_DEFINITION'>D-CONUS,AK,PR,HI</a></font>
+
+                                                    <-- FOB Object present Ends -->
+
+                                                </td>
+
+
+                                                <-- 508 Information Detail -->
+
+                                                <-- 508 Information Detail ends -->
+                                            </tr>
+
+
+                                            <-- products Iteration Ends -->
+
+                                            <-- Check if products list exists ends -->
+
+                                        </table>
+                                    </td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </form>
+
+                            <-- 2nd tr end -->
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="2">&nbsp;</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                        <--  end 2nd outline table -->
+                        <br>
+                        <br>
+                        <script type="text/javascript">
+                            <--
+                            var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+                            //-->
+                        </script>
+                        <div style="margin-top: 5px;"></div>
+                    </td>
+                </tr>
+            </table>
+            <-- end outline 1st table -->
+
+            <div id="dwindow" style="position:absolute;background-color:#ffffff;border:3px solid #666666;cursor:hand;display:none;z-index:3000" onMousedown="initializedrag(event)" onMouseup="stopdrag()"
+                 onSelectStart="return false">
+                <div align="right" style="background-color:black;width:100%"><img src="/images/adv12/images/gui/buttons/max.gif" id="maxname" onClick="maximize()"><img src="/images/adv12/images/gui/buttons/close.gif"
+                                                                                                                                                                        onClick="closeit()"></div>
+                <div id="dwindowcontent" style="height:100%">
+                    <iframe id="cframe" src="" width="100%" height="100%"></iframe>
+                </div>
+            </div>
+
+            <--Use below code to load DHTML window via link-->
+            <-- InstanceEndEditable -->
+
+        </div>
+        <-- main end -->
+        <--footer-->
+        <div id="footer">
+        </div>
+
+        <script type="text/javascript">
+            <--
+            var navbar = new Spry.Widget.MenuBar("navbar", {imgDown: "/images/adv12/images/gui/SpryMenuBarDownHover.gif", imgRight: "/images/adv12/images/gui/SpryMenuBarRightHover.gif"});
+            //-->
+        </script>
+        </body>
+        <-- InstanceEnd -->
+        </html>
+
+        <-- end of Body -->
+
+        <--footer-->
+
+
+        <--footer-->
+
+        <div id="footer">
+            <div><p> -------------------------- FOOTER id="footer" --------------------- </p></div>
+            <table width="960" border="0" align="center" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>&nbsp;</td>
+                    <td colspan="7" align="center"><img src="/images/adv13/images/refresh/gui/gsa-adv-logo-sm.png" alt="GSA Advantage!"></td>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+
+                    <td colspan="7" align="center"><a href="/advantage/main/home.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5">Home</a> | <a
+                            href="/advantage/profile/update_profile.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="My Account">My Account</a> | <a
+                            href="/advantage/orders/my_orders.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Order Status/History">Order History</a> | <a
+                            href="/advantage/main/login.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="Login">Login</a> | <a
+                            href="/advantage/information/page.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?keyName=NEW_CUST_ASSISTANCE" title="Help">Help</a> | <a href="https://www.asap.gsa.gov" target="_blank"
+                                                                                                                                                                        title="Reports">Reports</a> | <a
+                            href="/advantage/main/elib.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="eLibrary - GSA Contracts">GSA eLibrary</a> | <a
+                            href="/advantage/login/eBuyLogin.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5" title="eBuy - Get Quotes">GSA eBuy</a> | <a
+                            href="/advantage/information/page.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?keyName=NEWS" title="News">News&nbsp;</a>
+
+                        <FONT size=1>| &nbsp;<a href="https://hallways.cap.gsa.gov/login-information?utm_campaign=Marcom&utm_source=Marcom&utm_medium=link&utm_content=Advantage" target="_blank"
+                                                title="Acquisition Gateway">Acquisition Gateway</a>&nbsp;</FONT>
+
+
+                    </td>
+
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td width="227">&nbsp;</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="227">&nbsp;</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="227">&nbsp;</td>
+                    <td width="10">&nbsp;</td>
+                    <td width="227">&nbsp;</td>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+            <strong>*** WARNING *** </strong><br/>This is a U.S. General Services Administration computer system that is &quot;FOR OFFICIAL USE ONLY&quot;. This system is subject to monitoring. Therefore, no expectation
+            of privacy is to be assumed. Individuals found performing unauthorized activities are subject to disciplinary action including criminal prosecution. <a
+                href="/advantage/information/page.do;jsessionid=6431152D9993F6EEFFAFD3310AB863ED.F5?keyName=NEW_SECURITY"><br/>Privacy and Security<br/>
+            <br/>
+        </div>
+
+
+        <-- end of footer -->
+    </div>
+</div>
+</div>
+<-- SCRIPTS -->
+
+<script type="text/javascript" src="/images/adv13/js/dhtmlwindow.js"></script>
+<noscript>
+</noscript>
+<script src="/images/adv13/js/bjqs-1.3.js"></script>
+<noscript>
+</noscript>
+<script src="/images/adv13/js/jquery.min.js"></script>
+<noscript>
+</noscript>
+<script>window.jQuery || document.write('<script src="/images/adv13/js/jquery-1.8.2.min.js"><\/script>')</script>
+<noscript>
+</noscript>
+<script src="/images/adv13/js/new/vendor/bootstrap.min.js"></script>
+<noscript>
+</noscript>
+<script src="/images/adv13/js/new/plugins.js"></script>
+<noscript>
+</noscript>
+<script src="/images/adv13/js/new/main.js"></script>
+<noscript>
+</noscript>
+
+</body>
+</html>

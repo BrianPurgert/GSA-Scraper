@@ -25,44 +25,35 @@ CATALOG_LT.create_table?(:gsin)do
 	primary_key :id
 end
 
-# class GSIN < Sequel::Model
-# 	one_to_many :product, :key=>:id
-# end
-#
-# class Product < Sequel::Model
-# 	many_to_one :GSIN
-# end
+
 
 
 CATALOG_LT.create_table? :products do
 	primary_key :id
-	String :gsin             ,null: false
-	String :contractor       ,null: false
-	String :contract_number  ,null: false
-	String :vendor_part      ,null: false
-	String :manufacture      ,null: false
-	String :bpa_number       ,null: false
-	Float :price             ,null: false
-	String :unit             ,null: false
-	String :features         ,null: false
-	String :photo            ,null: false
-	String :delivery         ,null: false
-	String :fob_shipping     ,null: false
+	String :gsin             ,null: true
+	String :contractor       ,null: true
+	String :contract_number  ,null: true
+	String :vendor_part      ,null: true
+	String :manufacture      ,null: true
+	String :bpa_number       ,null: true
+	Float  :price             ,null: true
+	String :unit             ,null: true
+	String :features         ,null: true
+	String :photo            ,null: true
+	String :delivery         ,null: true
+	String :fob_shipping     ,null: true
 end
 
 CATALOG_LT[:products].print
-@DB[:manufacture_parts].select(10)
+gsins = @DB[:manufacture_parts].select(:gsin).limit(10)
+gsins.each { |gsin| puts gsin }
 
-
-# TODO Extract links /advantage/catalog/product_detail.do?contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
+# TODO Extract links /advantage/catalog/product_detail.do?
+# contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
 # TODO split product_detail{ contractNumber:      GS-21F-0010W , itemNumber: 5017-11, mfrName: HUTCHINS ALLIANCE COATINGS INC.}
 
 
 products = CATALOG_LT[:products]
-100.times do |i|
-
-end
-
 
 
 # Step 1 Load GSIN only with simple array Use
@@ -72,14 +63,17 @@ gsin_queue = Queue.new
 product_agents = []
 product_agent  = initialize_browser
 product_agents << product_agent
- gsin_queue
+
+until gsin_queue.empty?
+
 product_url    = "#{GSA_ADVANTAGE}#{PRODUCT_DETAIL}gsin=#{gsin_queue.pop}&cview=true"
-puts product_url
 html           = get_html(product_agents, 0, product_url)
-puts html
 doc            = Nokogiri::HTML(html)
 
-
+doc.css("*[href*='/advantage/catalog']").each do |el|
+   puts "#{el.text}  #{el['href']}"
+end
+end
 
 exit
 url_set.in_threads(n_thr).each_with_index do |urls, i|

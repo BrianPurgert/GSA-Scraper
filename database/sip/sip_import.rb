@@ -87,6 +87,9 @@
 # http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
 # --------------------------------------------------
 
+# Array with table names used by the import program
+ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
+
 def delete_tables
 	puts "Delete SIP Tables? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
@@ -95,6 +98,15 @@ def delete_tables
 end
 # delete_tables
 
+# Removes entries that are not distinct on
+# contract number
+# manufacture part number
+# manufacture name
+def clean_table(table)
+	puts "Removing Duplicates from #{table}"
+	@DB.create_table!(:t1, :as => @DB[table].distinct(:CONTNUM,:MFGPART,:MFGNAME))#:temp=>true
+	@DB.create_table!(table, :as => @DB[:t1])
+end
 
 
 

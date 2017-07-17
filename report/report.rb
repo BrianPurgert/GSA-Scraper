@@ -10,9 +10,11 @@ def import_spreadsheets(files)
 		puts "#{files.size} files importing"
 		threads = []
 		files.each_with_index do |file|
-			threads << Thread.new { import_products(file) }
+			# threads << Thread.new {
+				import_products(file)
+			# }
 		end
-		threads.each { |thr| thr.join }
+		# threads.each { |thr| thr.join }
 		puts "Imports Complete"
 	end
 end
@@ -31,12 +33,7 @@ def export_price_comparisons(files)
 	end
 end
 
-def clean_table(table)
-	@DB.create_table!(:t1, :as => @DB[table].distinct)#:temp=>true
-	@DB.create_table!(table, :as => @DB[:t1])
-end
 
-ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
 
 
 require_relative File.dirname(__FILE__) + '/../adv/gsa_advantage'
@@ -44,7 +41,6 @@ require_relative File.dirname(__FILE__) + '/./import'
 require_relative File.dirname(__FILE__) + '/./export'
 
 Dir["*.xls"].each { |file| puts file }
-basedir   = File.join(__dir__, "/import/")
 
 # files     = Dir.glob(basedir+"*.xlsx")
 # files     = Dir[basedir+"*.xlsx","*.csv","*.csv"]
@@ -55,15 +51,18 @@ basedir   = File.join(__dir__, "/import/")
 # @tables = []
 
 
-# tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
+ tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
+
+
+
 files = Dir.glob(File.join(__dir__, './import/')+"*.xl*")
 
 
 list_files(files)
-
 import_spreadsheets(files)
+
 clean_table(:IPROD)
-puts "clean"
+
 export_price_comparisons(files)
 
 
