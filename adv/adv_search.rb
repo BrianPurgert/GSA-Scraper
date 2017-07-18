@@ -41,7 +41,7 @@ end
 
 
 def controller
-	@throttle = @DB[:controller].filter(key: 'throttle').select(:value).first
+	@throttle = DB[:controller].filter(key: 'throttle').select(:value).first
 	sleep 20
 end
 

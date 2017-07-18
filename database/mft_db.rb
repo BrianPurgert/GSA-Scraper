@@ -14,7 +14,7 @@ helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
-	@DB = Sequel.connect(
+	DB = Sequel.connect(
 		adapter:  "mysql2",
 		host:     ENV['MYSQL_HOST'],
 		database: 'mft_data',
@@ -24,7 +24,7 @@ begin
 rescue Exception => e
 	puts "#{e.message}".colorize(:red)
 	puts "------------------- Connecting to #{ENV['MYSQL_HOST_ALT']}".colorize(:red)
-	@DB = Sequel.connect(
+	DB = Sequel.connect(
 		adapter:  "mysql2",
 		host:     ENV['MYSQL_HOST_ALT'],
 		database: 'mft_data',
@@ -36,8 +36,8 @@ end
 
 
 
-@DB.loggers << Logger.new($stdout) if LOG_DATABASE
-@DB.extension :pretty_table
+DB.loggers << Logger.new($stdout) if LOG_DATABASE
+DB.extension :pretty_table
 # Sequel.extension :migration
 
 # todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
@@ -47,23 +47,20 @@ end
 #     Create Tables they need to be
 # ------------------------------------------------------------------ #
 require_relative 'sip/sip_import'
-# helpers.each { |sql|  @DB.run File.open(sql, "rb").read }
+ helpers.each { |sql|  DB.run File.open(sql, "rb").read }
 
 
 
 def clean_copy_parts
-	pp @DB.schema(:manufactures).inspect
-	pp @DB.schema(:manufacture_parts)
-	clean = @DB[:manufacture_parts].order(:last_updated).reverse.distinct(:href_name)
+	pp DB.schema(:manufactures).inspect
+	pp DB.schema(:manufacture_parts)
+	clean = DB[:manufacture_parts].order(:last_updated).reverse.distinct(:href_name)
 end
 
 
-# @DB.create_table? :controller do
-# 	Integer     :stop
-# end
-# @DB[:controller].insert(key: 'stop',value: 0)
 
-	@DB.create_table? :searches do
+
+	DB.create_table? :searches do
 		primary_key :id
 		String      :title
 		String      :url
@@ -71,15 +68,16 @@ end
 	end
 
 
-def create_distinct_manufactures
-	@DB.create_table?(:search_manufactures, :as => @DB[:manufactures].distinct(:href_name))
+# replace with deduplicate_table
+def create_search_tables(db)
+	db.create_table?(:search_manufactures, :as => db[:manufactures].distinct(:href_name))
+	db.create_table?(:search_manufactures, :as => db[:manufactures].distinct(:href_name))
 end
 
-create_distinct_manufactures
 
 def create_distinct_products
 	# todo: XSB
-	@DB.create_table!(:distinct_products,:as => @DB[:manufacture_parts].distinct(:href_name))
+	DB.create_table!(:distinct_products, :as => DB[:manufacture_parts].distinct(:href_name))
 end
 
 # do
@@ -96,25 +94,25 @@ end
 # end
 
 def removing_the_url_from_gsin
-	 @DB[:manufacture_parts].run("
+	 DB[:manufacture_parts].run("
 	      UPDATE `manufacture_parts`
 		SET href_name = REPLACE(href_name, '/advantage/catalog/product_detail.do?gsin=', '')
 		WHERE href_name LIKE '/advantage/catalog/product_detail.do?gsin=%';")
 end
 
 	def searched(title,url,found)
-		items = @DB[:searches]
+		items = DB[:searches]
 		items.insert(title: title,url: url,found: found)
 	end
 
 	def display_statistics
-		manufacture_parts = @DB[:manufacture_parts].distinct(:href_name).count
-		manufacture       = @DB[:manufactures]
+		manufacture_parts = DB[:manufacture_parts].distinct(:href_name).count
+		manufacture       = DB[:manufactures]
 		color_p "Manufacture Parts count: #{manufacture_parts}", 7
 	end
 
 	def priority_manufactures
-		result = @DB[:search_manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(50)
+		result = DB[:search_manufactures].filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(50)
 		result.all
 	end
 
@@ -130,7 +128,7 @@ end
 # ---------------------------------------------------------------------------------#
 	def get_mfr(amount = 1)
 		if continue
-			manufactures = IGNORE_CAT ? @DB[:search_manufactures] : @DB[:manufactures]
+			manufactures = IGNORE_CAT ? DB[:search_manufactures] : DB[:manufactures]
 			queued_set = manufactures.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
 			queued_set.update(check_out: 1)
 			up_next = queued_set.all
@@ -143,20 +141,20 @@ end
 
 
 	def insert_contractors(mfrs)
-		@DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
+		DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
 	end
 
 	def insert_manufactures(mfrs)
-		@DB[:manufactures].import([:name, :href_name, :category, :item_count], mfrs)
+		DB[:manufactures].import([:name, :href_name, :category, :item_count], mfrs)
 	end
 
 	def insert_mfr_parts(mfr_parts_data)
 		puts "importing #{mfr_parts_data.size} items"
-		@DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 2000})
+		DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 2000})
 	end
 
 	def check_in(mfr,cat)
-		@DB[:manufactures].where(name: mfr, category: cat).update(check_out: 2)
+		DB[:manufactures].where(name: mfr, category: cat).update(check_out: 2)
 		# safe_stop
 	end
 
@@ -165,7 +163,8 @@ end
 	end
 
 	def continue
-		stop = @DB[:controller].filter(key: 'stop').select(:value).first
+		begin
+		stop = DB[:controller].filter(key: 'stop').select(:value).first
 		print 'Controller: '
 		if stop[:value]==1
 			puts "Stopping".colorize(:red)
@@ -174,7 +173,14 @@ end
 			puts "Continue".colorize(:green)
 			@continue = true
 		end
-		
+		rescue
+ DB.create_table? :controller do
+	 primary_key :id
+	 String      :key
+	 String      :value
+ end
+ DB[:controller].insert(key: 'stop',value: 0)
+			end
 	end
 	
 	# def mfr_time(name)

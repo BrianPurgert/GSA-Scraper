@@ -28,14 +28,14 @@ end
 
 
 
-CATALOG_LT.create_table? :products do
+DB.create_table? :products do
 	primary_key :id
 	String :gsin             ,null: true
-	String :contractor       ,null: true
 	String :contract_number  ,null: true
 	String :vendor_part      ,null: true
 	String :manufacture      ,null: true
 	String :bpa_number       ,null: true
+	String :contractor       ,null: true
 	Float  :price             ,null: true
 	String :unit             ,null: true
 	String :features         ,null: true
@@ -44,8 +44,10 @@ CATALOG_LT.create_table? :products do
 	String :fob_shipping     ,null: true
 end
 
-CATALOG_LT[:products].print
-gsins = @DB[:manufacture_parts].select(:gsin).limit(10)
+DB[:products].print
+# deduplicate_table(DB, :manufacture_parts, [:href_name])
+
+gsins = DB[:manufacture_parts].select(:href_name).limit(50)
 gsins.each { |gsin| puts gsin }
 
 # TODO Extract links /advantage/catalog/product_detail.do?

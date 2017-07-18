@@ -6,7 +6,7 @@ require 'rake'
 # Bundler::Install.options
 
 desc 'Default Tasks'
-task(default: [:s2])
+task(default: [:s1,:s2])
 
 # source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
 # 	fl.exclude("~*")

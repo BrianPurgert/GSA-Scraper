@@ -12,7 +12,7 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 	def create_client_table(name, extra_columns = [])
 		color_p "#{name.class}  #{name.to_s}   #{name.inspect}   #{name}"
-		  @DB.create_table! name do
+		  DB.create_table! name do
 			primary_key :id
 			String :manufacture_name, null: true
 			String :manufacture_part, null: true
@@ -27,8 +27,8 @@ Header_PRICE   = /(.*)Price(.*)/ix
 
 
 def find_duplicates
-	@DB[:manufacture_parts].order(:last_updated).distinct(:mfr,:mpn)
-	@DB[:search_manufactures].group_and_count(:mfr,:mpn)
+	DB[:manufacture_parts].order(:last_updated).distinct(:mfr, :mpn)
+	DB[:search_manufactures].group_and_count(:mfr, :mpn)
 end
 
 def prioritize(table)
@@ -36,14 +36,14 @@ def prioritize(table)
 	manufacture_count.each do |mfr|
 		similar = mfr[:manufacture_name]
 		priority = mfr[:count]+10
-		affected = @DB[:search_manufactures].where(:name, similar).update(priority: priority, check_out: 0)
+		affected = DB[:search_manufactures].where(:name, similar).update(priority: priority, check_out: 0)
 		
 		if affected>0
 			puts "#{mfr[:manufacture_name]} : #{affected}".colorize(:green)
 		else
 			puts "No Similar Manufacture Names found\n#{mfr[:manufacture_name]} : #{affected}".colorize(:red)
 			similar = mfr[:manufacture_name].gsub!(/[^0-9A-Za-z]/, '%')
-			affected = @DB[:search_manufactures].where(Sequel.ilike(:name, similar)).update(priority: priority, check_out: 0)
+			affected = DB[:search_manufactures].where(Sequel.ilike(:name, similar)).update(priority: priority, check_out: 0)
 			puts "#{similar} #{affected}"
 		end
 	end
@@ -56,9 +56,9 @@ def import_products(path)
 		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
 		
 		table = :IPROD
-		columns = @DB[table].columns.to_a
+		columns = DB[table].columns.to_a
 		#@DB[table].multi_insert(sheet_data)
-		@DB[table].import(columns, sheet_data)
+		DB[table].import(columns, sheet_data)
 		
 		rescue
 		

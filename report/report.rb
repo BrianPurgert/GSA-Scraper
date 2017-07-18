@@ -61,7 +61,7 @@ files = Dir.glob(File.join(__dir__, './import/')+"*.xl*")
 list_files(files)
 import_spreadsheets(files)
 
-clean_table(:IPROD)
+deduplicate_table(DB,:IPROD,[:CONTNUM, :MFGPART, :MFGNAME])
 
 export_price_comparisons(files)
 
