@@ -4,78 +4,59 @@ module GSA
 	require 'rubygems'
 	require 'sequel'
 	require 'open-uri'
-	
-	Sequel::Model.plugin :update_or_create
-	GSA = Sequel.sqlite
-	
-	
-	# @param [String] page
-	# @return [Array]
-	def url_parse(page)
-
-	end
-	def url_parse_group
-	
-	end
-	def url_parse_query
-	
-	end
-
-
-	
-	GSA.create_table :items do
-		primary_key :id
-		String :name
-		Float :price
-	end
-	
-	
-	# create a dataset from the items table
-	items = GSA[:items]
-	# populate the table
-	100.times do |i|
-		items.insert(:name => 'abc', :price => rand * 30)
-		items.insert(:name => 'ghi', :price => rand * 30)
-	end
-
-	100.times do |i|
-		Thread.new do
-			items.where(:id=>i).first
-		end
-	end
-	# print out the number of records
-	puts "Item count: #{items.count}"
-	# print out the average price
-	puts "The average price is: #{items.avg(:price)}"
+	require 'uri'
 
 
 class Advantage
 	# @param [String] url
 	def initialize(url)
-		url.include? "gsaadvantage.gov/advantage"
-		@url = url
+		url.include? "/advantage/"
+		@url = url #URI.unescape(url)
+		puts URI.decode(url)
 		build
 	end
 	
-	
+
 	def build
-		
 		query        = @url.split('/').last
 		@page        = query.split('?').first
 		query_string = query.split('?').last
 		query_string.split('&').each do |part|
-			puts "#{part}\n\n"
+
+			if part.include? "gsin"
+				@gsin = part.split('=').last
+			elsif part.include? "contractNumber"
+				@contnum = part.split('=').last
+			elsif part.include? "itemNumber"
+				@vendpart = part.split('=').last
+			elsif part.include? "mfrName"
+				@mfgname = part.split('=').last
+			elsif part.include? "bpaNumber"
+				@bpanum = part.split('=').last
+			end
+
 		end
 		# /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
 	end
-	
+
+	def contnum
+		@contnum
+	end
+
+	def bpanum
+		@bpanum
+	end
+
 	def gsin
-		split_url = @url.chomp('&cview=true')
-		split_url.each_line('=') { |s|
-			if s.include? '11'
-				return s
-			end }
-		return false
+		@gsin
+	end
+
+	def mfgname
+		@mfgname
+	end
+
+	def mfgpart
+		@mfgname
 	end
 end
 end
@@ -117,6 +98,6 @@ test_array = []
 test_urls.each_with_index do |url, i|
 	test_array[i] = GSA::Advantage.new(url)
 	# puts test_array[i].gsin
-	puts test_array[i].inspect
+	puts "#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"
 end
 

@@ -27,10 +27,10 @@ end
 
 
 
-
 DB.create_table? :products do
 	primary_key :id
 	String :gsin             ,null: true
+  String :scraped					,null: true
 	String :contract_number  ,null: true
 	String :vendor_part      ,null: true
 	String :manufacture      ,null: true
@@ -67,16 +67,35 @@ product_agent  = initialize_browser
 product_agents << product_agent
 
 until gsin_queue.empty?
-
-product_url    = "#{GSA_ADVANTAGE}#{PRODUCT_DETAIL}gsin=#{gsin_queue.pop}&cview=true"
+  puts "--------------------------"
+  gsin = gsin_queue.pop
+product_url    = "#{GSA_ADVANTAGE}#{PRODUCT_DETAIL}gsin=#{gsin}&cview=true"
 html           = get_html(product_agents, 0, product_url)
 doc            = Nokogiri::HTML(html)
 
-doc.css("*[href*='/advantage/catalog']").each do |el|
-   puts "#{el.text}  #{el['href']}"
-end
+	p doc.css("input[name*='cartKey']").map(&:name)
+
+doc.css("a[href*='product_detail.do']:not([href*='oid='])").each do |el|
+	# el[:href].split
+
+	# {gsin: gsin,
+	#  contract_number:
+	# vendor_part:
+	# manufacture:
+	# bpa_number:
+	# contractor:
+	# price:
+	# unit:
+  # }
+  #  puts "#{el.text}  #{el['href']}"
 end
 
+
+	doc.css("*[href*='contractNumber=']").each do |el|
+		# puts "#{el.text}  #{el['href']}"
+	end
+end
+# input[name*='cartKey']
 exit
 url_set.in_threads(n_thr).each_with_index do |urls, i|
 	gsa_a[i] = initialize_browser

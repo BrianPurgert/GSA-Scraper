@@ -44,7 +44,7 @@ some logic behind scraping could come in handy token_get
 Im just going to put these here
 
 GSIN
-
+with a product "GSIN" number you should be able to get information on related products, Im going to paste from here  
 http://www.gtin.info/upc/
 
 ### GTIN DEFINITION : INFORMATION

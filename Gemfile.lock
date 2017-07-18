@@ -50,7 +50,7 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     eventmachine (1.2.3-x64-mingw32)
     eventmachine (1.2.3-x86-mingw32)
-    faker (1.7.3)
+    faker (1.8.4)
       i18n (~> 0.5)
     fastercsv (1.5.5)
     ffi (1.9.18-x64-mingw32)
@@ -59,15 +59,15 @@ GEM
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.8.5)
+    i18n (0.8.6)
     in_threads (1.4.0)
     io-like (0.3.0)
     mime-types (2.99.3)
     mimemagic (0.3.2)
     mini_portile2 (2.2.0)
     mustermann (1.0.0)
-    mysql2 (0.4.7-x64-mingw32)
-    mysql2 (0.4.7-x86-mingw32)
+    mysql2 (0.4.8-x64-mingw32)
+    mysql2 (0.4.8-x86-mingw32)
     net-http-digest_auth (1.4.1)
     net-http-persistent (2.9.4)
     net_http_ssl_fix (0.0.8)
@@ -105,7 +105,7 @@ GEM
       nokogiri (>= 1.4.4)
       rubyzip (>= 1.1.6)
     rubyzip (1.2.1)
-    selenium-webdriver (3.4.3)
+    selenium-webdriver (3.4.4)
       childprocess (~> 0.5)
       rubyzip (~> 1.0)
     sequel (4.48.0)
@@ -127,7 +127,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4-x64-mingw32)
     unf_ext (0.0.7.4-x86-mingw32)
-    watir (6.3.0)
+    watir (6.4.2)
       selenium-webdriver (~> 3.0)
     webrobots (0.1.2)
     yml_reader (0.7)
@@ -159,4 +159,4 @@ DEPENDENCIES
   watir (~> 6.3)
 
 BUNDLED WITH
-   1.15.1
+   1.15.2

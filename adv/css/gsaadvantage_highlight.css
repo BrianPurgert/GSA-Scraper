@@ -55,7 +55,3 @@ a[href*="mfrName="]
  */
 
 
-
-#container-fluid > div.container-fluid, #sectionheader,#footer,#searchcolumn, #sidebarSearch{
-  display:none!important;
-}

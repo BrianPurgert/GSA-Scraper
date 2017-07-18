@@ -26,11 +26,11 @@ DB.create_table? :links do
 	varchar :link
 end
 
-class Link < Sequel::Model; end
+# class IPROD < Sequel::Model; end
 
 get '/' do
-	@links = Link.all
-	haml :links
+	@iprod = DB[:iprod].limit(100).all
+		erb :iprod
 end
 
 
