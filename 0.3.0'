@@ -1,2 +1,0 @@
-ERROR: "bundler install" was called with arguments ["roman-numerals,", "~"]
-Usage: "bundler install [OPTIONS]"

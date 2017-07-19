@@ -1,4 +1,4 @@
-
+# URI resolutions for GSA resources
 
 module GSA
 	require 'rubygems'
@@ -11,14 +11,13 @@ class Advantage
 	# @param [String] url
 	def initialize(url)
 		url.include? "/advantage/"
-		@url = url #URI.unescape(url)
-		puts URI.decode(url)
-		build
+		# puts URI.decode(url)
+		build(url)
 	end
-	
 
-	def build
-		query        = @url.split('/').last
+
+	def build(url)
+		query        = url.split('/').last
 		@page        = query.split('?').first
 		query_string = query.split('?').last
 		query_string.split('&').each do |part|
@@ -34,6 +33,8 @@ class Advantage
 			elsif part.include? "bpaNumber"
 				@bpanum = part.split('=').last
 			end
+
+			@url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=#{@contnum}&itemNumber=#{@mfgpart}&mfrName=#{@mfgname}"
 
 		end
 		# /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
@@ -56,8 +57,13 @@ class Advantage
 	end
 
 	def mfgpart
-		@mfgname
+		@mfgpart
 	end
+
+	def url
+			@url
+	end
+
 end
 end
 
@@ -98,6 +104,7 @@ test_array = []
 test_urls.each_with_index do |url, i|
 	test_array[i] = GSA::Advantage.new(url)
 	# puts test_array[i].gsin
-	puts "#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"
+	puts test_array[i].url
+  #"#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"
 end
 

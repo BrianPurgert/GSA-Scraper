@@ -36,8 +36,14 @@ end
 
 # TRUNK ===========================================================
 
+# name LIKE '%CERTOL%'
 
 
 
 
+get '/r' do
+	# matches "GET /hello/foo" and "GET /hello/bar"
+	# params['name'] is 'foo' or 'bar'
 
+
+end
