@@ -15,13 +15,11 @@ class Advantage
 		build(url)
 	end
 
-
 	def build(url)
 		query        = url.split('/').last
 		@page        = query.split('?').first
 		query_string = query.split('?').last
 		query_string.split('&').each do |part|
-
 			if part.include? "gsin"
 				@gsin = part.split('=').last
 			elsif part.include? "contractNumber"

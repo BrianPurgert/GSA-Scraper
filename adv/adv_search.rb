@@ -10,17 +10,17 @@ end
 
 @reading   = 0
 @items     = 0
-@throttle  = 7
+@throttle  = 5
 @db_queue  = Queue.new
 @mfr_queue = Queue.new
 
 threads = []
-n_thr   = 10
+n_thr   = 150
 gsa_a   = []
 
 
 
-def get_all_products(gsa_a, mfr, n, n_low, pg)
+def get_all_products(gsa_a, mfr, n, n_low, pg, search_in)
 	begin
 		# url encode mfr[:name] mfr[:href_name]
 		url  = search_url(mfr[:href_name], n_low, mfr[:category])

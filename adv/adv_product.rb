@@ -30,13 +30,13 @@ end
 DB.create_table? :products do
 	primary_key :id
 	String :gsin             ,null: true
-  String :scraped					,null: true
+  String :scraped					 ,null: true
 	String :contract_number  ,null: true
 	String :vendor_part      ,null: true
 	String :manufacture      ,null: true
 	String :bpa_number       ,null: true
 	String :contractor       ,null: true
-	Float  :price             ,null: true
+	Float  :price            ,null: true
 	String :unit             ,null: true
 	String :features         ,null: true
 	String :photo            ,null: true

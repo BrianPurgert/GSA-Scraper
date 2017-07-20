@@ -51,37 +51,22 @@ end
 
 def import_products(path)
 	
-		color_p "IPROD | Import products from: #{Pathname.new(path).basename}"
+		color_p " | Import products from: #{Pathname.new(path).basename}"
 		begin
 		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
-		
-		table = :IPROD
-		columns = DB[table].columns.to_a
-		#@DB[table].multi_insert(sheet_data)
-		DB[table].import(columns, sheet_data)
+
+		# columns = DB[table].columns.to_a
+		# DB[table].import(columns, sheet_data)
+
+		@DB[table].multi_insert(sheet_data)
 		
 		rescue
 		
 		end
 		
-		
-		 #columns = @DB[:IPROD].columns.to_a # @DB[:IPROD].import(@DB[:IPROD].columns!, sheet_data)
-		 #color_p "#{sheet_data.class}   #{sheet_data[0].class}\nReference Columns\n#{columns}", 13
-		
-		# sheet_data.collect! do |import_column|
-		# 	columns.collect do |database_column|
-		# 		import_column[database_column]
-		# 	end
-		# 	# [import_column[:manufacture_name].to_s, import_column[:manufacture_part].to_s, import_column[:gsa_price].to_f.round(2)]
-		# end
+
 	
-	
-	# table = @DB[table_name]
-	# create_client_table table_name,['a', 'b', 'c']
-	# import_client_prices table, set
-		# rescue Exception => e
-		# 	puts e.message
-		# end
+
 end
 
 

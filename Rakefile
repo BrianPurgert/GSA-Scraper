@@ -6,7 +6,7 @@ require 'rake'
 # Bundler::Install.options
 
 desc 'Default Tasks'
-task(default: [:s1,:s2])
+task(default: [:install,:s1,:s2])
 
 # source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
 # 	fl.exclude("~*")
@@ -32,19 +32,27 @@ task(default: [:s1,:s2])
 
 
 desc 'Price Comparisons from spreadsheet(2)'
-task(:pcp)           { ruby 'database/spreadsheet/report.rb' }
+task(:pcp) do
+	ruby 'report/report.rb'
+end
 
 desc 'Build tables from Manufactures/Vendor'
-task(:s1)                     { ruby 'adv/adv_base.rb' }
+task(:s1) do
+	ruby 'adv/adv_base.rb'
+end
 
 desc 'Find products'
-task(:s2)                     { ruby 'adv/adv_search.rb' }
-task(:s3)                     { ruby 'adv/adv_product.rb' }
+task(:s2) do
+	ruby 'adv/adv_search.rb'
+end
+task(:s3) do
+	ruby 'adv/adv_product.rb'
+end
 
 
 desc 'Install Gems'
 task(:install) do
-	exec("cd #{Dir.getwd} && bundle clean && bundle update && bundle install")
+	exec("cd #{Dir.getwd} && bundle update && bundle install")
 end
 
 # Rake.application.options.trace = true
