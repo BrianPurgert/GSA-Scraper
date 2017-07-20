@@ -34,13 +34,14 @@ def export_price_comparisons(files)
 end
 
 
+base = 'C:\Users\brian\Government Contract Services, Inc\E-Commerce - PCP\GILL MARKETING COMPANY'
 
 
 require_relative File.dirname(__FILE__) + '/../adv/gsa_advantage'
 require_relative File.dirname(__FILE__) + '/./import'
 require_relative File.dirname(__FILE__) + '/./export'
 
-Dir["*.xls"].each { |file| puts file }
+# Dir["#{}*.xls"].each { |file| puts file }
 
 # files     = Dir.glob(basedir+"*.xlsx")
 # files     = Dir[basedir+"*.xlsx","*.csv","*.csv"]
@@ -55,7 +56,7 @@ Dir["*.xls"].each { |file| puts file }
 
 
 
-files = Dir.glob(File.join(__dir__, './import/')+"*.xl*")
+files = Dir.glob(File.join(base, './import/')+"*.xl*")
 
 
 list_files(files)

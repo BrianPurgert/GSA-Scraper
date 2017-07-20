@@ -4,7 +4,7 @@ I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
 
 # require 'socket'
 require_relative '../adv/gsa_advantage'
-require 'logger'
+
 
 logger = Logger.new $stdout
 # OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE

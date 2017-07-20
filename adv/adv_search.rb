@@ -63,8 +63,8 @@ def search(gsa_a, n)
 			i   += 1
 			mfr = @mfr_queue.shift
 			# puts "Start: #{mfr[:name]} #{mfr[:category]}"
-			
-			get_all_products(gsa_a, mfr, n, 900000000, 1)
+			search_by = "contract"
+			get_all_products(gsa_a, mfr, n, 900000000, 1, search_by)
 			# search by contractor
 			
 			# puts "Finished: #{mfr[:name]} #{mfr[:category]}"

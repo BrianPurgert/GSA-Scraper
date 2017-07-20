@@ -23,10 +23,10 @@
       </configuration>
     </shared>
     <local>
-      <configuration default="false" name="web_server" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <configuration default="false" name="adv_base" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
         <module name="GSA-Advantage-Scraper" />
         <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$" />
+        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/adv" />
         <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
         <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
         <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
@@ -34,57 +34,8 @@
         <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
         <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
         <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/web_server.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/adv/adv_base.rb" />
         <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
-        <method />
-      </configuration>
-      <configuration default="false" name="gsa_uri" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
-        <module name="GSA-Advantage-Scraper" />
-        <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/GeneralServicesAdministration" />
-        <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
-        <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
-        <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
-        <envs />
-        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
-        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/GeneralServicesAdministration/gsa_uri.rb" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
-        <method />
-      </configuration>
-      <configuration default="false" name="report" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
-        <module name="GSA-Advantage-Scraper" />
-        <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/report" />
-        <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
-        <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
-        <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
-        <envs />
-        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
-        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/report/report.rb" />
-        <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
-        <method />
-      </configuration>
-      <configuration default="false" name="default: GSA-Advantage-Scraper" type="RakeRunConfigurationType" factoryName="Rake" temporary="true">
-        <module name="GSA-Advantage-Scraper" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="WORK DIR" VALUE="$MODULE_DIR$" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="SHOULD_USE_SDK" VALUE="false" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="ALTERN_SDK_NAME" VALUE="" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="myPassParentEnvs" VALUE="true" />
-        <envs />
-        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
-        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
-        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_NAME" VALUE="default" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ARGS" VALUE="" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_ATTACHED_TEST_FRAMEWORKS" VALUE="" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TRACE" VALUE="false" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_DRYRUN" VALUE="false" />
-        <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_PREREQS" VALUE="false" />
         <method />
       </configuration>
       <configuration default="false" name="s1: GSA-Advantage-Scraper" type="RakeRunConfigurationType" factoryName="Rake" temporary="true">
@@ -104,6 +55,51 @@
         <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_TRACE" VALUE="false" />
         <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_DRYRUN" VALUE="false" />
         <RAKE_RUN_CONFIG_SETTINGS_ID NAME="RAKE_TASK_OPTION_PREREQS" VALUE="false" />
+        <method />
+      </configuration>
+      <configuration default="false" name="adv_search" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+        <module name="GSA-Advantage-Scraper" />
+        <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/adv" />
+        <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
+        <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+        <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+        <envs />
+        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
+        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/adv/adv_search.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+        <method />
+      </configuration>
+      <configuration default="false" name="script_for_testing" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+        <module name="GSA-Advantage-Scraper" />
+        <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/scratch" />
+        <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
+        <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+        <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+        <envs />
+        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
+        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/scratch/script_for_testing.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+        <method />
+      </configuration>
+      <configuration default="false" name="report" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+        <module name="GSA-Advantage-Scraper" />
+        <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+        <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/report" />
+        <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
+        <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+        <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+        <envs />
+        <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="true" />
+        <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+        <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/report/report.rb" />
+        <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
         <method />
       </configuration>
     </local>
