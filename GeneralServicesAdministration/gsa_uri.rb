@@ -22,20 +22,13 @@ class Advantage
 		
 		if @page.include? "/s/"
 			puts "XXXXXXXXX"
+
 			query_string.split('&').each do |part|
-				if part.include? "gsin"
-					@gsin = part.split('=').last
-				elsif part.include? "contractNumber"
-					@contnum = part.split('=').last
-				elsif part.include? "itemNumber"
-					@vendpart = part.split('=').last
-				elsif part.include? "mfrName"
-					@mfgname = part.split('=').last
-				elsif part.include? "bpaNumber"
-					@bpanum = part.split('=').last
-				end
+				puts part
 			end
-			
+
+		end
+
 
 
 			

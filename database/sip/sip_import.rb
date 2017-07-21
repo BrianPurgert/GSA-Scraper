@@ -104,7 +104,7 @@ end
 # manufacture name
 def deduplicate_table(db, table, columns)
 	puts "Removing Duplicates from #{table}"
-	db.create_table!(:t1, :as => db[table].distinct(:CONTNUM,:MFGPART,:MFGNAME))#:temp=>true
+	db.create_table!(:t1, :as => db[table].distinct(columns))#:temp=>true
 	db.create_table!(table, :as => db[:t1])
 end
 

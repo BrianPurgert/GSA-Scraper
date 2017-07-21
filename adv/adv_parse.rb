@@ -85,7 +85,7 @@ def parse_result(product_table)
 	mfr       = mfr_span.text.strip
 	gsin = href_name.split('=').last
 	product   = [mfr, mpn, name, gsin, desc, price, sources]
-	puts product.inspect
+	# puts product.inspect
 	@db_queue << product
 	return price
 end

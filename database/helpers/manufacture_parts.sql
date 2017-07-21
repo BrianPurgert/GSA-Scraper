@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS manufacture_parts
 	(
 		id INT(11) NOT NULL AUTO_INCREMENT,
+    term varchar(255) null,
 		mfr varchar(255) not null,
 		mpn varchar(255) not null,
 		name varchar(255) null,
@@ -11,4 +12,5 @@ CREATE TABLE IF NOT EXISTS manufacture_parts
 		status_id tinyint default '0' not null,
 		sources int(10) default '0' null,
 		primary key (id)
+
 	);

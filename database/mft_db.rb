@@ -10,7 +10,7 @@ require 'colorized_string'
 require 'logger'
 
 helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
-database = 'gsa_advantage'
+database = 'gsa_advantage721'
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
@@ -126,7 +126,7 @@ end
 	end
 
 # ---------------------------------------------------------------------------------#
-	def get_mfr(amount = 1)
+	def get_search(amount = 1)
 		if continue
 			case @search_in
 				when 'manufacture'
@@ -138,7 +138,9 @@ end
 			end
 			queued_set = search_set.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
 			queued_set.update(check_out: 1)
+			queued_set.print
 			up_next = queued_set.distinct(:name).all
+
 		else
 			up_next = []
 		end

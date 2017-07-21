@@ -10,15 +10,16 @@ end
 
 @reading   = 0
 @items     = 0
-@throttle  = 0
+@throttle  = 2
 @db_queue  = Queue.new
 @mfr_queue = Queue.new
 
 threads = []
-n_thr   = 150
+n_thr   = 50
 gsa_a   = []
 
 
+# deduplicate_table(DB,:manufacture_parts,:href_name)
 
 def get_all_products(gsa_a, mfr, n, n_low, pg, search_in)
 	begin
@@ -47,7 +48,7 @@ end
 
 
 def add_manufactures(n_total)
-	manufactures = get_mfr(n_total)
+	manufactures = get_search(n_total)
 	manufactures.each do |mfr|
 		@mfr_queue << mfr
 	end
