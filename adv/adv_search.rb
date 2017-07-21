@@ -10,7 +10,7 @@ end
 
 @reading   = 0
 @items     = 0
-@throttle  = 5
+@throttle  = 0
 @db_queue  = Queue.new
 @mfr_queue = Queue.new
 

@@ -1,4 +1,23 @@
-
+def parse_list(html, list_type, category)
+	doc = Nokogiri::HTML(html)
+	items = doc.css('#main  td:nth-child(n) > span')
+	items.each do |item|
+		link      = item.at_css("a[href*='advantage']")
+		href      = link['href']
+		decoded   = link.text.strip
+		encoded   = REGEX_QUERY.match(href)
+		
+		product_count = item.css(".gray8pt").text.strip.delete('()')
+		
+		color_p %W(#{decoded} #{encoded} #{product_count}), 13
+		if list_type == "vnd.do?"
+			@vnd_queue << [decoded.to_s,encoded.to_s,category,product_count.to_i]
+		else
+			@mfr_queue << [decoded.to_s,encoded.to_s,category,product_count.to_i]
+		end
+	end
+	return items.size
+end
 
 # s	Small Business
 # o	Other than Small Business

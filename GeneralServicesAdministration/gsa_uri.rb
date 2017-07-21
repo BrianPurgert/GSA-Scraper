@@ -19,18 +19,42 @@ class Advantage
 		query        = url.split('/').last
 		@page        = query.split('?').first
 		query_string = query.split('?').last
-		query_string.split('&').each do |part|
-			if part.include? "gsin"
-				@gsin = part.split('=').last
-			elsif part.include? "contractNumber"
-				@contnum = part.split('=').last
-			elsif part.include? "itemNumber"
-				@vendpart = part.split('=').last
-			elsif part.include? "mfrName"
-				@mfgname = part.split('=').last
-			elsif part.include? "bpaNumber"
-				@bpanum = part.split('=').last
+		
+		if @page.include? "/s/"
+			puts "XXXXXXXXX"
+			query_string.split('&').each do |part|
+				if part.include? "gsin"
+					@gsin = part.split('=').last
+				elsif part.include? "contractNumber"
+					@contnum = part.split('=').last
+				elsif part.include? "itemNumber"
+					@vendpart = part.split('=').last
+				elsif part.include? "mfrName"
+					@mfgname = part.split('=').last
+				elsif part.include? "bpaNumber"
+					@bpanum = part.split('=').last
+				end
 			end
+			
+
+
+			
+			if @page.include? "product_detail.do"
+			query_string.split('&').each do |part|
+				if part.include? "gsin"
+					@gsin = part.split('=').last
+				elsif part.include? "contractNumber"
+					@contnum = part.split('=').last
+				elsif part.include? "itemNumber"
+					@vendpart = part.split('=').last
+				elsif part.include? "mfrName"
+					@mfgname = part.split('=').last
+				elsif part.include? "bpaNumber"
+					@bpanum = part.split('=').last
+				end
+		end
+		
+		
 
 			@url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=#{@contnum}&itemNumber=#{@mfgpart}&mfrName=#{@mfgname}"
 
@@ -94,6 +118,14 @@ test_urls = %w(
 	/advantage/catalog/product_detail.do?gsin=11000000939567
 	/advantage/catalog/product_detail.do?gsin=11000000939739
 	/advantage/catalog/product_detail.do?gsin=11000000939739
+/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5G-FORCE+POWERSPORTS%2C+LLC
+https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5GALAXIE+DEFENSE+MARKETING+SERVICES
+https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5GALAXY+INTEGRATED+TECHNOLOGIES%2C+INC
+/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5GOVSOLUTIONS%2C+INC.
+/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5GRAPHICADD+SUPPLIES%2C+INC.
+/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=u&_q=24:5GRAY+MANUFACTURING+COMPANY%2C+INC.
+
+
 )
 
 

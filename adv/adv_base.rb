@@ -1,9 +1,8 @@
 require_relative 'gsa_advantage'
 1.times do
-	
-	# '1+SOURCE+SOLUTIONS%2C+LLC'
-	# '1 SOURCE SOLUTIONS, LLC'
-	# '1+SOURCE+SOLUTIONS%2C+LLC'
+
+
+
 	
 	
 threads     = []
@@ -33,28 +32,7 @@ threads << Thread.new do
 	end
 end
 
-def parse_list(html, list_type, category)
-	# = Nokogiri::HTML(
 
-	list = Nokogiri::HTML(html)
-	items = list.search('table > tbody > tr > td > span')
-	items.each do |item|
-		# puts item.inspect
-		mfr_link   = item.search("a[href*='refineSearch.do']")[0]
-		name_mfr   = mfr_link.text.strip
-		href_mfr   = REGEX_QUERY.match(mfr_link['href'])
-		# puts href_mfr
-		n_products = item.css(".gray8pt").text.strip.delete('()')
-
-		# color_p ["#{name_mfr}","#{href_mfr}","#{n_products}","#{@queue.size}"],13
-		if list_type == "vnd.do?"
-			@vnd_queue << [name_mfr.to_s,href_mfr.to_s,category,n_products.to_i]
-		else
-			@mfr_queue << [name_mfr.to_s,href_mfr.to_s,category,n_products.to_i]
-		end
-	end
-	return items.size
-end
 
 def test_mfr_list(gsa_a)
 	gsa_a.mft_table_element.links.each do |link|
@@ -73,7 +51,7 @@ end
 found = 0
 benchmark '', @count
 
-	10.times do |i|
+	27.times do |i|
 	threads << Thread.new do
 		gsa_a[i] = initialize_browser
 		until @letter_queue.empty?
@@ -81,11 +59,9 @@ benchmark '', @count
 			ADV::Lists.each do |list|
 				ADV::Categories.each do |category|
 					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
-						 html = get_html(gsa_a, i, url)
-						  found = parse_list(html, list, category)
-          puts found
-
-					sleep 5
+					html = get_html(gsa_a, i, url)
+					found = parse_list(html, list, category)
+					sleep 2
 				end
 			end
 		end

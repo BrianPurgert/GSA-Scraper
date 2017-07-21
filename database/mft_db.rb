@@ -9,15 +9,15 @@ require 'colorize'
 require 'colorized_string'
 require 'logger'
 
-
 helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
+database = 'gsa_advantage'
 
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
 	DB = Sequel.connect(
 		adapter:  "mysql2",
 		host:     ENV['MYSQL_HOST'],
-		database: 'mft_data',
+		database: database,
 		user:     ENV['MYSQL_USER'],
 		password: ENV['MYSQL_PASS']
 	)
@@ -27,7 +27,7 @@ rescue Exception => e
 	DB = Sequel.connect(
 		adapter:  "mysql2",
 		host:     ENV['MYSQL_HOST_ALT'],
-		database: 'mft_data',
+		database: database,
 		user:     ENV['MYSQL_USER'],
 		password: ENV['MYSQL_PASS']
 	)
@@ -89,7 +89,7 @@ end
 #
 # 	index :name
 # end
-# @DB[:manufactures].distinct(:href_name).each do |row|
+# @DB[:search_set].distinct(:href_name).each do |row|
 # 	@DB[:search_manufactures].insert(name: row[:name], href_name: row[:href_name],check_out: '0',priority: '0')
 # end
 
@@ -128,10 +128,17 @@ end
 # ---------------------------------------------------------------------------------#
 	def get_mfr(amount = 1)
 		if continue
-			manufactures = IGNORE_CAT ? DB[:search_manufactures] : DB[:manufactures]
-			queued_set = manufactures.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
+			case @search_in
+				when 'manufacture'
+					search_set = IGNORE_CAT ? DB[:manufactures] : DB[:manufactures]
+				when 'contract'
+					search_set = IGNORE_CAT ? DB[:search_contracts] : DB[:contracts]
+				when 'contractor'
+					search_set = IGNORE_CAT ? DB[:contractors] : DB[:contractors]
+			end
+			queued_set = search_set.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
 			queued_set.update(check_out: 1)
-			up_next = queued_set.all
+			up_next = queued_set.distinct(:name).all
 		else
 			up_next = []
 		end
@@ -185,7 +192,7 @@ end
 	
 	# def mfr_time(name)
 	# 	escaped       = @client.escape("#{name}")
-	# 	insert_string = "UPDATE mft_data.manufactures SET last_search=NOW() WHERE name='#{escaped}'"
+	# 	insert_string = "UPDATE mft_data.search_set SET last_search=NOW() WHERE name='#{escaped}'"
 	# 	puts insert_string.colorize(:green)
 	# 	@client.query("#{insert_string}")
 	# end

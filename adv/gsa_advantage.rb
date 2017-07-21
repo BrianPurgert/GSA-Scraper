@@ -48,7 +48,7 @@ def search_url(url_encoded_name, current_lowest_price,category,page_number=1,hig
 	url         = "#{GSA_ADVANTAGE}/advantage/s/search.do?"
 	search_in   = 'manufacture'
 	search_type = '1'
-	case search_in
+	case @search_in
 		when 'manufacture'
 			url = url + 'q=28:5'
 		when 'contract'

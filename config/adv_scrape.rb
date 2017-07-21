@@ -19,6 +19,8 @@ DEV_MODE                  = false
 IS_PROD                   = true
 HUDSON_LOCAL              = '//192.168.1.104/gsa_price/'
 
+@search_in = 'contractor'
+
 # ===================================== Constants
 REGEX_QUERY               = /(?<=\q=..:.).*/
 
@@ -33,6 +35,7 @@ OUTAGE_IP      = '104.160.239.120:60099'
 
 module ADV
 	FSSI        = "a[href*='#fssi']"
+	
 	SUB_CAT     = "a[href*='/advantage/s/search.do?q=1:4ADV.']"
 	CAT         = "a[href*='/advantage/department/main.do?cat=ADV.']"       # a[href*='cat=']
 	Lists          =  ["vnd.do?", "mfr.do?"]
@@ -49,7 +52,9 @@ module ADV
 	# 9	Tools, Paint & Recreational
 	# 10	Vehicles & Equipment
 	Categories   = ["ADV.BUI", "ADV.ELE", "ADV.FAC", "ADV.FUR", "ADV.LAW", "ADV.OEQ", "ADV.OFF", "ADV.FSSI", "ADV.SCI", "ADV.TOO", "ADV.VEH"]
-   end
+end
+
+SYMBOLS = %w(#wwwlink39 #cpg #wwwlink43 #epeatbronze #energystar #femp #fips #gss #hspd12 #hazmat #508 #wwwlink42 #eparecommended #neshap #prime #snap #safer #wwwlink38 #gsaglobal #abilityOne #unicor #bpa #fssi)
 
 # ===================================== OVERRIDES
 I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil

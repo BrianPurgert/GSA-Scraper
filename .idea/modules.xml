@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/Government Contract Services, Inc/E-Commerce - PCP/.idea/E-Commerce - PCP.iml" filepath="$USER_HOME$/Government Contract Services, Inc/E-Commerce - PCP/.idea/E-Commerce - PCP.iml" />
+      <module fileurl="file://C:\Users\Brian\Government Contract Services, Inc\E-Commerce - PCP\.idea\E-Commerce - PCP.iml" filepath="C:\Users\Brian\Government Contract Services, Inc\E-Commerce - PCP\.idea\E-Commerce - PCP.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/GSA-Advantage-Scraper.iml" filepath="$PROJECT_DIR$/.idea/GSA-Advantage-Scraper.iml" />
     </modules>
   </component>
