@@ -2,10 +2,27 @@ require 'roo'
 require 'prettyprint'
 require 'pp'
 require 'roo-xls'
+require 'colorize'
+require 'prettyprint'
 
 Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
 Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
 Header_PRICE   = /(.*)Price(.*)/ix
+# MFR PART NO
+# {"SIN"=>"Avatier Group Enforcer Licensing",
+#  "MANUFACTURER NAME"=>nil,
+#  "MFR PART NO"=>nil,
+#  "PRODUCT NAME AND DESCRIPTION"=>nil,
+#  "UOI"=>nil,
+#  "COMMERCIAL LIST PRICE"=>nil,
+#  "MOST FAVORED CUSTOMER (MFC)"=>nil,
+#  "MFC PRICE"=>nil,
+#  "MFC (%) DISCOUNT"=>nil,
+#  "GSA OFFER PRICE (exclusive of the .75% IFF)"=>nil,
+#  "GSA(%) DISCOUNT (exclusive of the .75% IFF)"=>nil,
+#  "GSA OFFER PRICE (inclusive of the .75% IFF)"=>nil,
+#  "QUANTITY/VOLUME DISCOUNT"=>nil,
+#  "COO"=>nil},
 
 
 
@@ -51,18 +68,34 @@ end
 
 def import_products(path)
 	
-		color_p " | Import products from: #{Pathname.new(path).basename}"
+		" | Parsing from: #{Pathname.new(path).basename}"
 		begin
-		sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])  #  RubyXL::Parser.parse("path/to/Excel/file.xlsx")
-
-		# columns = DB[table].columns.to_a
-		# DB[table].import(columns, sheet_data)
-
-		@DB[table].multi_insert(sheet_data)
+			xl_sheet = puts RubyXL::Parser.parse(path)
+			puts xl_sheet.pretty_inspect.colorize(:white)
+		rescue
+			puts 'opps'
+		end
 		
+		begin
+			
+			sheet = Roo::Spreadsheet.open(path)
+			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])
+			puts sheet_data.pretty_inspect.colorize(:red)
+		rescue
+			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true)
+				puts sheet_data.pretty_inspect.colorize(:blue)
 		rescue
 		
 		end
+	
+	
+		# DB[table].multi_insert(sheet_data)
+		
+		
+		# columns = DB[table].columns.to_a
+		# DB[table].import(columns, sheet_data)
+
+	
 		
 
 	

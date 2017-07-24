@@ -14,55 +14,52 @@ CATALOG = Sequel.connect(adapter:    "mysql2",
                        user:       ENV['MYSQL_USER'],
                        password:   ENV['MYSQL_PASS'])
 
-CATALOG_LT = Sequel.sqlite
 
 CATALOG.extension(:pretty_table)
-CATALOG_LT.extension(:pretty_table)
 
 
-
-CATALOG_LT.create_table?(:gsin)do
-	primary_key :id
-end
-
+# https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=GS-07F-9158S&itemNumber=RM-4E-5PK&mfrName=SOFTWARE+HOUSE
+#main_img , .black8pt .black8pt , #TabbedPanels1 div
 
 
 DB.create_table? :products do
 	primary_key :id
 	String :gsin             ,null: true
-  String :scraped					 ,null: true
 	String :contract_number  ,null: true
-	String :vendor_part      ,null: true
-	String :manufacture      ,null: true
-	String :bpa_number       ,null: true
+	String :item_number      ,null: true
+	String :mfr_name         ,null: true
 	String :contractor       ,null: true
 	Float  :price            ,null: true
-	String :unit             ,null: true
-	String :features         ,null: true
-	String :photo            ,null: true
-	String :delivery         ,null: true
-	String :fob_shipping     ,null: true
+	# String :unit             ,null: true
+	# String :features         ,null: true
+	# String :photo            ,null: true
+	# String :delivery         ,null: true
+	# String :fob_shipping     ,null: true
 end
 
 DB[:products].print
-# deduplicate_table(DB, :manufacture_parts, [:href_name])
+ deduplicate_table(DB, :manufacture_parts, [:href_name])
 
-gsins = DB[:manufacture_parts].select(:href_name).limit(50)
-gsins.each { |gsin| puts gsin }
+
+
+
 
 # TODO Extract links /advantage/catalog/product_detail.do?
 # contractNumber=GS-21F-0010W&itemNumber=5017-11&mfrName=HUTCHINS ALLIANCE COATINGS INC.
 # TODO split product_detail{ contractNumber:      GS-21F-0010W , itemNumber: 5017-11, mfrName: HUTCHINS ALLIANCE COATINGS INC.}
 
 
-products = CATALOG_LT[:products]
-
 
 # Step 1 Load GSIN only with simple array Use
-gsin_queue = Queue.new
- [11000011151811,11000050589433,11000044674011,11000044675013,11000043883398,11000007925152,11000044676885,11000044674054, 11000044673543].each{ |gsin| gsin_queue << gsin}
+
+gsin_queue     = Queue.new
+gsins          = DB[:manufacture_parts].select(:href_name).limit(50)
+gsins.each { |gsin| puts gsin }
+gsins.each{ |gsin| gsin_queue << gsin}
+
 
 product_agents = []
+
 product_agent  = initialize_browser
 product_agents << product_agent
 

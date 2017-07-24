@@ -23,7 +23,6 @@ HUDSON_LOCAL              = '//192.168.1.104/gsa_price/'
 
 # ===================================== Constants
 REGEX_QUERY               = /(?<=\q=..:.).*/
-
 GSA_ADVANTAGE  = 'https://gsaadvantage.gov'
 PRODUCT_DETAIL = '/advantage/catalog/product_detail.do?'
 OUTAGE         = '/outage.html'
@@ -32,6 +31,10 @@ OUTAGE_IP      = '104.160.239.120:60099'
 # contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
 # contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
 # /advantage/catalog/product_detail.do?contractNumber=GS-25F-0139M&itemNumber=10942B&mfrName=EK+EKCESSORIES
+
+module ELI
+	Lists          =  ["contractorList.do?", "mfr.do?"]
+end
 
 module ADV
 	FSSI        = "a[href*='#fssi']"
@@ -57,7 +60,7 @@ end
 SYMBOLS = %w(#wwwlink39 #cpg #wwwlink43 #epeatbronze #energystar #femp #fips #gss #hspd12 #hazmat #508 #wwwlink42 #eparecommended #neshap #prime #snap #safer #wwwlink38 #gsaglobal #abilityOne #unicor #bpa #fssi)
 
 # ===================================== OVERRIDES
-I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
+I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil          # lol
 OpenSSL::SSL::VERIFY_PEER                                   = OpenSSL::SSL::VERIFY_NONE
 
 

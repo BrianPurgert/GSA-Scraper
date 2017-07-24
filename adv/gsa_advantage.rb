@@ -26,7 +26,6 @@ require_relative File.dirname(__FILE__) + '/../pages/gsa_advantage_page'
 # :default => 9
 
 def color_p(str,i=-1)
-
 	case i
 		when -1
 			out_color = [:light_cyan,:green, :yellow,:light_yellow].sample
@@ -68,7 +67,7 @@ def search_url(url_encoded_name, current_lowest_price,category,page_number=1,hig
 	return url
 end
 
-def product_url()
+def gsin_url
 	# https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?gsin=11000005818274&cview=true
 	url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?"
 	url = url + "q=28:5#{mfr_href_name}"

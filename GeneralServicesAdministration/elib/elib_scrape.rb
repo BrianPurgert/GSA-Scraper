@@ -5,6 +5,9 @@ require 'nokogiri'
 require 'open-uri'
 require 'net_http_ssl_fix'
 # require 'open_uri_redirections'
+
+# https://inventory.data.gov/dataset/4fd4a79f-7fd6-4699-a77a-411bc7e980b9/resource/bfd33f01-4156-44a9-a680-d31dc42a857c/download/elibraryschedulecontracts.xlsx
+
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 @Elibq = Queue.new
 
@@ -16,9 +19,10 @@ CSS_contract   = "a[href*='contract=']"
 CSS_table      = "td td td+ td"
 
 
-mcsv       = FCSV.new
-#CSV.open("contractor_data.csv", "wb") do |csv|
 
+CSV.open("contractor_data.csv", "wb") do |csv|
+
+end
 
 p          = Axlsx::Package.new
 wb         = p.workbook

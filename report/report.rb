@@ -1,45 +1,11 @@
-def list_files(files)
-	files.each_with_index do |file, num|
-		puts "#{num}\t#{file}".colorize(:green)
-	end
-end
+require_relative 'report_helper'
+include ReportHelper
+require 'find'
+require 'pp'
+ENV['SEARCH_PATH']         = 'M:\GOVCON\HG'
 
-def import_spreadsheets(files)
-	puts "Import Spreadsheets? (Y/N)".colorize(:green)
-	if gets.to_s.upcase.include? 'Y'
-		puts "#{files.size} files importing"
-		threads = []
-		files.each_with_index do |file|
-			# threads << Thread.new {
-				import_products(file)
-			# }
-		end
-		# threads.each { |thr| thr.join }
-		puts "Imports Complete"
-	end
-end
-
-
-
-def export_price_comparisons(files)
-	puts "Generate Price Comparisons? (Y/N)".colorize(:green)
-	if gets.to_s.upcase.include? 'Y'
-		excel :iprod
-		# threads = []
-		# files.each_with_index do |file, num|
-		# 	threads << Thread.new { excel tables[num] }
-		# end
-		# threads.each { |thr| thr.join }
-	end
-end
-
-
-base = 'C:\Users\brian\Government Contract Services, Inc\E-Commerce - PCP\GILL MARKETING COMPANY'
-
-
-require_relative File.dirname(__FILE__) + '/../adv/gsa_advantage'
-require_relative File.dirname(__FILE__) + '/./import'
-require_relative File.dirname(__FILE__) + '/./export'
+require_relative 'import'
+require_relative 'export'
 
 # Dir["#{}*.xls"].each { |file| puts file }
 
@@ -51,18 +17,22 @@ require_relative File.dirname(__FILE__) + '/./export'
 # puts Dir.entries(basedir).inspect
 # @tables = []
 
+xls_sheets = []
+xlsx_sheets = []
+csv_sheets = []
+Find.find(ENV['SEARCH_PATH']) do |path|
+	csv_sheets << path if path =~ /.*\.csv$/
+	xls_sheets << path if path =~ /.*\.xls$/
+	xlsx_sheets << path if path =~ /.*\.xlsx$/
+end
 
- tables  = [:client1, :client2, :client3, :client4, :client5, :client6, :client7, :client8, :client9]
+list_files(csv_sheets)
+list_files(xls_sheets)
+list_files(xlsx_sheets)
 
+import_spreadsheets(xlsx_sheets)
 
-
-files = Dir.glob(File.join(base, './import/')+"*.xl*")
-
-
-list_files(files)
-import_spreadsheets(files)
-
-deduplicate_table(DB,:IPROD,[:CONTNUM, :MFGPART, :MFGNAME])
+# deduplicate_table(DB,:IPROD,[:CONTNUM, :MFGPART, :MFGNAME])
 
 export_price_comparisons(files)
 

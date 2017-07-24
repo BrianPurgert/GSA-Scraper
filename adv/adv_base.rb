@@ -11,6 +11,7 @@ config      = [6]
 
 @vnd_queue      = Queue.new
 @mfr_queue      = Queue.new
+@elib_queue      = Queue.new
 @letter_queue = Queue.new
 # @reading    = 0
 
@@ -20,12 +21,15 @@ letters.each {|l| @letter_queue << l}
 
 
 threads << Thread.new do
-	until @letter_queue.empty? && @mfr_queue.empty? && @vnd_queue.empty? do
+	until @letter_queue.empty? && @mfr_queue.empty? && @vnd_queue.empty? && @elib_queue.empty? do
 		until @mfr_queue.empty?
 			insert_manufactures(take(@mfr_queue))
 		end
 		until @vnd_queue.empty?
 			insert_contractors(take(@vnd_queue))
+		end
+		until @elib_queue.empty?
+			insert_elib_contractors(take(@elib_queue))
 		end
 
 		sleep 1
@@ -56,6 +60,7 @@ benchmark '', @count
 		gsa_a[i] = initialize_browser
 		until @letter_queue.empty?
 				letter = @letter_queue.pop
+				eli = "https://www.gsaelibrary.gsa.gov/ElibMain/contractorList.do?contractorListFor=#{letter}"
 			ADV::Lists.each do |list|
 				ADV::Categories.each do |category|
 					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"

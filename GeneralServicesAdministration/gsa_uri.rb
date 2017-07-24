@@ -1,4 +1,75 @@
 # URI resolutions for GSA resources
+# GSAAdvantage & GSAeLibrary mapping to SIP
+# www.gsaelibrary.gsa.gov
+#    /ElibMain
+# 		/contractorList.do?
+#         /sinDetails.do?
+#              executeQuery=YES
+#         scheduleNumber=71
+#              flag=
+#              filter=
+#         specialItemNumber=489+157
+#         /contractorInfo.do?
+#              contractNumber=GS-03F-0033S
+#              contractorName=ALPHA+SAFE+%26+VAULT+INC
+#              executeQuery=YES
+#         /advRedirect.do?
+#              contract=GS-03F-0033S
+#         sin=489+103
+#         src=elib
+#              app=cat
+#         /contractClauses.do?
+#         scheduleNumber=71
+#              contractNumber=GS-03F-0033S
+#              contractorName=ALPHA+SAFE+%26+VAULT+INC
+#              duns=163632537
+#         source=ci
+#              view=clauses
+
+
+
+# www.gsaadvantage.gov
+#    /advantage
+#         /main
+#              /elib.do?
+#                    contract=GS-03F-0033S
+#                    sin=489+154
+#                    src=elib
+#                    app=cat
+#                    pg=srch
+#         /s
+#              /search.do?
+#                   db=0
+#              searchType=1
+#                   q=19%3A5GS-03F-0033S
+#                   q=20%3A5489+154
+#              src=elib
+#              /search.do?
+# 				q=19:5GS-03F-0033S
+# 				q=20:5489+154
+# 				db=0
+# 				searchType=0
+# 			/vnd.do?
+# 				q=28:5DOLPHIN+COMPONENTS+CORP
+# 				c=100
+#              s=9
+# 				p=1
+# 				listFor=All
+#              /mfr.do?
+#                   q=1:4ADV.*
+#                   listFor=C
+#         /contractor
+#              /contractor_detail.do?
+#                   mapName=/s/search/
+#                   cat=ADV
+#                   contractNumber=GS-03F-0033S
+#         /catalog
+#              /product_detail.do?
+#                   contractNumber=GS-03F-0033S
+#                   itemNumber=SF702-FH
+#                   mfrName=ALPHA+SAFE%2FSKILCRAFT
+#              /product_detail.do?
+#                   gsin=11000034769215
 
 module GSA
 	require 'rubygems'

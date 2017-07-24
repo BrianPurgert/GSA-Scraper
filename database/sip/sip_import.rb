@@ -3,73 +3,7 @@
 # TODO: split this into multiple files
 #
 #
-# GSAAdvantage & GSAeLibrary mapping to SIP
-# www.gsaelibrary.gsa.gov
-#    /ElibMain
-#         /sinDetails.do?
-#              executeQuery=YES
-#         scheduleNumber=71
-#              flag=
-#              filter=
-#         specialItemNumber=489+157
-#         /contractorInfo.do?
-#              contractNumber=GS-03F-0033S
-#              contractorName=ALPHA+SAFE+%26+VAULT+INC
-#              executeQuery=YES
-#         /advRedirect.do?
-#              contract=GS-03F-0033S
-#         sin=489+103
-#         src=elib
-#              app=cat
-#         /contractClauses.do?
-#         scheduleNumber=71
-#              contractNumber=GS-03F-0033S
-#              contractorName=ALPHA+SAFE+%26+VAULT+INC
-#              duns=163632537
-#         source=ci
-#              view=clauses
-# www.gsaadvantage.gov
-#    /advantage
-#         /main
-#              /elib.do?
-#                    contract=GS-03F-0033S
-#               sin=489+154
-#               src=elib
-#                    app=cat
-#                    pg=srch
-#         /s
-#              /search.do?
-#                   db=0
-#              searchType=1
-#                   q=19%3A5GS-03F-0033S
-#                   q=20%3A5489+154
-#              src=elib
-#              /search.do?
-# 				q=19:5GS-03F-0033S
-# 				q=20:5489+154
-# 				db=0
-# 				searchType=0
-# 			/vnd.do?
-# 				q=28:5DOLPHIN+COMPONENTS+CORP
-# 				c=100
-#              s=9
-# 				p=1
-# 				listFor=All
-#              /mfr.do?
-#                   q=1:4ADV.*
-#                   listFor=C
-#         /contractor
-#              /contractor_detail.do?
-#                   mapName=/s/search/
-#                  cat=ADV
-#                   contractNumber=GS-03F-0033S
-#         /catalog
-#              /product_detail.do?
-#                   contractNumber=GS-03F-0033S
-#                   itemNumber=SF702-FH
-#                   mfrName=ALPHA+SAFE%2FSKILCRAFT
-#              /product_detail.do?
-#                   gsin=11000034769215
+
 
 # Mfr Part No.:	     DURPC1300
 # Contractor Part No.:	DURPC1300
@@ -90,13 +24,13 @@
 # Array with table names used by the import program
 ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
 
-def delete_tables
+def delete_sip_tables
 	puts "Delete SIP Tables? (Y/N)".colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
 		ImportTables.each { |i_table| DB.drop_table?(i_table) }
 	end
 end
-# delete_tables
+
 
 # Removes entries that are not distinct on
 # contract number
@@ -106,6 +40,7 @@ def deduplicate_table(db, table, columns)
 	puts "Removing Duplicates from #{table}"
 	db.create_table!(:t1, :as => db[table].distinct(columns))#:temp=>true
 	db.create_table!(table, :as => db[:t1])
+	puts "Duplicates Removed from #{table}"
 end
 
 
@@ -475,7 +410,7 @@ DB.create_table?(:IPHOTO) do
 	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40           ,null: false      #   Manufacturer part number. Must be found in Product table.
 	column :MFGNAME      ,String,           size: 40           ,null: false      #   Manufacturer name. Must be found in Product table.
-	column :DEF_PHOTO    ,String,           size: 80           ,null: false      #  Filename of first photo. This is the default photo that will be shown with product/accessory. This should be the largest and best photo.*DEF_PHOTO required for some SINs.  See SIP Help for SINs requiring DEF_PHOTO for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table)
+	column :DEF_PHOTO    ,String,           size: 80           ,null: false      #    Filename of first photo. This is the default photo that will be shown with product/accessory. This should be the largest and best photo.*DEF_PHOTO required for some SINs.  See SIP Help for SINs requiring DEF_PHOTO for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table)
 	column :PHOTO2       ,String,           size: 80           ,null: true       #    Filename of second photo.
 	column :PHOTO3       ,String,           size: 80           ,null: true       #    Filename of third photo.
 	column :PHOTO4       ,String,           size: 80           ,null: true       #    filename of fourth photo.

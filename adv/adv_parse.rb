@@ -1,3 +1,30 @@
+
+ElibMain       = "https://www.gsaelibrary.gsa.gov/ElibMain/"
+ContractorList = "contractorList.do?contractorListFor="
+
+
+ScheduleList   = "scheduleList.do"
+
+
+# https://www.gsaelibrary.gsa.gov/ElibMain/sinDetails.do?executeQuery=YES&scheduleNumber=51+V&flag=&filter=&specialItemNumber=105+002
+# https://www.gsaelibrary.gsa.gov/ElibMain/scheduleSummary.do?scheduleNumber=23+V
+# https://www.gsaelibrary.gsa.gov/ElibMain/sinDetails.do?executeQuery=YES&scheduleNumber=70&flag=&filter=&specialItemNumber=132+100
+#
+# https://www.gsaelibrary.gsa.gov/ElibMain/contractorInfo.do?contractNumber=GS-35F-247DA&contractorName=A+%26+T+SYSTEMS%2C+INC.&executeQuery=YES
+# https://www.gsaelibrary.gsa.gov/ElibMain/advRedirect.do?contract=GS-35F-247DA&sin=132+40&src=elib&app=cat
+#
+# https://www.gsaadvantage.gov/advantage/s/vnd.do?q=1:4ADV.BUI*&listFor=C
+# https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4ADV.BUI*&searchType=1&_a=u&_q=24:5C%26H+DISTRIBUTORS%2C+LLC
+#
+# https://www.gsaadvantage.gov/advantage/s/mfr.do?q=1:4ADV.BUI*&listFor=C
+# https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4ADV.BUI*&_a=u&_q=28:5C2G
+#
+# https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?gsin=11000049763004
+# https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=GS-35F-0391P&itemNumber=N7H-01023&mfrName=MICROSOFT
+# End_Point https://www.gsaadvantage.gov/advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-35F-0391P
+
+
+
 def parse_list(html, list_type, category)
 	doc = Nokogiri::HTML(html)
 	items = doc.css('#main  td:nth-child(n) > span')

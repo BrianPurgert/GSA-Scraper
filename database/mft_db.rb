@@ -86,9 +86,10 @@ end
 # 	Integer :priority, :default => '0'
 # 	String :href_name
 # 	# foreign_key :category_id, :categories
-#
 # 	index :name
 # end
+
+
 # @DB[:search_set].distinct(:href_name).each do |row|
 # 	@DB[:search_manufactures].insert(name: row[:name], href_name: row[:href_name],check_out: '0',priority: '0')
 # end
@@ -147,7 +148,9 @@ end
 		up_next
 	end
 
-
+	def insert_contractors(mfrs)
+		DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
+	end
 
 	def insert_contractors(mfrs)
 		DB[:contractors].import([:name, :href_name, :category, :item_count], mfrs)
@@ -159,7 +162,7 @@ end
 
 	def insert_mfr_parts(mfr_parts_data)
 		puts "importing #{mfr_parts_data.size} items"
-		DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 2000})
+		DB[:manufacture_parts].import([:mfr, :mpn, :name, :href_name, :desc, :low_price, :sources], mfr_parts_data, opts={commit_every: 500})
 	end
 
 	def check_in(mfr,cat)
