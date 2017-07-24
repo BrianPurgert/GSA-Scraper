@@ -72,18 +72,13 @@ end
 def import_products(path)
 	
 		" | Parsing from: #{Pathname.new(path).basename}"
-		# begin
-		# 	xl_sheet = puts RubyXL::Parser.parse(path)
-		# 	puts xl_sheet.pretty_inspect.colorize(:white)
-		# rescue
-		# 	puts 'opps'
-		# end
+
 
 
 		begin
 			
 			sheet = Roo::Spreadsheet.open(path)
-			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_GENERAL])
+			sheet_data = sheet.parse(clean: true, header_search: [Header_GENERAL])
 			color_p sheet_data.pretty_inspect
 		rescue
 			puts 'No Header Row Found'

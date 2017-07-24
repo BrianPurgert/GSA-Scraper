@@ -3,7 +3,7 @@ include ReportHelper
 require 'find'
 require 'pp'
 ENV['SEARCH_PATH']         = "Z:\\Gold Clients Archive"
-ENV['SEARCH_PATH']         = "Z:\\pcp-in"
+ENV['SEARCH_PATH']         = "X:\\"
 
 require_relative 'import'
 require_relative 'export'
@@ -25,7 +25,7 @@ end
 list_files(csv_sheets)
 list_files(xls_sheets)
 list_files(xlsx_sheets)
-
+import_spreadsheets(xls_sheets)
 import_spreadsheets(xlsx_sheets)
 
 # deduplicate_table(DB,:IPROD,[:CONTNUM, :MFGPART, :MFGNAME])

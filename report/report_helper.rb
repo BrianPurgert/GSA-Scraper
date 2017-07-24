@@ -11,16 +11,16 @@ module ReportHelper
 			puts "#{files.size} files importing"
 			threads = []
 			files.each_with_index do |file|
-				# threads << Thread.new {
+				 threads << Thread.new {
 						import_products(file)
-				# }
+				 }
 			end
-			# threads.each { |thr| thr.join }
+			 threads.each { |thr| thr.join }
 			puts "Imports Complete"
 		end
 	end
-	
-	
+
+
 	
 	def export_price_comparisons(files)
 		puts "Generate Price Comparisons? (Y/N)"
