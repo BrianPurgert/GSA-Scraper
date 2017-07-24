@@ -61,6 +61,9 @@ benchmark '', @count
 		until @letter_queue.empty?
 				letter = @letter_queue.pop
 				eli = "https://www.gsaelibrary.gsa.gov/ElibMain/contractorList.do?contractorListFor=#{letter}"
+				html = get_html(gsa_a, i, eli)
+
+
 			ADV::Lists.each do |list|
 				ADV::Categories.each do |category|
 					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"

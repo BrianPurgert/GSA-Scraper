@@ -12,7 +12,7 @@ module ReportHelper
 			threads = []
 			files.each_with_index do |file|
 				# threads << Thread.new {
-				import_products(file)
+						import_products(file)
 				# }
 			end
 			# threads.each { |thr| thr.join }

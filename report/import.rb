@@ -8,6 +8,9 @@ require 'prettyprint'
 Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
 Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
 Header_PRICE   = /(.*)Price(.*)/ix
+
+Header_GENERAL     = /(MFG|MFR|Manufacture|Manufacturer|SIN|PRODUCT|UOI|PRICE|DISCOUNT|QUANTITY|Contract|CONTNUM|MFGPART|MFGNAME|BPAPRICE|SCHEDCAT)/ix
+
 # MFR PART NO
 # {"SIN"=>"Avatier Group Enforcer Licensing",
 #  "MANUFACTURER NAME"=>nil,
@@ -69,23 +72,21 @@ end
 def import_products(path)
 	
 		" | Parsing from: #{Pathname.new(path).basename}"
-		begin
-			xl_sheet = puts RubyXL::Parser.parse(path)
-			puts xl_sheet.pretty_inspect.colorize(:white)
-		rescue
-			puts 'opps'
-		end
-		
+		# begin
+		# 	xl_sheet = puts RubyXL::Parser.parse(path)
+		# 	puts xl_sheet.pretty_inspect.colorize(:white)
+		# rescue
+		# 	puts 'opps'
+		# end
+
+
 		begin
 			
 			sheet = Roo::Spreadsheet.open(path)
-			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_MFR, Header_PART])
-			puts sheet_data.pretty_inspect.colorize(:red)
+			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true, header_search: [Header_GENERAL])
+			color_p sheet_data.pretty_inspect
 		rescue
-			sheet_data = Roo::Spreadsheet.open(path).parse(clean: true)
-				puts sheet_data.pretty_inspect.colorize(:blue)
-		rescue
-		
+			puts 'No Header Row Found'
 		end
 	
 	
