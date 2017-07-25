@@ -2,7 +2,7 @@ require_relative 'report_helper'
 include ReportHelper
 require 'find'
 require 'pp'
-ENV['SEARCH_PATH']         = 'M:\GOVCON\HG'
+ENV['SEARCH_PATH']         = __DIR__
 
 require_relative 'import'
 require_relative 'export'

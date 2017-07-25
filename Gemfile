@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-
+gem 'tiny_tds'
 gem 'rake', '~> 12.0'
 # one of them has to work right?
 gem 'rubyXL', '~> 3.3', '>= 3.3.21'

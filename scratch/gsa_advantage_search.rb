@@ -1,7 +1,7 @@
 require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
-require_relative 'pages/es/gsa_advantage_page'
+require_relative 'gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
@@ -17,7 +17,7 @@ gsa_advantage      = []
 @mfr_name          = []
 N_threads          = 5
 N_threads_plus_one = N_threads+1
-Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list         = YAML::load_file(File.join(__dir__, '../config/proxy.yml'))
 
 # Basedir_input  = 'a:/input/'
 Basedir_input      = './general helper file/Input-Files/'
@@ -96,9 +96,10 @@ if gsa_advantage.first_result_element.exist?
           contractor          = gsa_advantage.contractor_highlight_link_element.text
           contractor_price    = gsa_advantage.contractor_highlight_price
           contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
-     else contractor     = 'data not found on product page'
-     contractor_price    = '-1'
-     contractor_page_url = 'n/a'
+     else
+          contractor     = 'data not found on product page'
+          contractor_price    = '-1'
+          contractor_page_url = 'n/a'
      end
 else product_page_url = "#{search_url(si, mn)}"
 contractor            = 'search returned no results'
