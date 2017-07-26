@@ -32,7 +32,7 @@ threads << Thread.new do
 			insert_elib_contractors(take(@elib_queue))
 		end
 
-		sleep 1
+
 	end
 end
 
@@ -52,7 +52,6 @@ def test_mfr_list(gsa_a)
 	end
 end
 @count = 0
-found = 0
 benchmark '', @count
 
 	27.times do |i|
@@ -60,20 +59,17 @@ benchmark '', @count
 		gsa_a[i] = initialize_browser
 		until @letter_queue.empty?
 				letter = @letter_queue.pop
+        # parse
 				eli = "https://www.gsaelibrary.gsa.gov/ElibMain/contractorList.do?contractorListFor=#{letter}"
-				html = get_html(gsa_a, i, eli)
-
-
 			ADV::Lists.each do |list|
 				ADV::Categories.each do |category|
 					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
 					html = get_html(gsa_a, i, url)
-					found = parse_list(html, list, category)
-					sleep 2
+					parse_list(html, list, category)
+
 				end
 			end
 		end
-		 # gsa_a[i].browser.close
 	end
 end
 

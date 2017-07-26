@@ -1,13 +1,7 @@
 
 ElibMain       = "https://www.gsaelibrary.gsa.gov/ElibMain/"
 ContractorList = "contractorList.do?contractorListFor="
-
-
 ScheduleList   = "scheduleList.do"
-
-
-
-
 
 
 def parse_list(html, list_type, category)
@@ -24,23 +18,25 @@ def parse_list(html, list_type, category)
 		color_p %W(#{decoded} #{encoded} #{product_count}), 13
 		if list_type == "vnd.do?"
 			@vnd_queue << [decoded.to_s,encoded.to_s,category,product_count.to_i]
-		else
+    elsif list_type == "mfr.do?"
 			@mfr_queue << [decoded.to_s,encoded.to_s,category,product_count.to_i]
+    else
+
 		end
 	end
 	return items.size
 end
 
-# s	Small Business
-# o	Other than Small Business
-# w	Woman Owned Business
-# wo	Women Owned Small Business (WOSB)
-# ew	Economically Disadvantaged Women Owned Small Business (EDWOSB)
-# v	Veteran Owned Small Business
-# dv	Service Disabled Veteran Owned Small Business
-# d	SBA Certified Small Disadvantaged Business
-# 8a	SBA Certified 8(a) Firm
-# h	SBA Certified HUBZone Firm
+    # s	Small Business
+    # o	Other than Small Business
+    # w	Woman Owned Business
+    # wo	Women Owned Small Business (WOSB)
+    # ew	Economically Disadvantaged Women Owned Small Business (EDWOSB)
+    # v	Veteran Owned Small Business
+    # dv	Service Disabled Veteran Owned Small Business
+    # d	SBA Certified Small Disadvantaged Business
+    # 8a	SBA Certified 8(a) Firm
+    # h	SBA Certified HUBZone Firm
 def business_indicators(product_table)
 	# product_table.search("a[href*='BUSINESS_IND']").map(&text.strip)
 	product_table.search("a[href*='BUSINESS_IND']").map { |business_indicator| business_indicator.text.strip }
@@ -53,10 +49,6 @@ end
 # 38 possible symbols [href*='keyName=SYMBOLS#']
 def product_symbols(product_table)
 	product_table.search("a[href*='SYMBOLS#']").each { |symbol| symbol['href'].split('#').last }
-end
-
-def contractor(url)
-
 end
 
 def normalize_price(last_price)

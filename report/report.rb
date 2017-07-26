@@ -3,7 +3,7 @@ include ReportHelper
 require 'find'
 require 'pp'
 ENV['SEARCH_PATH']         = "Z:\\Gold Clients Archive"
-ENV['SEARCH_PATH']         = "X:\\"
+
 
 require_relative 'import'
 require_relative 'export'
@@ -17,12 +17,17 @@ xls_sheets = []
 xlsx_sheets = []
 csv_sheets = []
 Find.find(ENV['SEARCH_PATH']) do |path|
-	csv_sheets << path if path =~ /.*\.csv$/
-	xls_sheets << path if path =~ /.*\.xls$/
-	xlsx_sheets << path if path =~ /.*\.xlsx$/
+
+  if path =~ /.*\.xls$/
+    xls_sheets << path
+  end
+
+  if path =~ /.*\.xlsx$/
+    xlsx_sheets << path
+  end
+
 end
 
-list_files(csv_sheets)
 list_files(xls_sheets)
 list_files(xlsx_sheets)
 import_spreadsheets(xls_sheets)

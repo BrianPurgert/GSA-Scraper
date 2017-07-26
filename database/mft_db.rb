@@ -10,8 +10,8 @@ require 'colorized_string'
 require 'logger'
 
 helpers = Dir.glob(File.join(__dir__, './helpers/')+"*.sql")
-database = 'gsa_advantage721'
-
+database = 'gill_marketing_company'
+# GILL+MARKETING+COMPANY
 begin
 	puts "Connecting to #{ENV['MYSQL_HOST']}"
 	DB = Sequel.connect(
@@ -40,11 +40,8 @@ DB.loggers << Logger.new($stdout) if LOG_DATABASE
 DB.extension :pretty_table
 # Sequel.extension :migration
 
-# todo: sequel extension      https://github.com/sdepold/sequel-bit_fields
-# todo: sequel extension      https://github.com/earaujoassis/sequel-seed
-# todo: sequel extension      http://shrinerb.com/
 # ------------------------------------------------------------------ #
-#     Create Tables they need to be
+#     Create Tables
 # ------------------------------------------------------------------ #
 require_relative 'sip/sip_import'
  helpers.each { |sql|  DB.run File.open(sql, "rb").read }
@@ -67,16 +64,12 @@ end
 		Integer     :found
 	end
 
-
-# replace with deduplicate_table
 def create_search_tables(db)
 	db.create_table?(:search_manufactures, :as => db[:manufactures].distinct(:href_name))
 	db.create_table?(:search_manufactures, :as => db[:manufactures].distinct(:href_name))
 end
 
-
 def create_distinct_products
-	# todo: XSB
 	DB.create_table!(:distinct_products, :as => DB[:manufacture_parts].distinct(:href_name))
 end
 
@@ -127,15 +120,20 @@ end
 	end
 
 # ---------------------------------------------------------------------------------#
-	def get_search(amount = 1)
+# gill_marketing_company
+
+def get_search(amount = 1)
 		if continue
+
 			case @search_in
 				when 'manufacture'
-					search_set = IGNORE_CAT ? DB[:manufactures] : DB[:manufactures]
+					search_set = IGNORE_CAT ? DB[:manufactures]     : DB[:manufactures]
 				when 'contract'
 					search_set = IGNORE_CAT ? DB[:search_contracts] : DB[:contracts]
 				when 'contractor'
-					search_set = IGNORE_CAT ? DB[:contractors] : DB[:contractors]
+					search_set = IGNORE_CAT ? DB[:contractors]      : DB[:contractors]
+        else
+
 			end
 			queued_set = search_set.filter(check_out: 0).order(Sequel.desc(:priority), :name).limit(amount)#.update(priority: 100)
 			queued_set.update(check_out: 1)

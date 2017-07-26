@@ -15,7 +15,7 @@ end
 @mfr_queue = Queue.new
 
 threads = []
-n_thr   = 50
+n_thr   = 100
 gsa_a   = []
 
 

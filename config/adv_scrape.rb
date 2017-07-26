@@ -19,7 +19,10 @@ DEV_MODE                  = false
 IS_PROD                   = true
 HUDSON_LOCAL              = '//192.168.1.104/gsa_price/'
 
-@search_in = 'manufacture'
+
+sb = ['manufacture','contractor']
+@search_in = sb[1]
+
 
 # ===================================== Constants
 REGEX_QUERY               = /(?<=\q=..:.).*/
