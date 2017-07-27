@@ -2,12 +2,9 @@
 # About the Schedule Input Program https://vsc.gsa.gov/sipuser/files/SIP-Instructions.pdf
 # TODO: split this into multiple files
 #
-#
 
 
 # GILL+MARKETING+COMPANY
-
-
 
 
 # Mfr Part No.:	     DURPC1300

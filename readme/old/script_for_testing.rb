@@ -3,7 +3,7 @@ I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil
 
 
 # require 'socket'
-require_relative '../adv/gsa_advantage'
+require_relative '../adv/dv/gsa_advantage'
 
 
 logger = Logger.new $stdout

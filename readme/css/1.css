@@ -1,0 +1,79 @@
+/*   content:" (" attr(href) ") "; */
+
+/* :not([href*='oid=']) */
+
+
+a[href*='.do?']::before{
+    content:" (" attr(href) ") ";
+}
+
+a[href*='.do?']{
+    background-color:rgba(200,200,200,.4);
+}
+
+a[href*='.do?'][href*='&']{
+    background-color:rgba(20,200,20,.4);
+}
+
+
+a[href*='.do?'][href*='&']::before{
+    content:" (" attr(href) ") ";
+}
+
+
+
+/* scheduleSummary.do?scheduleNumber=BPA */
+a[href*='product_detail.do?'][href*='contractNumber='][href*='mfrName=']			{background-color: rgba(50,200,50,.3)}
+a[href*='product_detail.do?'][href*="gsin="]
+a[href*='product_detail.do'][href*='oid=']
+a[href*='ElibMain'][href*='manufacturer.do?'][href*='mfrName=']
+
+#pagination~ table:not(#pagination2){	}
+a[href*="product_detail.do?gsin"][href*="gsin="]{		}
+
+
+input[name*='cartKey=']{}
+#myTable{  }
+
+input[name*="TOKEN"]{ }
+
+a[href*="refineSearch.do"],
+a[href*='ref_text'][href*='advantage']
+{
+    box-shadow: 4px 4px 4px 4px rgba(20,20,200,.3);
+}
+
+#pagination~ table:not(#pagination2){
+    box-shadow: 0px 3px 0px 0px green;
+}
+
+
+/* #main-alt > table > tbody > tr > td:not(#searchcolumn):not(.greyVertRuleLeft){
+
+} */
+
+a[id^='anch_'] {}
+
+#main-alt #pagination~ table:not(#pagination2){
+    background-color:rgba(20,20,200,.3);
+}
+
+
+/*  a[href*="#fssi"]{ }  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

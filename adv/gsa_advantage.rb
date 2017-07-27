@@ -144,6 +144,16 @@ def get_html(gsa_a, n, url)
 	return html
 end
 
+def get_urls(gsa_a, n, url)
+  url
+  html      = get_html(gsa_a, n, url)
+  doc       = Nokogiri::HTML(html)
+  contractors = doc.css(CONTRACTOR_INFO)
+
+
+  return
+end
+
 def save_page(html, url, file_name="")
 	 # html = HtmlBeautifier.beautify(html)
 		puts 'saving page'

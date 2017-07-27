@@ -1,35 +1,30 @@
 require_relative 'gsa_advantage'
-1.times do
 
-
-
-	
 	
 threads     = []
 gsa_a       = []
-config      = [6]
+
 
 @vnd_queue      = Queue.new
 @mfr_queue      = Queue.new
-@elib_queue      = Queue.new
-@letter_queue = Queue.new
-# @reading    = 0
+@database_queue = Queue.new
+@alphabet_queue = Queue.new
 
-ARGV.each_with_index { |a,i| config[i] = a }
+
 letters = ("A".."Z").to_a << '0'
-letters.each {|l| @letter_queue << l}
+letters.each {|l| @alphabet_queue << l}
 
 
 threads << Thread.new do
-	until @letter_queue.empty? && @mfr_queue.empty? && @vnd_queue.empty? && @elib_queue.empty? do
+	until @alphabet_queue.empty? && @mfr_queue.empty? && @vnd_queue.empty? && @database_queue.empty? do
 		until @mfr_queue.empty?
 			insert_manufactures(take(@mfr_queue))
 		end
 		until @vnd_queue.empty?
 			insert_contractors(take(@vnd_queue))
 		end
-		until @elib_queue.empty?
-			insert_elib_contractors(take(@elib_queue))
+		until @database_queue.empty?
+			insert_elib_contractors(take(@database_queue))
 		end
 
 
@@ -57,10 +52,10 @@ benchmark '', @count
 	27.times do |i|
 	threads << Thread.new do
 		gsa_a[i] = initialize_browser
-		until @letter_queue.empty?
-				letter = @letter_queue.pop
+		until @alphabet_queue.empty?
+				letter = @alphabet_queue.pop
         # parse
-				eli = "https://www.gsaelibrary.gsa.gov/ElibMain/contractorList.do?contractorListFor=#{letter}"
+			  # todo	eli = "https://www.gsaelibrary.gsa.gov/ElibMain/contractorList.do?contractorListFor=#{letter}"
 			ADV::Lists.each do |list|
 				ADV::Categories.each do |category|
 					url = "https://www.gsaadvantage.gov/advantage/s/#{list}q=1:4#{category}*&listFor=#{letter}"
@@ -74,8 +69,6 @@ benchmark '', @count
 end
 
 threads.each { |thr| thr.join }
-color_p "#{Time.now} Complete"
-benchmark 'Manufactures/Contractors', @count
 
 end
 

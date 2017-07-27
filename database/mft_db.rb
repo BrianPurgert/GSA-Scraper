@@ -43,7 +43,7 @@ DB.extension :pretty_table
 # ------------------------------------------------------------------ #
 #     Create Tables
 # ------------------------------------------------------------------ #
-require_relative 'sip/sip_import'
+# require_relative 'sip/sip_import'
  helpers.each { |sql|  DB.run File.open(sql, "rb").read }
 
 
