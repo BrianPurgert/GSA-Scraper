@@ -21,6 +21,7 @@ task(:crawl_network) do
 	ruby 'report/report.rb'
 end
 
+
 task(:crawl_web_manufactures_vendors_categories) do
 	ruby 'GSA/adv/adv_base.rb'
 end
