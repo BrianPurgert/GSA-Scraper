@@ -1,22 +1,25 @@
 source 'https://rubygems.org'
 
-
+gem 'azure'
+# gem 'azure/storage'
+gem 'azure-storage'
+# gem 'azure_mgmt_storage'
+gem 'addressable', '~> 2.4'
 gem 'rake', '~> 12.0'
-# one of them has to work right?
-gem 'rubyXL', '~> 3.3', '>= 3.3.21'
+
 gem 'roo', '~> 2.7', '>= 2.7.1'
 gem 'roo-xls', '~> 1.1'
-gem 'fastercsv', '~> 1.5', '>= 1.5.5'
 gem 'axlsx', github: 'randym/axlsx'
 # gem 'creek', '~> 2.0'
 # gem 'spreadsheet', '~> 1.1', '>= 1.1.4'
-
-# gem 'rspec'
-# gem 'yard'
+gem 'rubyXL', '~> 3.3', '>= 3.3.21'
 gem 'sinatra'
+gem 'grape'
+
+# gem 'sinatra'
 gem 'thin'
-# gem 'erubi'
-# gem 'roda'
+gem 'erubi'
+gem 'roda'
 # gem 'forme'
 # gem 'rubyzip'
 gem 'in_threads', '~> 1.4'

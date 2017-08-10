@@ -74,17 +74,26 @@
 module GSA
 	require 'rubygems'
 	require 'sequel'
-	require 'open-uri'
-	require 'uri'
+  require 'addressable/uri'
 
 
-class Advantage
-	# @param [String] url
+
+
+class URI
 	def initialize(url)
-		url.include? "/advantage/"
-		# puts URI.decode(url)
-		build(url)
-	end
+    @uri = Addressable::URI.parse(url)
+    puts @uri.scheme
+    puts @uri.host
+    puts @uri.path
+    puts @uri.normalize
+
+		# build(url)
+  end
+
+  def print
+    "#{@uri.schema} #{@uri.host} #{@uri.path}"
+  end
+
 
 	def build(url)
 		query        = url.split('/').last
@@ -92,10 +101,10 @@ class Advantage
 		query_string = query.split('?').last
 		
 		if @page.include? "/s/"
-			puts "XXXXXXXXX"
 
 			query_string.split('&').each do |part|
 				puts part
+				puts REGEX_QUERY.match(part)
 			end
 
 		end
@@ -117,8 +126,7 @@ class Advantage
 					@bpanum = part.split('=').last
 				end
 		end
-		
-		
+
 
 			@url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=#{@contnum}&itemNumber=#{@mfgpart}&mfrName=#{@mfgname}"
 
@@ -196,7 +204,7 @@ https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=
 test_array = []
 
 test_urls.each_with_index do |url, i|
-	test_array[i] = GSA::Advantage.new(url)
+	test_array[i] = GSA::URI.new(url)
 	# puts test_array[i].gsin
 	puts test_array[i].url
   #"#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"

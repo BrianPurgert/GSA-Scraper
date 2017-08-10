@@ -1,15 +1,6 @@
-require 'roo'
-require 'prettyprint'
-require 'pp'
-require 'roo-xls'
-require 'colorize'
-require 'prettyprint'
 
-Header_MFR     = /(MFG|MFR|Manufacture|Manufacturer)*Name/ix
-Header_PART    = /(MFG|MFR|Manufacture|Manufacturer)*(Number|Part)/ix
-Header_PRICE   = /(.*)Price(.*)/ix
 
-Header_GENERAL     = /(MFG|MFR|Manufacture|Manufacturer|SIN|PRODUCT|UOI|PRICE|DISCOUNT|QUANTITY|Contract|CONTNUM|MFGPART|MFGNAME|BPAPRICE|SCHEDCAT)/ix
+
 
 # MFR PART NO
 # {"SIN"=>"Avatier Group Enforcer Licensing",
@@ -31,7 +22,7 @@ Header_GENERAL     = /(MFG|MFR|Manufacture|Manufacturer|SIN|PRODUCT|UOI|PRICE|DI
 
 
 	def create_client_table(name, extra_columns = [])
-		color_p "#{name.class}  #{name.to_s}   #{name.inspect}   #{name}"
+		puts "#{name.class}  #{name.to_s}   #{name.inspect}   #{name}"
 		  DB.create_table! name do
 			primary_key :id
 			String :manufacture_name, null: true
@@ -69,34 +60,7 @@ def prioritize(table)
 	end
 end
 
-def import_products(path)
-	
-		" | Parsing from: #{Pathname.new(path).basename}"
 
-
-
-		begin
-			
-			sheet = Roo::Spreadsheet.open(path)
-			sheet_data = sheet.parse(clean: true, header_search: [Header_GENERAL])
-			color_p sheet_data.pretty_inspect
-		rescue
-			puts 'No Header Row Found'
-		end
-	
-	
-		# DB[table].multi_insert(sheet_data)
-		
-		
-		# columns = DB[table].columns.to_a
-		# DB[table].import(columns, sheet_data)
-
-	
-		
-
-	
-
-end
 
 
 #   DB.add_index :posts, :title

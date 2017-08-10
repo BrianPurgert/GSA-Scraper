@@ -11,7 +11,7 @@ class FedBizOpps
 		Feed = 'FBOFeed'
 		Date = ""   # Format YYYYMMDD
 	
-	def initialize(date = Time.now.strftime("%Y%m%d"))
+	def initialize(date = Time.now.strftime("%Y%m%d") )
 		# yday = Time.now - (3600 * 24)
 		# puts Time.now - 1.day
 		#

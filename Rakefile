@@ -1,60 +1,54 @@
 require 'bundler'
 require 'bundler/setup'
 require 'rake'
+require 'colorize'
+# require_relative 'config.ru'
+# require_relative 'GSA/adv/adv_base'
 
-# Bundler::GemHelper.install_tasks
-# Bundler::Install.options
+
 
 desc 'Default Tasks'
-task(default: [:install,:s1,:s2])
-
-# source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
-# 	fl.exclude("~*")
-# 	fl.exclude(/^scratch\//)
-# 	fl.exclude(/^export\//)
-# 	fl.exclude do |f|
-# 		`git ls-files #{f}`.empty?
-# 	end
-# end
-#
-#
-#  task abc: :html
-# task html: source_files.ext(".html")
-#
-# rule ".html" => ".md" do |t|
-# 	sh "pandoc -o #{t.name} #{t.source}"
-# end
-#
-# rule ".html" => ".markdown" do |t|
-# 	sh "pandoc -o #{t.name} #{t.source}"
-# end
+task(default:
+         [:crawl_web_manufactures_vendors_categories,
+          :crawl_web_master_products,
+          :crawl_web_base_products])
 
 
 
-desc 'Price Comparisons from spreadsheet(2)'
-task(:pcp) do
+
+task(:crawl_network) do
+  puts "Crawling Network for with SIP files".colorize(:yellow)
 	ruby 'report/report.rb'
 end
 
-desc 'Build tables from Manufactures/Vendor'
-task(:s1) do
-	ruby 'adv/adv_base.rb'
+task(:crawl_web_manufactures_vendors_categories) do
+	ruby 'GSA/adv/adv_base.rb'
 end
 
-desc 'Find products'
-task(:s2) do
-	ruby 'adv/adv_search.rb'
-end
-task(:s3) do
-	ruby 'adv/adv_product.rb'
+task(:crawl_web_master_products) do
+	ruby 'GSA/adv/adv_search.rb'
 end
 
+task(:crawl_web_base_products) do
+	ruby 'GSA/adv/adv_product.rb'
+end
 
 desc 'Install Gems'
 task(:install) do
 	exec("cd #{Dir.getwd} && bundle update && bundle install")
 end
 
-# Rake.application.options.trace = true
 
 
+
+
+
+# source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
+#   fl.exclude("~*")
+#   fl.exclude(/^scratch\//)
+#   fl.exclude(/^export\//)
+#   fl.exclude do |f|
+#     `git ls-files #{f}`.empty?
+#   end
+# end
+# puts source_files.pretty_inspect

@@ -50,34 +50,34 @@ end
 
 
 DB.create_table?(:ICOLORS) do
-	column :CONTNUM      ,String,           size: 12               ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40               ,null: false      #   Manufacturer part number. Must be found in Product table.
-	column :MFGNAME      ,String,           size: 40               ,null: false      #   Manufacturer name. Must be found in Product table.
+	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40               ,null: true      #   Manufacturer part number. Must be found in Product table.
+	column :MFGNAME      ,String,           size: 40               ,null: true      #   Manufacturer name. Must be found in Product table.
 end
 
 # ======================================================================================================================
 # Link for accessories to products -------------------------------------------------------------------------------------
 
 DB.create_table?(:IACCXPRO) do
-	column :CONTNUM    ,String,   size: 12    ,null: false          # CONTNUM
-	column :MFGPART    ,String,   size: 40    ,null: false          # Manufacturer part number. Must be found in Product table. Cannot equal accpart.
-	column :PROD_MFR   ,String,   size: 40    ,null: false          # Product Manufacturer name. Must be found in Product table.
-	column :ACCPART    ,String,   size: 40    ,null: false          # Accessory part number. Must be found in Product table. Cannot equal mfgpart.
-	column :ACC_MFR    ,String,   size: 40    ,null: false          # Accessory Manufacturer name. Must be found in Product table.
+	column :CONTNUM    ,String,   size: 12    ,null: true          # CONTNUM
+	column :MFGPART    ,String,   size: 40    ,null: true          # Manufacturer part number. Must be found in Product table. Cannot equal accpart.
+	column :PROD_MFR   ,String,   size: 40    ,null: true          # Product Manufacturer name. Must be found in Product table.
+	column :ACCPART    ,String,   size: 40    ,null: true          # Accessory part number. Must be found in Product table. Cannot equal mfgpart.
+	column :ACC_MFR    ,String,   size: 40    ,null: true          # Accessory Manufacturer name. Must be found in Product table.
 end
 
 
 # BPA Price and quantity/volume discount information table ------------------------------------------------------------------------------
 
 DB.create_table?(:IBPA) do
-	column :CONTNUM      ,String,            size: 12     ,null: false # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,            size: 40     ,null: false # Manufacturer part number. In PROD.TXT.
-	column :MFGNAME      ,String,            size: 40     ,null: false # Manufacturer name. Must be found in Product table.
-	column :BPANUM       ,String,            size: 30     ,null: false # BPA number.
+	column :CONTNUM      ,String,            size: 12     ,null: true # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,            size: 40     ,null: true # Manufacturer part number. In PROD.TXT.
+	column :MFGNAME      ,String,            size: 40     ,null: true # Manufacturer name. Must be found in Product table.
+	column :BPANUM       ,String,            size: 30     ,null: true # BPA number.
 	column :BLIN         ,String,            size: 10     ,null: true  # BPA line item number from BPA document. Else blank.
-	column :BPAPRICE     ,BigDecimal,       size: [15,4] ,null: false # BPA price.
-	column :MLP          ,BigDecimal,       size: [12,4] ,null: false # GSA Price or Manufacturer List price if no GSA price.
-	column :DISC_TYPE    ,Integer,          size: 1      ,null: false # Discount type. 0= no volume discounts offered. 1= volume discounts are by quantity range. 2= discount ranges are by dollar range.
+	column :BPAPRICE     ,BigDecimal,       size: [15,4] ,null: true # BPA price.
+	column :MLP          ,BigDecimal,       size: [12,4] ,null: true # GSA Price or Manufacturer List price if no GSA price.
+	column :DISC_TYPE    ,Integer,          size: 1      ,null: true # Discount type. 0= no volume discounts offered. 1= volume discounts are by quantity range. 2= discount ranges are by dollar range.
 	
 	column :ST_RANGE1    ,Integer,          size: 8      ,null: true  # Beginning range for the first break. If DISC_TYPE =1 then it must be greater than 1. If DISC_TYPE=2 then it must be greater than the BPAPRICE. If DISC_TYPE=0 then it must be 0.
 	column :END_RANGE1   ,Integer,          size: 8      ,null: true  # Ending range for the first break. It must be greater than the beginning range.
@@ -118,109 +118,109 @@ end
 # Color information for product ------------------------------------------------------------------------------
 
 DB.create_table?(:ICOLORS) do
-	column :CONTNUM      ,String,           size: 12               ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40               ,null: false      #   Manufacturer part number. Must be found in Product table.
-	column :MFGNAME      ,String,           size: 40               ,null: false      #   Manufacturer name. Must be found in Product table.
-	column :COLOR        ,String,           size: 40               ,null: false      #   Color. Must be unique.
+	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40               ,null: true      #   Manufacturer part number. Must be found in Product table.
+	column :MFGNAME      ,String,           size: 40               ,null: true      #   Manufacturer name. Must be found in Product table.
+	column :COLOR        ,String,           size: 40               ,null: true      #   Color. Must be unique.
 end
 
 
 # Contract information table ------------------------------------------------------------------------------
 
 DB.create_table?(:ICONTR) do
-	column :CONTNUM      ,String,           size: 12               ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 'for VA contract), unique.
-	column :SCHEDCAT     ,String,           size: 10               ,null: false      #   Schedule category number.
-	column :A_NAME       ,String,           size: 35               ,null: false      #   Contract administrator name.
-	column :A_PHONE      ,String,           size: 30               ,null: false      #   Contract administrator phone number. Must be numbers.
-	column :A_FAX        ,String,           size: 30               ,null: false      #   Contract administrator fax number. Must be numbers.
-	column :C_DELIV      ,Integer,          size: 8                ,null: false      #   Number of days for contract delivery.  < 999 days.
-	column :MIN_ORD      ,BigDecimal,       size: [12,4]           ,null: false      #   Minimum dollar order that is authorized.
+	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 'for VA contract), unique.
+	column :SCHEDCAT     ,String,           size: 10               ,null: true      #   Schedule category number.
+	column :A_NAME       ,String,           size: 35               ,null: true      #   Contract administrator name.
+	column :A_PHONE      ,String,           size: 30               ,null: true      #   Contract administrator phone number. Must be numbers.
+	column :A_FAX        ,String,           size: 30               ,null: true      #   Contract administrator fax number. Must be numbers.
+	column :C_DELIV      ,Integer,          size: 8                ,null: true      #   Number of days for contract delivery.  < 999 days.
+	column :MIN_ORD      ,BigDecimal,       size: [12,4]           ,null: true      #   Minimum dollar order that is authorized.
 	column :PRMPT_DISC   ,Float,            size: [8,4]            ,null: true       #   Prompt payment discount as a percentage value.  >0 if PRMPT_PAY, < 100.00.
 	column :PRMPT_DAYS   ,Integer,          size: 3                ,null: true       #   Number of days considered to be prompt payment.  >0 if PRMPT_PAY, < 31.
-	column :PPOINT       ,String,           size: 2                ,null: false      #   Production point country code. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
+	column :PPOINT       ,String,           size: 2                ,null: true      #   Production point country code. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
 	column :PPOINT2      ,String,           size: 2                ,null: true       #   Second production point country code. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
-	column :FOB_AK       ,String,           size: 1                ,null: false      #   Freight-on-board for Alaska. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
-	column :FOB_HI       ,String,           size: 1                ,null: false      #   Freight-on-board for Hawaii. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery
-	column :FOB_PR       ,String,           size: 1                ,null: false      #   Freight-on-board for Puerto Rico. ‘D’- destination. ‘O’ – origin buyer pays shipping cost), ‘N’-no delivery.
-	column :FOB_US       ,String,           size: 1                ,null: false      #   Freight-on-board for CONUS. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘W’-worldwide (CONUS= dest, outside CONUS = origin.
-	column :EFF_DATE     ,Date                                     ,null: false      #   Catalog effective start date.
-	column :WARNUMBER    ,String,           size: 3                ,null: false      #   Time period for warranty. Must be between 1 and 999. 0 if warperiod is 'NONE', 'LIFE', 'STND'.
-	column :WARPERIOD    ,String,           size: 5                ,null: false      #   Unit of time for warranty. Value should be 'DAY', 'WEEK', 'MONTH', 'YEAR', 'NONE', 'LIFE' or 'STND'.
-	column :REV_NUM      ,String,           size: 6                ,null: false      #   Revision number.
+	column :FOB_AK       ,String,           size: 1                ,null: true      #   Freight-on-board for Alaska. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
+	column :FOB_HI       ,String,           size: 1                ,null: true      #   Freight-on-board for Hawaii. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery
+	column :FOB_PR       ,String,           size: 1                ,null: true      #   Freight-on-board for Puerto Rico. ‘D’- destination. ‘O’ – origin buyer pays shipping cost), ‘N’-no delivery.
+	column :FOB_US       ,String,           size: 1                ,null: true      #   Freight-on-board for CONUS. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘W’-worldwide (CONUS= dest, outside CONUS = origin.
+	column :EFF_DATE     ,Date                                     ,null: true      #   Catalog effective start date.
+	column :WARNUMBER    ,String,           size: 3                ,null: true      #   Time period for warranty. Must be between 1 and 999. 0 if warperiod is 'NONE', 'LIFE', 'STND'.
+	column :WARPERIOD    ,String,           size: 5                ,null: true      #   Unit of time for warranty. Value should be 'DAY', 'WEEK', 'MONTH', 'YEAR', 'NONE', 'LIFE' or 'STND'.
+	column :REV_NUM      ,String,           size: 6                ,null: true      #   Revision number.
 	column :CAT_MODS     ,String,           size: 30               ,null: true       #    Modification number for the contract, if any.
-	column :LEADTIME     ,String,           size: 2                ,null: false      #   Code to explain C_DELIV. 'AF' for time delivered after receipt of order, 'AE' for time shipped after receipt, 'AX' for award date to completion date.
-	column :A_EMAIL      ,String,           size: 80               ,null: false      #   Contract administrator e-mail address.
+	column :LEADTIME     ,String,           size: 2                ,null: true      #   Code to explain C_DELIV. 'AF' for time delivered after receipt of order, 'AE' for time shipped after receipt, 'AX' for award date to completion date.
+	column :A_EMAIL      ,String,           size: 80               ,null: true      #   Contract administrator e-mail address.
 	column :REF_FILE     ,String,           size: 80               ,null: true       #    File name of reference file which can be attached to contract to describe products under it.
 end
 
 # Vendor information table -------------------------------------------------------------------------------
 
 DB.create_table?(:ICORPET) do
-	column :VENDNAME     ,String,           size: 35              ,null: false      #   Vendor name.
+	column :VENDNAME     ,String,           size: 35              ,null: true      #   Vendor name.
 	column :DIVISION     ,String,           size: 35              ,null: true       #    Corporate/division name.
-	column :V_STR1       ,String,           size: 35              ,null: false      #   Corporate/division headquarters address 1.
+	column :V_STR1       ,String,           size: 35              ,null: true      #   Corporate/division headquarters address 1.
 	column :V_STR2       ,String,           size: 35              ,null: true       #    Corporate/division headquarters address 2.
-	column :V_CITY       ,String,           size: 30              ,null: false      #   Corporate/division headquarters city.
-	column :V_STATE      ,String,           size: 2               ,null: false      #   Corporate/division headquarters state. In SIP help(SIP contents/Import data/SIP lookup tables/State and country code table).
-	column :V_CTRY       ,String,           size: 2               ,null: false      #   Corporate/division headquarters country. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
-	column :V_ZIP        ,String,           size: 11              ,null: false      #   Corporate/division headquarters zip code.
-	column :V_PHONE      ,String,           size: 30              ,null: false      #   Corporate/division headquarters telephone number. Must be numbers.
-	column :V_FAX        ,String,           size: 30              ,null: false      #   Corporate/division headquarters fax number. Must be numbers.
-	column :V_WWW        ,String,           size: 80              ,null: false      #   Corporate/division headquarters www address. First 7 char = 'http://'.
-	column :V_EMAIL      ,String,           size: 80              ,null: false      #   Email address that can accept GSA Advantage purchase order.
-	column :PASSWORD     ,String,           size: 30              ,null: false      #   Vendor support center provided password. Given out by the GSA help desk.
-	column :DUNS_NO      ,String,           size: 9               ,null: false      #   DUNS number. Must be 9 digits.
+	column :V_CITY       ,String,           size: 30              ,null: true      #   Corporate/division headquarters city.
+	column :V_STATE      ,String,           size: 2               ,null: true      #   Corporate/division headquarters state. In SIP help(SIP contents/Import data/SIP lookup tables/State and country code table).
+	column :V_CTRY       ,String,           size: 2               ,null: true      #   Corporate/division headquarters country. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
+	column :V_ZIP        ,String,           size: 11              ,null: true      #   Corporate/division headquarters zip code.
+	column :V_PHONE      ,String,           size: 30              ,null: true      #   Corporate/division headquarters telephone number. Must be numbers.
+	column :V_FAX        ,String,           size: 30              ,null: true      #   Corporate/division headquarters fax number. Must be numbers.
+	column :V_WWW        ,String,           size: 80              ,null: true      #   Corporate/division headquarters www address. First 7 char = 'http://'.
+	column :V_EMAIL      ,String,           size: 80              ,null: true      #   Email address that can accept GSA Advantage purchase order.
+	column :PASSWORD     ,String,           size: 30              ,null: true      #   Vendor support center provided password. Given out by the GSA help desk.
+	column :DUNS_NO      ,String,           size: 9               ,null: true      #   DUNS number. Must be 9 digits.
 end
 
 
 # Contract Special Item Number (SIN) Table ------------------------------------------------------------------------------
 
 DB.create_table?(:IMOLS) do
-	column :CONTNUM      ,String,           size: 12              ,null: false        #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :SIN          ,String,           size: 15              ,null: false        #     Special item number. In help(SIP help contents/Import data/SIP lookup tables/Special item number table) for current SCHEDCAT.
-	column :MOL          ,Integer,          size: 8               ,null: false        #     Maximum order limit for special item number. In SIP help(SIP help contents/Import data/SIP lookup tables/Maximum order Limit table) for current SIN.
+	column :CONTNUM      ,String,           size: 12              ,null: true        #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :SIN          ,String,           size: 15              ,null: true        #     Special item number. In help(SIP help contents/Import data/SIP lookup tables/Special item number table) for current SCHEDCAT.
+	column :MOL          ,Integer,          size: 8               ,null: true        #     Maximum order limit for special item number. In SIP help(SIP help contents/Import data/SIP lookup tables/Maximum order Limit table) for current SIN.
 end
 
 
 # Product Options (allows you to enter any options, colors, components or upgrades, so that customers may configure a product by selecting from available options)
 
 DB.create_table?(:IOPTIONS) do
-	column :CONTNUM      ,String,           size: 12              ,null: false      #     Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40              ,null: false      #     Manufacturer part number. In PROD.TXT
-	column :MFGNAME      ,String,           size: 40              ,null: false      #     Manufacturer name of attached product. Must be found in Product table.
-	column :OPT_PART     ,String,           size: 40              ,null: false      #     Option part. Must be unique for a product
-	column :GROUP        ,String,           size: 20              ,null: false      #     Option group. Name option groups so that similar options can be kept together. For example, if a computer has 3 available monitor sizes (e.g., 14", 15", 17"), each of these monitor options should be grouped together under the group name "monitors."
-	column :OPT_CODE     ,String,           size: 1               ,null: false      #     Option code. 'I'-option INCLUDED as feature of product, 'S'-option can be SUBSTITUTED, 'A'-option can be ADDED, or 'O'-None can be selected.
-	column :OPT_QTY      ,Integer,          size: 8               ,null: false      #     Option quantity. Must be greater than 0.
-	column :OPT_UNIT     ,String,           size: 2               ,null: false      #     Option unit. In SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
-	column :OPT_PRICE    ,Float,            size: [15,4]          ,null: false      #     Option price.
-	column :OPT_DESC     ,String,           size: 80              ,null: false      #     Option description.
-	column :OPT_MFG      ,String,           size: 40              ,null: false      #     Option manufacturer.
+	column :CONTNUM      ,String,           size: 12              ,null: true      #     Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40              ,null: true      #     Manufacturer part number. In PROD.TXT
+	column :MFGNAME      ,String,           size: 40              ,null: true      #     Manufacturer name of attached product. Must be found in Product table.
+	column :OPT_PART     ,String,           size: 40              ,null: true      #     Option part. Must be unique for a product
+	column :GROUP        ,String,           size: 20              ,null: true      #     Option group. Name option groups so that similar options can be kept together. For example, if a computer has 3 available monitor sizes (e.g., 14", 15", 17"), each of these monitor options should be grouped together under the group name "monitors."
+	column :OPT_CODE     ,String,           size: 1               ,null: true      #     Option code. 'I'-option INCLUDED as feature of product, 'S'-option can be SUBSTITUTED, 'A'-option can be ADDED, or 'O'-None can be selected.
+	column :OPT_QTY      ,Integer,          size: 8               ,null: true      #     Option quantity. Must be greater than 0.
+	column :OPT_UNIT     ,String,           size: 2               ,null: true      #     Option unit. In SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
+	column :OPT_PRICE    ,Float,            size: [15,4]          ,null: true      #     Option price.
+	column :OPT_DESC     ,String,           size: 80              ,null: true      #     Option description.
+	column :OPT_MFG      ,String,           size: 40              ,null: true      #     Option manufacturer.
 	column :IS_DELETED   ,TrueClass                               ,null: true       #      If options is deletable and if Opt_Code is "I".
 end
 # Product specific price information table ------------------------------------------------------------------------------
 
 DB.create_table?(:IPRICE) do
-	column :CONTNUM      ,String,           size: 12              ,null: false       #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40              ,null: false       #   Manufacturer part number. In PROD.TXT.
-	column :MFGNAME      ,String,           size: 40              ,null: false       #   Manufacturer name. Must be found in Product table.
-	column :GSAPRICE     ,BigDecimal,       size: [12,4]          ,null: false       #   GSA price.
+	column :CONTNUM      ,String,           size: 12              ,null: true       #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40              ,null: true       #   Manufacturer part number. In PROD.TXT.
+	column :MFGNAME      ,String,           size: 40              ,null: true       #   Manufacturer name. Must be found in Product table.
+	column :GSAPRICE     ,BigDecimal,       size: [12,4]          ,null: true       #   GSA price.
 	column :TEMPRICE     ,BigDecimal,       size: [12,4]          ,null: true        #   Temporary GSA price reduction.
 	column :TPRSTART     ,Date                                    ,null: true        #   Temporary price start date. Required if TEMPRICE has a value
 	column :TPRSTOP      ,Date                                    ,null: true        #   Temporary price end date. Required if TEMPRICE has a value.
-	column :MLP          ,BigDecimal,       size: [12,4]          ,null: false       #   Manufacturer list price.
-	column :ZONE_NUM     ,String,           size: 2               ,null: false       #   Zone number to which price applies. Zones are assigned at IZONE. '00' If there are no zones.
+	column :MLP          ,BigDecimal,       size: [12,4]          ,null: true       #   Manufacturer list price.
+	column :ZONE_NUM     ,String,           size: 2               ,null: true       #   Zone number to which price applies. Zones are assigned at IZONE. '00' If there are no zones.
 end
 
 
 # Product Information Table ------------------------------------------------------------------------------
 DB.create_table?(:IPROD) do
-	column :CONTNUM      ,String,           size: 12             ,null: false     # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40             ,null: false     # Manufacturer part number. Must be unique for a contract.
-	column :MFGNAME      ,String,           size: 40             ,null: false     # Manufacturer name.
-	column :PRODNAME     ,String,           size: 40             ,null: false     # Product name.
+	column :CONTNUM      ,String,           size: 12             ,null: true     # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40             ,null: true     # Manufacturer part number. Must be unique for a contract.
+	column :MFGNAME      ,String,           size: 40             ,null: true     # Manufacturer name.
+	column :PRODNAME     ,String,           size: 40             ,null: true     # Product name.
 	column :VENDPART     ,String,           size: 40             ,null: true      # Vendor part number.
-	column :PRODDESC     ,String,           size: 250            ,null: false     # product description.
+	column :PRODDESC     ,String,           size: 250            ,null: true     # product description.
 	column :PRODDESC2    ,String,           size: 250            ,null: true      # Second description. Not until PRODDESC is full.
 	column :PRODDESC3    ,String,           size: 250            ,null: true      # Third description. Not until PRODDESC2 is full.
 	column :PRODDESC4    ,String,           size: 250            ,null: true      # Forth description. Not until PRODDESC3 is full.
@@ -230,44 +230,44 @@ DB.create_table?(:IPROD) do
 	column :VALUE3       ,Float,            size: [13,4]         ,null: true      # Dimension value 3. Required if UNIT3 has a value.
 	column :DVOLUME      ,Float,            size: [14,4]         ,null: true      # Dimension volume. Only used if FOB = 'O'
 	column :D_VUNIT      ,String,           size: 2              ,null: true      # Dimension unit volume. Only used if FOB = 'O'. Always "CF" cubic feet.
-	column :ISSCODE      ,String,           size: 2              ,null: false     # Unit of issue code. SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
+	column :ISSCODE      ,String,           size: 2              ,null: true     # Unit of issue code. SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
 	column :QTY_UNIT     ,String,           size: 12             ,null: true      # Quantity per unit package. Required if ISSFLAG=.T. ISSFLAG is in ILISSUE lookup table.
 	column :QP_UNIT      ,String,           size: 2              ,null: true      # Quantity of product per unit package. Required if ISSFLAG=.T. in SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
 	column :STDPACK      ,String,           size: 20             ,null: true      # Standard package size.
 	column :WEIGHT       ,Float,            size: [14,4]         ,null: true      # Weight of product.
-	column :SIN          ,String,           size: 15             ,null: false     # Special item number. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special item number table) and in related SCHEDCAT.
-	column :PPOINT       ,String,           size: 2              ,null: false     # Production point country code. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table)
+	column :SIN          ,String,           size: 15             ,null: true     # Special item number. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special item number table) and in related SCHEDCAT.
+	column :PPOINT       ,String,           size: 2              ,null: true     # Production point country code. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table)
 	column :INCR_OF      ,String,           size: 20             ,null: true      # Increments that products can be purchased in
 	column :P_WWW        ,String,           size: 80             ,null: true      # WWW address for this specific product. First 7 char = 'http://'.
-	column :WARNUMBER    ,String,           size: 3              ,null: false     # Time period for warranty. Must be between 1 and 999. 0 if warperiod is 'NONE', 'LIFE', 'STND'.
-	column :WARPERIOD    ,String,           size: 5              ,null: false     # Unit of time for warranty. Value should be 'DAY', 'WEEK', 'MONTH', 'YEAR', 'NONE', 'LIFE' or 'STND'.
-	column :P_DELIV      ,Float,            size: [8,0]          ,null: false     # Product delivery.  < 999 days.
-	column :LEADTIME     ,String,           size: 2              ,null: false     # Code to explain P_DELIV. 'AF' for time delivered after receipt of order, 'AE' for time shipped after receipt, 'AX' for award date to completion date.
+	column :WARNUMBER    ,String,           size: 3              ,null: true     # Time period for warranty. Must be between 1 and 999. 0 if warperiod is 'NONE', 'LIFE', 'STND'.
+	column :WARPERIOD    ,String,           size: 5              ,null: true     # Unit of time for warranty. Value should be 'DAY', 'WEEK', 'MONTH', 'YEAR', 'NONE', 'LIFE' or 'STND'.
+	column :P_DELIV      ,Float,            size: [8,0]          ,null: true     # Product delivery.  < 999 days.
+	column :LEADTIME     ,String,           size: 2              ,null: true     # Code to explain P_DELIV. 'AF' for time delivered after receipt of order, 'AE' for time shipped after receipt, 'AX' for award date to completion date.
 	column :UNIT1        ,String,           size: 2              ,null: true      # Dimension unit 1. Required if there is a value in VALUE1. in . SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
 	column :UNIT2        ,String,           size: 2              ,null: true      # Dimension unit 2. Required if there is a value in VALUE2. in . SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
 	column :UNIT3        ,String,           size: 2              ,null: true      # Dimension unit 3. Required if there is a value in VALUE3. in . SIP help(SIP help contents/Import data/SIP lookup tables/Unit of issue table).
 	column :TYPE1        ,String,           size: 2              ,null: true      # Dimension type 1. Required if UNIT1 or VALUE1 has a value. Must be 'LN'.
 	column :TYPE2        ,String,           size: 2              ,null: true      # Dimension type 2. Required if UNIT2 or VALUE2 has a value. Must be 'WD'.
 	column :TYPE3        ,String,           size: 2              ,null: true      # Dimension type 3. Required if UNIT3 or VALUE3 has a value. Must be 'HT'.
-	column :ITEMTYPE     ,String,           size: 1              ,null: false     # Item type. Must be 'P' or 'A'. P=Product, A=Accessory.
-	column :UPC		       ,String,           size: 14             ,null: false     # UPC must be12 digits (you may enter 11 and will assume UPC has leading zero).  You may enter EAN8, EAN13, GTIN14, or ISBN13 (for books) if you use these identifiers instead of a UPC.  ISBN13 must start with 978 or 979.  You may pad any of these identifies with zero(s) to make a 14 digit GTIN. *UPC required for some SINs. See SIP Help for SINs requiring UPC for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table).
+	column :ITEMTYPE     ,String,           size: 1              ,null: true     # Item type. Must be 'P' or 'A'. P=Product, A=Accessory.
+	column :UPC		       ,String,           size: 14             ,null: true     # UPC must be12 digits (you may enter 11 and will assume UPC has leading zero).  You may enter EAN8, EAN13, GTIN14, or ISBN13 (for books) if you use these identifiers instead of a UPC.  ISBN13 must start with 978 or 979.  You may pad any of these identifies with zero(s) to make a 14 digit GTIN. *UPC required for some SINs. See SIP Help for SINs requiring UPC for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table).
 	column :UNSPSC       ,String,           size: 8              ,null: true      # UNSPSC must be 8 digits all numeric and not start with 0.
-	column :FOB_AK       ,String,           size: 1              ,null: false     # Freight-on-board for Alaska. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
-	column :FOB_HI       ,String,           size: 1              ,null: false     # Freight-on-board for Hawaii. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
-	column :FOB_PR       ,String,           size: 1              ,null: false     # Freight-on-board for Puerto Rico. ‘D’- destination. ‘O’ – origin buyer pays shipping cost), ‘N’-no delivery
-	column :FOB_US       ,String,           size: 1              ,null: false     # Freight-on-board for CONUS. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘W’-worldwide (CONUS= dest, outside CONUS = origin.
+	column :FOB_AK       ,String,           size: 1              ,null: true     # Freight-on-board for Alaska. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
+	column :FOB_HI       ,String,           size: 1              ,null: true     # Freight-on-board for Hawaii. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
+	column :FOB_PR       ,String,           size: 1              ,null: true     # Freight-on-board for Puerto Rico. ‘D’- destination. ‘O’ – origin buyer pays shipping cost), ‘N’-no delivery
+	column :FOB_US       ,String,           size: 1              ,null: true     # Freight-on-board for CONUS. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘W’-worldwide (CONUS= dest, outside CONUS = origin.
 	column :PSC_CODE	 ,String,           size: 4              ,null: true      # Product Service Code. Must be 4 characters and can only contain letters and numbers.
 end
 
 # Product quantity/volume discount information table ------------------------------------------------------------------------------
 DB.create_table?(:IQTYVOL) do
-	column :CONTNUM      ,String,           size: 12            ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40            ,null: false      #   Manufacturer part number. In PROD.TXT.
-	column :MFGNAME      ,String,           size: 40            ,null: false      #   Manufacturer name. Must be found in Product table.
-	column :BREAK1       ,BigDecimal,       size: [12,4]        ,null: false      #   Discount GSA price for the first break. If not temp discount record.
-	column :DISC_PCT1    ,Float,            size: [8,4]         ,null: false      #   Percentage off of the regular GSA price for the first break.
-	column :RANGE1       ,Float,            size: [8,0]         ,null: false      #   Beginning range for the first break. If IS_QTY='Y' then it must be greater than 1. If IS_QTY=’N’ then it must be greater than the GSAPRICE.
-	column :ENDRANGE1    ,Float,            size: [8,0]         ,null: false      #   Ending range for the first break. It must be greater than the beginning range.
+	column :CONTNUM      ,String,           size: 12            ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40            ,null: true      #   Manufacturer part number. In PROD.TXT.
+	column :MFGNAME      ,String,           size: 40            ,null: true      #   Manufacturer name. Must be found in Product table.
+	column :BREAK1       ,BigDecimal,       size: [12,4]        ,null: true      #   Discount GSA price for the first break. If not temp discount record.
+	column :DISC_PCT1    ,Float,            size: [8,4]         ,null: true      #   Percentage off of the regular GSA price for the first break.
+	column :RANGE1       ,Float,            size: [8,0]         ,null: true      #   Beginning range for the first break. If IS_QTY='Y' then it must be greater than 1. If IS_QTY=’N’ then it must be greater than the GSAPRICE.
+	column :ENDRANGE1    ,Float,            size: [8,0]         ,null: true      #   Ending range for the first break. It must be greater than the beginning range.
 	column :BREAK2       ,BigDecimal,       size: [12,4]        ,null: true       #   Discount GSA price for the 2nd break. It must be less than the previous break.
 	column :DISC_PCT2    ,Float,            size: [8,4]         ,null: true       #   Percentage off of the regular GSA price for the 2nd break. It must be greater than the previous break.
 	column :RANGE2       ,Float,            size: [8,0]         ,null: true       #   Beginning range for the 2nd break. It must be 1 greater than the previous ending range.
@@ -293,44 +293,44 @@ DB.create_table?(:IQTYVOL) do
 	column :RANGE7       ,Float,            size: [8,0]         ,null: true       #   Beginning range for the 7th break. It must be 1 greater than the previous ending range.
 	column :ENDRANGE7    ,Float,            size: [8,0]         ,null: true       #   Ending range for the 7th break. It must be greater than the beginning range.
 	column :QMSG         ,String,           size: 80            ,null: true       #    Enter any terms applicable to quantity discounts.
-	column :IS_QTY       ,String,           size: 1             ,null: false      #   ,null: false      #/no field. ‘Y’ if discounts are based on the quantity of the product purchased. ‘N’ if discounts are based on the total purchase price of the product.
-	column :IS_TEMP      ,String,           size: 1             ,null: false      #   ,null: false      #/no field. Is this a temporary price? Must be 'Y' or 'N'.
-	column :ZONE_NUM     ,String,           size: 2             ,null: false      #   Zone number. Zone to which the price applies. (Zones are assigned at IZONE.) '00' if there are no zones.
+	column :IS_QTY       ,String,           size: 1             ,null: true      #   ,null: true      #/no field. ‘Y’ if discounts are based on the quantity of the product purchased. ‘N’ if discounts are based on the total purchase price of the product.
+	column :IS_TEMP      ,String,           size: 1             ,null: true      #   ,null: true      #/no field. Is this a temporary price? Must be 'Y' or 'N'.
+	column :ZONE_NUM     ,String,           size: 2             ,null: true      #   Zone number. Zone to which the price applies. (Zones are assigned at IZONE.) '00' if there are no zones.
 end
 
 
 # Contract order address information table ------------------------------------------------------------------------------
 
 DB.create_table?(:IREMITOR) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :R_NAME       ,String,           size: 35           ,null: false      #   Contact name for order address.
-	column :R_STR1       ,String,           size: 35           ,null: false      #   Street address for order address.
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :R_NAME       ,String,           size: 35           ,null: true      #   Contact name for order address.
+	column :R_STR1       ,String,           size: 35           ,null: true      #   Street address for order address.
 	column :R_STR2       ,String,           size: 35           ,null: true       #    Street address 2 for order address.
-	column :R_CITY       ,String,           size: 30           ,null: false      #   City for order address.
-	column :R_STATE      ,String,           size: 2            ,null: false      #   State for order address. In SIP help(SIP contents/Import data/SIP lookup tables/State and country code table).
-	column :R_CTRY       ,String,           size: 2            ,null: false      #   Country for remittance order. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
-	column :R_ZIP        ,String,           size: 11           ,null: false      #   Zip code for order address.
-	column :R_PHONE      ,String,           size: 30           ,null: false      #   Telephone number for order address. Must be numbers.
-	column :R_FAX        ,String,           size: 30           ,null: false      #   Fax number for order address. Must be numbers.
-	column :R_EMAIL      ,String,           size: 80           ,null: false      #   Send orders to this email address.
+	column :R_CITY       ,String,           size: 30           ,null: true      #   City for order address.
+	column :R_STATE      ,String,           size: 2            ,null: true      #   State for order address. In SIP help(SIP contents/Import data/SIP lookup tables/State and country code table).
+	column :R_CTRY       ,String,           size: 2            ,null: true      #   Country for remittance order. In SIP help(SIP contents/Import data/SIP lookup tables/Point of production table).
+	column :R_ZIP        ,String,           size: 11           ,null: true      #   Zip code for order address.
+	column :R_PHONE      ,String,           size: 30           ,null: true      #   Telephone number for order address. Must be numbers.
+	column :R_FAX        ,String,           size: 30           ,null: true      #   Fax number for order address. Must be numbers.
+	column :R_EMAIL      ,String,           size: 80           ,null: true      #   Send orders to this email address.
 end
 
 
 # Product/contract special terms & conditions table ------------------------------------------------------------------------------
 
 DB.create_table?(:ISPECTER) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :SPECNAME     ,String,           size: 25           ,null: false      #   Special term name. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special charges table).
-	column :CHARGE       ,BigDecimal,       size: [12,4]       ,null: false      #   Special term charge.
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :SPECNAME     ,String,           size: 25           ,null: true      #   Special term name. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special charges table).
+	column :CHARGE       ,BigDecimal,       size: [12,4]       ,null: true      #   Special term charge.
 	column :SPECDESC     ,String,           size: 80           ,null: true       #   Special term description.
-	column :S_PER        ,String,           size: 2            ,null: false      #   Unit of special term measurement. SIP help(SIP contents/Import data/SIP lookup tables/unit of issue table).
+	column :S_PER        ,String,           size: 2            ,null: true      #   Unit of special term measurement. SIP help(SIP contents/Import data/SIP lookup tables/unit of issue table).
 end
 
 
 # Contract Zone table. If prices vary by geographic zone, assign zone numbers to each state, up to 10 zones, numbered 1-10. AK, HI, PR and VI must >= 0. All others > 0.-----------------------
 
 DB.create_table?(:IZONE) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :AK           ,Integer,          size: 2            ,null: true       #    Alaska zone number. Required if you have zones.
 	column :AL           ,Integer,          size: 2            ,null: true       #    Alabama zone number. Required if you have zones.
 	column :AR           ,Integer,          size: 2            ,null: true       #    Arkansas zone number. Required if you have zones.
@@ -388,19 +388,19 @@ end
 
 # Fabric information for contract. If many of your products have fabrics choices, this table is useful. ------------------------------------
 DB.create_table?(:IFABRICS) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :FABTYPE      ,String,           size: 15           ,null: false      #   Fabric type.
-	column :COLOR        ,String,           size: 40           ,null: false      #   Color.
-	column :COLOR_NUM    ,String,           size: 40           ,null: false      #   Color number.
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :FABTYPE      ,String,           size: 15           ,null: true      #   Fabric type.
+	column :COLOR        ,String,           size: 40           ,null: true      #   Color.
+	column :COLOR_NUM    ,String,           size: 40           ,null: true      #   Color number.
 end
 
 # Environmental message information for product. ------------------------------------------------------------------------------
 
 DB.create_table?(:IMSG) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40           ,null: false      #   Manufacturer part number. In PROD.TXT.
-	column :MFGNAME      ,String,           size: 40           ,null: false      #   Manufacturer name. Must be found in Product table.
-	column :EMSGCODE     ,String,           size: 2            ,null: false      #   Environmental message code. SIP help(SIP help contents/Import data/SIP lookup tables/Environmental Message Table).
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40           ,null: true      #   Manufacturer part number. In PROD.TXT.
+	column :MFGNAME      ,String,           size: 40           ,null: true      #   Manufacturer name. Must be found in Product table.
+	column :EMSGCODE     ,String,           size: 2            ,null: true      #   Environmental message code. SIP help(SIP help contents/Import data/SIP lookup tables/Environmental Message Table).
 	column :RECYCLED     ,String,           size: 80           ,null: true       #   Recycled content for mfrpart. Example: Contains 50% recovered meterial which includes 20% post consumer meterial.
 	column :URL          ,String,           size: 80           ,null: true       #   URL having Section 508 accessibility info for this product
 	column :SCANCODE     ,String,           size: 40           ,null: true       #   Scan code related to GSA Parallel Contracting program.
@@ -411,10 +411,10 @@ end
 # photo information for product ------------------------------------------------------------------------------
 
 DB.create_table?(:IPHOTO) do
-	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
-	column :MFGPART      ,String,           size: 40           ,null: false      #   Manufacturer part number. Must be found in Product table.
-	column :MFGNAME      ,String,           size: 40           ,null: false      #   Manufacturer name. Must be found in Product table.
-	column :DEF_PHOTO    ,String,           size: 80           ,null: false      #    Filename of first photo. This is the default photo that will be shown with product/accessory. This should be the largest and best photo.*DEF_PHOTO required for some SINs.  See SIP Help for SINs requiring DEF_PHOTO for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table)
+	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
+	column :MFGPART      ,String,           size: 40           ,null: true      #   Manufacturer part number. Must be found in Product table.
+	column :MFGNAME      ,String,           size: 40           ,null: true      #   Manufacturer name. Must be found in Product table.
+	column :DEF_PHOTO    ,String,           size: 80           ,null: true      #    Filename of first photo. This is the default photo that will be shown with product/accessory. This should be the largest and best photo.*DEF_PHOTO required for some SINs.  See SIP Help for SINs requiring DEF_PHOTO for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table)
 	column :PHOTO2       ,String,           size: 80           ,null: true       #    Filename of second photo.
 	column :PHOTO3       ,String,           size: 80           ,null: true       #    Filename of third photo.
 	column :PHOTO4       ,String,           size: 80           ,null: true       #    filename of fourth photo.

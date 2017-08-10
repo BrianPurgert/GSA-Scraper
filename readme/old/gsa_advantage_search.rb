@@ -1,7 +1,7 @@
 require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
-require_relative 'pages/es/gsa_advantage_page'
+require_relative 'gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
@@ -17,12 +17,12 @@ gsa_advantage      = []
 @mfr_name          = []
 N_threads          = 5
 N_threads_plus_one = N_threads+1
-Proxy_list         = YAML::load_file(File.join(__dir__, 'proxy.yml'))
+Proxy_list         = YAML::load_file(File.join(__dir__, 'proxylist.yml'))
 
 # Basedir_input  = 'a:/input/'
-Basedir_input      = './general helper file/Input-Files/'
-Basedir_output     = './general helper file/Input-Files/'
-Files_input        = Dir.glob(Basedir_input+"*.xls")
+Basedir_input      = './'
+Basedir_output     = './'
+Files_input        = Dir.glob(Basedir_input+"*.xlsx")
 Files_output       = Dir.glob(Basedir_output+"*.xls")
 Current_time       = Time.new
 @redo_counter      = 0
@@ -35,7 +35,6 @@ def info_user
      puts "2:\t gets the Manufacture Name column by using the first cell containing either: manufacturer name, mfgname, mfr part".colorize(:cyan)
      puts "3:\t open browsers, check proxies".colorize(:cyan)
      puts "4:\t perform searches on on mpn & mft to find the featured price".colorize(:cyan)
-     puts "4:\t this script specifically is not able to find sale prices"
      puts "5:\t generates filename-out.xls containing this data".colorize(:cyan)
 end
 
@@ -75,6 +74,33 @@ def initialize_browsers(browser, gsa_advantage)
      end
 end
 
+def search_on_browser(gsa_advantage, si, mn) gsa_advantage.browser.goto search_url(si, mn)
+if gsa_advantage.first_result_element.exist?
+  gsa_advantage.first_result
+  product_page_url = gsa_advantage.current_url
+  if gsa_advantage.contractor_highlight_link_element.exist? && gsa_advantage.contractor_highlight_price_element.exists?
+    contractor          = gsa_advantage.contractor_highlight_link_element.text
+    contractor_price    = gsa_advantage.contractor_highlight_price
+    contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
+  else contractor     = 'data not found on product page'
+  contractor_price    = '-1'
+  contractor_page_url = 'n/a'
+  end
+else product_page_url = "#{search_url(si, mn)}"
+contractor            = 'search returned no results'
+contractor_price      = '-1'
+contractor_page_url   = 'n/a'
+puts "Search #{si} returned no items"
+end
+
+begin
+  @semaphore.synchronize { @data_out[si] = [mn, contractor, contractor_price, contractor_page_url, product_page_url] }
+rescue Exception => e
+  puts "MPN:\t#{si}\tMSG:\t#{e.message}"
+end
+
+end
+
 info_user
 excel_file_out_name = "#{Basedir_output}#{Current_time.month}-#{Current_time.day}-#{Current_time.hour}-#{Current_time.min}--#{xls_read}"
 puts excel_file_out_name
@@ -88,32 +114,7 @@ initialize_browsers(browser, gsa_advantage)
 
 @data_out = {}
 
-def search_on_browser(gsa_advantage, si, mn) gsa_advantage.browser.goto search_url(si, mn)
-if gsa_advantage.first_result_element.exist?
-     gsa_advantage.first_result
-     product_page_url = gsa_advantage.current_url
-     if gsa_advantage.contractor_highlight_link_element.exist? && gsa_advantage.contractor_highlight_price_element.exists?
-          contractor          = gsa_advantage.contractor_highlight_link_element.text
-          contractor_price    = gsa_advantage.contractor_highlight_price
-          contractor_page_url = gsa_advantage.contractor_highlight_link_element.href
-     else contractor     = 'data not found on product page'
-     contractor_price    = '-1'
-     contractor_page_url = 'n/a'
-     end
-else product_page_url = "#{search_url(si, mn)}"
-contractor            = 'search returned no results'
-contractor_price      = '-1'
-contractor_page_url   = 'n/a'
-puts "Search #{si} returned no items"
-end
 
-begin
-     @semaphore.synchronize { @data_out[si] = [mn, contractor, contractor_price, contractor_page_url, product_page_url] }
-rescue Exception => e
-     puts "MPN:\t#{si}\tMSG:\t#{e.message}"
-end
-
-end
 
 @semaphore = Mutex.new
 @threads   = []

@@ -2,7 +2,7 @@ require 'watir'
 require 'page-object/page_factory'
 require 'page-object'
 require 'spreadsheet'
-require_relative '../pages/es/gsa_advantage_page'
+require_relative '../../pages/es/gsa_advantage_page'
 require 'colorize'
 require 'colorized_string'
 require 'mysql2'
@@ -17,13 +17,7 @@ gsa_advantage      = []
 N_threads          = 10
 N_threads_plus_one = N_threads+1
 Proxy_list         = YAML::load_file(File.join(__dir__, '../proxy.yml'))
-@client            = Mysql2::Client.new(
-host:     "70.61.131.180",
-username: "mft_data",
-password: "GoV321CoN",
-reconnect: true,
-cast: false
-)
+@client
 
 def ask_user
     user_value = 0
@@ -151,18 +145,13 @@ end
 
 
 user_value = ask_user
-case user_value
-    when 0
-	  puts 'Skipping XLS read'
-	  use_database_items
-    when 1
+
+
+
+
 	  output_xls = xls_read
-	  xls_to_database(@client)
-	  use_database_items
-    when 2
-	  output_xls = xls_read
-	  xls_to_database(@client)
-end
+
+
 
 
 
