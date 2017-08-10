@@ -1,10 +1,11 @@
 # This File was made using IMPORT.txt found in the SIP template folder after installing
 # About the Schedule Input Program https://vsc.gsa.gov/sipuser/files/SIP-Instructions.pdf
-# TODO: split this into multiple files
 #
+#------------------------------------------------------------------------------
+# http://www.rubydoc.info/github/jeremyevans/sequel
+# http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
+# -----------------------------------------------------------------------------
 #
-
-
 # Mfr Part No.:	     DURPC1300
 # Contractor Part No.:	DURPC1300
 # Manufacturer:	     DURACELL U.S.A.
@@ -16,10 +17,7 @@
 #   3000 - 4999 2.5%
 # 5000 - 999999 3.5%
 
-#------------------------------------------------------------------------------
-# http://www.rubydoc.info/github/jeremyevans/sequel
-# http://sequel.jeremyevans.net/rdoc/files/doc/schema_modification_rdoc.html
-# --------------------------------------------------
+module ADV
 
 # Array with table names used by the import program
 ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
@@ -36,11 +34,17 @@ end
 # contract number
 # manufacture part number
 # manufacture name
-def deduplicate_table(db, table, columns)
+def deduplicate_table(db, table)
 	puts "Removing Duplicates from #{table}"
-	db.create_table!(:t1, :as => db[table].distinct(columns))#:temp=>true
+	db.create_table!(:t1, :as => db[table].distinct)#:temp=>true
 	db.create_table!(table, :as => db[:t1])
 	puts "Duplicates Removed from #{table}"
+end
+
+def deduplicate_schedule_tables(db)
+  ImportTables.each do |table|
+    deduplicate_table(db, table)
+  end
 end
 
 
@@ -222,7 +226,7 @@ DB.create_table?(:IPROD) do
 	column :PRODDESC4    ,String,           size: 250            ,null: true      # Forth description. Not until PRODDESC3 is full.
 	column :NSN          ,String,           size: 16             ,null: true      # National stock number. Format '9999-99-999-9999'.
 	column :VALUE1       ,Float,            size: [13,4]         ,null: true      # Dimension value 1. Required if UNIT1 has a value.
-	column :VALUE2        ,Float,           size: [13,4]         ,null: true      # Dimension value 2. Required if UNIT2 has a value.
+	column :VALUE2       ,Float,            size: [13,4]         ,null: true      # Dimension value 2. Required if UNIT2 has a value.
 	column :VALUE3       ,Float,            size: [13,4]         ,null: true      # Dimension value 3. Required if UNIT3 has a value.
 	column :DVOLUME      ,Float,            size: [14,4]         ,null: true      # Dimension volume. Only used if FOB = 'O'
 	column :D_VUNIT      ,String,           size: 2              ,null: true      # Dimension unit volume. Only used if FOB = 'O'. Always "CF" cubic feet.
@@ -246,7 +250,7 @@ DB.create_table?(:IPROD) do
 	column :TYPE2        ,String,           size: 2              ,null: true      # Dimension type 2. Required if UNIT2 or VALUE2 has a value. Must be 'WD'.
 	column :TYPE3        ,String,           size: 2              ,null: true      # Dimension type 3. Required if UNIT3 or VALUE3 has a value. Must be 'HT'.
 	column :ITEMTYPE     ,String,           size: 1              ,null: false     # Item type. Must be 'P' or 'A'. P=Product, A=Accessory.
-	column :UPC		 ,String,           size: 14             ,null: false     # UPC must be12 digits (you may enter 11 and will assume UPC has leading zero).  You may enter EAN8, EAN13, GTIN14, or ISBN13 (for books) if you use these identifiers instead of a UPC.  ISBN13 must start with 978 or 979.  You may pad any of these identifies with zero(s) to make a 14 digit GTIN. *UPC required for some SINs. See SIP Help for SINs requiring UPC for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table).
+	column :UPC		       ,String,           size: 14             ,null: false     # UPC must be12 digits (you may enter 11 and will assume UPC has leading zero).  You may enter EAN8, EAN13, GTIN14, or ISBN13 (for books) if you use these identifiers instead of a UPC.  ISBN13 must start with 978 or 979.  You may pad any of these identifies with zero(s) to make a 14 digit GTIN. *UPC required for some SINs. See SIP Help for SINs requiring UPC for associated products (SIP contents/Import data/SIP lookup tables/ Special item number table).
 	column :UNSPSC       ,String,           size: 8              ,null: true      # UNSPSC must be 8 digits all numeric and not start with 0.
 	column :FOB_AK       ,String,           size: 1              ,null: false     # Freight-on-board for Alaska. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
 	column :FOB_HI       ,String,           size: 1              ,null: false     # Freight-on-board for Hawaii. ‘D’- destination. ‘O’ – origin (buyer pays shipping cost), ‘N’-no delivery.
@@ -318,7 +322,7 @@ DB.create_table?(:ISPECTER) do
 	column :CONTNUM      ,String,           size: 12           ,null: false      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :SPECNAME     ,String,           size: 25           ,null: false      #   Special term name. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special charges table).
 	column :CHARGE       ,BigDecimal,       size: [12,4]       ,null: false      #   Special term charge.
-	column :SPECDESC     ,String,           size: 80           ,null: true       #    Special term description.
+	column :SPECDESC     ,String,           size: 80           ,null: true       #   Special term description.
 	column :S_PER        ,String,           size: 2            ,null: false      #   Unit of special term measurement. SIP help(SIP contents/Import data/SIP lookup tables/unit of issue table).
 end
 
@@ -415,3 +419,5 @@ DB.create_table?(:IPHOTO) do
 	column :PHOTO3       ,String,           size: 80           ,null: true       #    Filename of third photo.
 	column :PHOTO4       ,String,           size: 80           ,null: true       #    filename of fourth photo.
 end
+
+  end

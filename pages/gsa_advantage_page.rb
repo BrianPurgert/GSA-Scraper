@@ -1,4 +1,3 @@
-# don't use page object
 
 # helper stylesheet https://userstyles.org/styles/142221/pretty-gsa-advantage
 class GsaAdvantagePage
