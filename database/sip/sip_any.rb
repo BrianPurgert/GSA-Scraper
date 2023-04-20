@@ -23,9 +23,9 @@ module ADV
 ImportTables = [:IACCXPRO,:IBPA,:ICOLORS,:ICONTR,:ICORPET,:IMOLS,:IOPTIONS,:IPRICE,:IPROD,:IQTYVOL,:IREMITOR,:ISPECTER,:IZONE,:IFABRICS,:IMSG,:IPHOTO]
 
 def delete_sip_tables
-	puts "Delete SIP Tables? (Y/N)".colorize(:green)
+	puts 'Delete SIP Tables? (Y/N)'.colorize(:green)
 	if gets.to_s.upcase.include? 'Y'
-		ImportTables.each { |i_table| DB.drop_table?(i_table) }
+		ImportTables.each { |i_table| DB_CONNECT.drop_table?(i_table) }
 	end
 end
 
@@ -49,7 +49,7 @@ end
 
 
 
-DB.create_table?(:ICOLORS) do
+DB_CONNECT.create_table?(:ICOLORS) do
 	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40               ,null: true      #   Manufacturer part number. Must be found in Product table.
 	column :MFGNAME      ,String,           size: 40               ,null: true      #   Manufacturer name. Must be found in Product table.
@@ -58,7 +58,7 @@ end
 # ======================================================================================================================
 # Link for accessories to products -------------------------------------------------------------------------------------
 
-DB.create_table?(:IACCXPRO) do
+DB_CONNECT.create_table?(:IACCXPRO) do
 	column :CONTNUM    ,String,   size: 12    ,null: true          # CONTNUM
 	column :MFGPART    ,String,   size: 40    ,null: true          # Manufacturer part number. Must be found in Product table. Cannot equal accpart.
 	column :PROD_MFR   ,String,   size: 40    ,null: true          # Product Manufacturer name. Must be found in Product table.
@@ -69,7 +69,7 @@ end
 
 # BPA Price and quantity/volume discount information table ------------------------------------------------------------------------------
 
-DB.create_table?(:IBPA) do
+DB_CONNECT.create_table?(:IBPA) do
 	column :CONTNUM      ,String,            size: 12     ,null: true # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,            size: 40     ,null: true # Manufacturer part number. In PROD.TXT.
 	column :MFGNAME      ,String,            size: 40     ,null: true # Manufacturer name. Must be found in Product table.
@@ -117,7 +117,7 @@ end
 
 # Color information for product ------------------------------------------------------------------------------
 
-DB.create_table?(:ICOLORS) do
+DB_CONNECT.create_table?(:ICOLORS) do
 	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40               ,null: true      #   Manufacturer part number. Must be found in Product table.
 	column :MFGNAME      ,String,           size: 40               ,null: true      #   Manufacturer name. Must be found in Product table.
@@ -127,7 +127,7 @@ end
 
 # Contract information table ------------------------------------------------------------------------------
 
-DB.create_table?(:ICONTR) do
+DB_CONNECT.create_table?(:ICONTR) do
 	column :CONTNUM      ,String,           size: 12               ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 'for VA contract), unique.
 	column :SCHEDCAT     ,String,           size: 10               ,null: true      #   Schedule category number.
 	column :A_NAME       ,String,           size: 35               ,null: true      #   Contract administrator name.
@@ -155,7 +155,7 @@ end
 
 # Vendor information table -------------------------------------------------------------------------------
 
-DB.create_table?(:ICORPET) do
+DB_CONNECT.create_table?(:ICORPET) do
 	column :VENDNAME     ,String,           size: 35              ,null: true      #   Vendor name.
 	column :DIVISION     ,String,           size: 35              ,null: true       #    Corporate/division name.
 	column :V_STR1       ,String,           size: 35              ,null: true      #   Corporate/division headquarters address 1.
@@ -175,7 +175,7 @@ end
 
 # Contract Special Item Number (SIN) Table ------------------------------------------------------------------------------
 
-DB.create_table?(:IMOLS) do
+DB_CONNECT.create_table?(:IMOLS) do
 	column :CONTNUM      ,String,           size: 12              ,null: true        #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :SIN          ,String,           size: 15              ,null: true        #     Special item number. In help(SIP help contents/Import data/SIP lookup tables/Special item number table) for current SCHEDCAT.
 	column :MOL          ,Integer,          size: 8               ,null: true        #     Maximum order limit for special item number. In SIP help(SIP help contents/Import data/SIP lookup tables/Maximum order Limit table) for current SIN.
@@ -184,7 +184,7 @@ end
 
 # Product Options (allows you to enter any options, colors, components or upgrades, so that customers may configure a product by selecting from available options)
 
-DB.create_table?(:IOPTIONS) do
+DB_CONNECT.create_table?(:IOPTIONS) do
 	column :CONTNUM      ,String,           size: 12              ,null: true      #     Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40              ,null: true      #     Manufacturer part number. In PROD.TXT
 	column :MFGNAME      ,String,           size: 40              ,null: true      #     Manufacturer name of attached product. Must be found in Product table.
@@ -200,7 +200,7 @@ DB.create_table?(:IOPTIONS) do
 end
 # Product specific price information table ------------------------------------------------------------------------------
 
-DB.create_table?(:IPRICE) do
+DB_CONNECT.create_table?(:IPRICE) do
 	column :CONTNUM      ,String,           size: 12              ,null: true       #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40              ,null: true       #   Manufacturer part number. In PROD.TXT.
 	column :MFGNAME      ,String,           size: 40              ,null: true       #   Manufacturer name. Must be found in Product table.
@@ -214,7 +214,7 @@ end
 
 
 # Product Information Table ------------------------------------------------------------------------------
-DB.create_table?(:IPROD) do
+DB_CONNECT.create_table?(:IPROD) do
 	column :CONTNUM      ,String,           size: 12             ,null: true     # Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40             ,null: true     # Manufacturer part number. Must be unique for a contract.
 	column :MFGNAME      ,String,           size: 40             ,null: true     # Manufacturer name.
@@ -260,7 +260,7 @@ DB.create_table?(:IPROD) do
 end
 
 # Product quantity/volume discount information table ------------------------------------------------------------------------------
-DB.create_table?(:IQTYVOL) do
+DB_CONNECT.create_table?(:IQTYVOL) do
 	column :CONTNUM      ,String,           size: 12            ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40            ,null: true      #   Manufacturer part number. In PROD.TXT.
 	column :MFGNAME      ,String,           size: 40            ,null: true      #   Manufacturer name. Must be found in Product table.
@@ -301,7 +301,7 @@ end
 
 # Contract order address information table ------------------------------------------------------------------------------
 
-DB.create_table?(:IREMITOR) do
+DB_CONNECT.create_table?(:IREMITOR) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :R_NAME       ,String,           size: 35           ,null: true      #   Contact name for order address.
 	column :R_STR1       ,String,           size: 35           ,null: true      #   Street address for order address.
@@ -318,7 +318,7 @@ end
 
 # Product/contract special terms & conditions table ------------------------------------------------------------------------------
 
-DB.create_table?(:ISPECTER) do
+DB_CONNECT.create_table?(:ISPECTER) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :SPECNAME     ,String,           size: 25           ,null: true      #   Special term name. In . SIP help(SIP help contents/Import data/SIP lookup tables/Special charges table).
 	column :CHARGE       ,BigDecimal,       size: [12,4]       ,null: true      #   Special term charge.
@@ -329,7 +329,7 @@ end
 
 # Contract Zone table. If prices vary by geographic zone, assign zone numbers to each state, up to 10 zones, numbered 1-10. AK, HI, PR and VI must >= 0. All others > 0.-----------------------
 
-DB.create_table?(:IZONE) do
+DB_CONNECT.create_table?(:IZONE) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :AK           ,Integer,          size: 2            ,null: true       #    Alaska zone number. Required if you have zones.
 	column :AL           ,Integer,          size: 2            ,null: true       #    Alabama zone number. Required if you have zones.
@@ -387,7 +387,7 @@ DB.create_table?(:IZONE) do
 end
 
 # Fabric information for contract. If many of your products have fabrics choices, this table is useful. ------------------------------------
-DB.create_table?(:IFABRICS) do
+DB_CONNECT.create_table?(:IFABRICS) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :FABTYPE      ,String,           size: 15           ,null: true      #   Fabric type.
 	column :COLOR        ,String,           size: 40           ,null: true      #   Color.
@@ -396,7 +396,7 @@ end
 
 # Environmental message information for product. ------------------------------------------------------------------------------
 
-DB.create_table?(:IMSG) do
+DB_CONNECT.create_table?(:IMSG) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40           ,null: true      #   Manufacturer part number. In PROD.TXT.
 	column :MFGNAME      ,String,           size: 40           ,null: true      #   Manufacturer name. Must be found in Product table.
@@ -410,7 +410,7 @@ end
 
 # photo information for product ------------------------------------------------------------------------------
 
-DB.create_table?(:IPHOTO) do
+DB_CONNECT.create_table?(:IPHOTO) do
 	column :CONTNUM      ,String,           size: 12           ,null: true      #   Contract number. Format 'GS-99F-9999A' or GS-'GS-99F-999AA' ('V999P-99999 ' or 'V999D-99999 ' for VA contract) in CONTR.TXT.
 	column :MFGPART      ,String,           size: 40           ,null: true      #   Manufacturer part number. Must be found in Product table.
 	column :MFGNAME      ,String,           size: 40           ,null: true      #   Manufacturer name. Must be found in Product table.

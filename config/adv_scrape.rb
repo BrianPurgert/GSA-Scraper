@@ -1,65 +1,45 @@
 module ADV
 
-# ============= Environment Variables ============= #
-  ENV['MYSQL_HOST']         = 'gcs-data.mysql.database.azure.com'
-  ENV['MYSQL_HOST_ALT']     = 'gcs-data0.mysql.database.azure.com'
-  ENV['MYSQL_DATABASE']     = 'mft_data'
-  ENV['MYSQL_USER']         = 'BrianPurgert@gcs-data'
-  ENV['MYSQL_PASS']         = 'GoV321CoN'
+	# ============= Environment Variables ============= #
+	ENV['MYSQL_HOST']     = '192.168.1.9'
+	ENV['MYSQL_DATABASE'] = 'crawler'
+	ENV['MYSQL_USER']     = 'root'
+	ENV['MYSQL_PASS']     = 'root'
 
-  def self.select_host
-    ENV['MYSQL_HOST'] = 'simplegsa.com'
-    ENV['MYSQL_DATABASE'] = 'crawler'
-    ENV['MYSQL_USER'] = 'crawler'
-    ENV['MYSQL_PASS'] = 'crawler'
-  end
-
-  select_host
+	# ===================================== Execution Configurations
+	Thread.abort_on_exception = false
+	PAGE_LIST                 = YAML::load_file(File.join(__dir__, '../config/page.yml'))
 
 
-# ===================================== Execution Configurations
-#   Thread.abort_on_exception = true
-  Thread.abort_on_exception = false
+	# ===================================== Constants
+	DOWNLOAD     = true
+	IGNORE_CAT   = true
+	MECHANIZED   = true
+	LOG_DATABASE = true
+	DEBUG_AGENTS = false
 
-  PAGE_LIST                = YAML::load_file(File.join(__dir__, '../config/page.yml'))
-  PROXY_LIST               = YAML::load_file(File.join(__dir__, '../config/proxylist.yml'))
+	# manufacture q=28:5
+	# contract    q=19:2
+	# contractor  q=24:2
+	# category    q=1:4
 
+	@search_in = 'q=1:4'
 
-# ===================================== Constants
-DOWNLOAD                  = true
-IGNORE_CAT                = true
-MECHANIZED                = true
-LOG_DATABASE              = true
-DEBUG_AGENTS              = false
-HUDSON_LOCAL              = '//192.168.1.104/gsa_price/'
+	# ===================================== Constants
+	REGEX_QUERY    = /(?<=\q=..:.).*/
+	GSA_ADVANTAGE  = 'https://gsaadvantage.gov'
+	PRODUCT_DETAIL = '/advantage/catalog/product_detail.do?'
 
+	# contractNumber            = GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
+	# contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
+	# contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
+	# /advantage/catalog/product_detail.do?contractNumber=GS-25F-0139M&itemNumber=10942B&mfrName=EK+EKCESSORIES
 
-  # manufacture q=28:5
-  # contract    q=19:2
-  # contractor  q=24:2
-  # category    q=1:4
+	FSSI    = 'a[href*=\'#fssi\']'
+	SUB_CAT = 'a[href*=\'/advantage/s/search.do?q=1:4ADV.\']'
+	CAT     = 'a[href*=\'/advantage/department/main.do?cat=ADV.\']' # a[href*='cat=']
+	LISTS   = ['vnd.do?', 'mfr.do?']
 
-@search_in = 'q=1:4'
-
-
-# ===================================== Constants
-REGEX_QUERY               = /(?<=\q=..:.).*/
-GSA_ADVANTAGE  = 'https://gsaadvantage.gov'
-PRODUCT_DETAIL = '/advantage/catalog/product_detail.do?'
-OUTAGE         = '/outage.html'
-OUTAGE_IP      = '104.160.239.120:60099'
-# contractNumber            = GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
-# contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
-# contractNumber=GS-07F-0100W&itemNumber=10942B&mfrName=E.K.+EKCESSORIES
-# /advantage/catalog/product_detail.do?contractNumber=GS-25F-0139M&itemNumber=10942B&mfrName=EK+EKCESSORIES
-
-
-
-	FSSI        = "a[href*='#fssi']"
-	SUB_CAT     = "a[href*='/advantage/s/search.do?q=1:4ADV.']"
-	CAT         = "a[href*='/advantage/department/main.do?cat=ADV.']"       # a[href*='cat=']
-	Lists          =  ["vnd.do?", "mfr.do?"]
-	
 	# 0	Building & Industrial
 	# 1	Electronics & Technology
 	# 2	Facilities & Supplies
@@ -71,14 +51,13 @@ OUTAGE_IP      = '104.160.239.120:60099'
 	# 8	Scientific & Medical
 	# 9	Tools, Paint & Recreational
 	# 10	Vehicles & Equipment
-	Categories   = ["ADV.BUI", "ADV.ELE", "ADV.FAC", "ADV.FUR", "ADV.LAW", "ADV.OEQ", "ADV.OFF", "ADV.FSSI", "ADV.SCI", "ADV.TOO", "ADV.VEH"]
+	CATS = ['ADV.BUI', 'ADV.ELE', 'ADV.FAC', 'ADV.FUR', 'ADV.LAW', 'ADV.OEQ', 'ADV.OFF', 'ADV.FSSI', 'ADV.SCI', 'ADV.TOO', 'ADV.VEH']
 
+	SYMBOLS = %w(#wwwlink39 #cpg #wwwlink43 #epeatbronze #energystar #femp #fips #gss #hspd12 #hazmat #508 #wwwlink42 #eparecommended #neshap #prime #snap #safer #wwwlink38 #gsaglobal #abilityOne #unicor #bpa #fssi)
 
-SYMBOLS = %w(#wwwlink39 #cpg #wwwlink43 #epeatbronze #energystar #femp #fips #gss #hspd12 #hazmat #508 #wwwlink42 #eparecommended #neshap #prime #snap #safer #wwwlink38 #gsaglobal #abilityOne #unicor #bpa #fssi)
-
-# ===================================== OVERRIDES
-I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil          # lol
-OpenSSL::SSL::VERIFY_PEER                                   = OpenSSL::SSL::VERIFY_NONE
+	# ===================================== OVERRIDES
+	I_KNOW_THAT_OPENSSL_VERIFY_PEER_EQUALS_VERIFY_NONE_IS_WRONG = nil # lol
+	OpenSSL::SSL::VERIFY_PEER                                   = OpenSSL::SSL::VERIFY_NONE
 
 end
 

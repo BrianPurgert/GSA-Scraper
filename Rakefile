@@ -5,22 +5,16 @@ require 'colorize'
 # require_relative 'config.ru'
 # require_relative 'GSA/adv/adv_base'
 
-
-
 desc 'Default Tasks'
 task(default:
-         [:crawl_web_manufactures_vendors_categories,
-          :crawl_web_master_products,
-          :crawl_web_base_products])
-
-
-
+     [:crawl_web_manufactures_vendors_categories,
+      :crawl_web_master_products,
+      :crawl_web_base_products])
 
 task(:crawl_network) do
-  puts "Crawling Network for with SIP files".colorize(:yellow)
+	puts 'Crawling Network for with SIP files'.colorize(:yellow)
 	ruby 'report/report.rb'
 end
-
 
 task(:crawl_web_manufactures_vendors_categories) do
 	ruby 'GSA/adv/adv_base.rb'
@@ -38,11 +32,6 @@ desc 'Install Gems'
 task(:install) do
 	exec("cd #{Dir.getwd} && bundle update && bundle install")
 end
-
-
-
-
-
 
 # source_files = Rake::FileList.new("**/*.xlsx", "**/*.xls") do |fl|
 #   fl.exclude("~*")

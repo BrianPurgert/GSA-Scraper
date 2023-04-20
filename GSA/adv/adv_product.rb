@@ -8,15 +8,15 @@ threads         = []
 def vendor_product_detail(product_agents, product_href)
   html = send_agent(product_href)
   doc = Nokogiri::HTML(html)
-  vendor_link = doc.css("a[href*='contractor_detail.do'][href*='?']").first
+  vendor_link = doc.css('a[href*=\'contractor_detail.do\'][href*=\'?\']').first
   vendor_href = clean_href(vendor_link['href'])
   vendor_text = vendor_link.text
-  bad = "#main > table:nth-child(3) > tbody > tr > td > table > tbody > tr:nth-child(1) > td:nth-child(2)"
+  bad = '#main > table:nth-child(3) > tbody > tr > td > table > tbody > tr:nth-child(1) > td:nth-child(2)'
   vendor_product_detail = doc.css(bad)
 end
 
 
-DB.create_table! :products do
+DB_CONNECT.create_table! :products do
 	primary_key :id
 	String :GSIN             ,null: true
 	String :CONTNUM          ,null: true
@@ -37,15 +37,15 @@ end
 
 
 
-DB[:products].print
+DB_CONNECT[:products].print
 
 
 # Step 1 Load GSIN
 def product_search
   @search_in = 'q=1:4'
-  DB.create_table!(:product_search, :as => DB[:manufacture_parts].select(:href_name).distinct(:href_name))
-  DB[:product_search].print
-  DB[:product_search].each { |product| @gsin_queue  << product[:href_name] }
+  DB_CONNECT.create_table!(:product_search, :as => DB_CONNECT[:manufacture_parts].select(:href_name).distinct(:href_name))
+  DB_CONNECT[:product_search].print
+  DB_CONNECT[:product_search].each { |product| @gsin_queue  << product[:href_name] }
 end
 
 product_search
@@ -56,7 +56,7 @@ threads << Thread.new do
     @import_queue
           sleep 10
           unless @import_queue.empty?
-            DB[:products].import([:GSIN, :CONTNUM,:VENDNAME, :MFGNAME, :MFGPART, :BPANUM, :PRICE, :PHOTO], take(@import_queue))
+            DB_CONNECT[:products].import([:GSIN, :CONTNUM, :VENDNAME, :MFGNAME, :MFGPART, :BPANUM, :PRICE, :PHOTO], take(@import_queue))
           end
         end
     end
@@ -112,15 +112,15 @@ until @gsin_queue.empty?
     # /images/products/GS-21F-161AA/l/SCS_PHOTO_13482825_500x500.JPG
 
 
-    vendor_row.css("img[src*='images'][src*='products']").each {|image| product_vendor[:photo] = image['src']}
+    vendor_row.css('img[src*=\'images\'][src*=\'products\']').each {|image| product_vendor[:photo] = image['src']}
 
-    vendor_row.css("a[href*='contractNumber']:not([href*='gsin']):not([href*='oid=']):not([href*='keyName='])").each do |link|
+    vendor_row.css('a[href*=\'contractNumber\']:not([href*=\'gsin\']):not([href*=\'oid=\']):not([href*=\'keyName=\'])').each do |link|
       if link.text.size > 0
         product_vendor[:name] = link.text
       end
     end
 
-    vendor_row.css("*[href*='contractNumber']").each do |link|
+    vendor_row.css('*[href*=\'contractNumber\']').each do |link|
       product_href = clean_href(link['href'])
       query = product_href.split('?').last
       query.split('&').each do |parameter|

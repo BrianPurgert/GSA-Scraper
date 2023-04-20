@@ -23,16 +23,16 @@ puts 'Creating table search_list for crawl'
 
 def manufacture_search
   @search_in = 'q=28:5'
-DB.create_table!(:manufacture_search, :as => DB[:manufactures].select(:href_name).distinct(:href_name))
-DB[:manufacture_search].print
-DB[:manufacture_search].each { |mfr| @search_queue << mfr[:href_name] }
+DB_CONNECT.create_table!(:manufacture_search, :as => DB_CONNECT[:manufactures].select(:href_name).distinct(:href_name))
+DB_CONNECT[:manufacture_search].print
+DB_CONNECT[:manufacture_search].each { |mfr| @search_queue << mfr[:href_name] }
 end
 
 def category_search
   @search_in = 'q=1:4'
-  DB.create_table!(:category_search, :as => DB[:categories].select(:id).distinct(:id))
-  DB[:category_search].print
-  DB[:category_search].each { |category| @search_queue << category[:id] }
+  DB_CONNECT.create_table!(:category_search, :as => DB_CONNECT[:categories].select(:id).distinct(:id))
+  DB_CONNECT[:category_search].print
+  DB_CONNECT[:category_search].each { |category| @search_queue << category[:id] }
 end
 
 category_search
@@ -43,8 +43,8 @@ def get_all_products(mfr, n_low, pg)
 		url            = search_url(mfr, n_low)
 		html           = send_agent(url)
 		doc            = Nokogiri::HTML(html)
-		pagination     = doc.css("#pagination")
-		next_page      = pagination.text.include? "Next Page >"
+		pagination     = doc.css('#pagination')
+		next_page      = pagination.text.include? 'Next Page >'
 		product_tables = doc.search('#pagination~ table:not(#pagination2)')
 		n_results      = product_tables.length
 
@@ -61,7 +61,7 @@ end
 
 
 def controller
-	@throttle = DB[:controller].filter(key: 'throttle').select(:value).first
+	@throttle = DB_CONNECT[:controller].filter(key: 'throttle').select(:value).first
 	sleep 10
 end
 
@@ -88,7 +88,7 @@ def search
 
     end
     sleep 10
-		color_p "Queue is Empty"
+		color_p 'Queue is Empty'
 	end
 end
 

@@ -15,7 +15,7 @@ THREADS = []
 
 
  # Dir["#{}*.xls"].each { |file| puts file }
-abc = ("A".."Z").to_a
+abc = ('A'..'Z').to_a
 xls_other   = []
 xlsx_sheets = []
 csv_sheets  = []
@@ -66,7 +66,7 @@ abc.each do |xyz|
 # THREADS.each { |thr| thr.join }
 
 exit
-deduplicate_schedule_tables(DB)
+deduplicate_schedule_tables(DB_CONNECT)
 
 
 list_files(xls_other)

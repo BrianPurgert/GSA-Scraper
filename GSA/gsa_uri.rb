@@ -26,8 +26,6 @@
 #         source=ci
 #              view=clauses
 
-
-
 # www.gsaadvantage.gov
 #    /advantage
 #         /main
@@ -74,91 +72,83 @@
 module GSA
 	require 'rubygems'
 	require 'sequel'
-  require 'addressable/uri'
+	require 'addressable/uri'
 
+	class URI
+		def initialize(url)
+			@uri = Addressable::URI.parse(url)
+			puts @uri.scheme
+			puts @uri.host
+			puts @uri.path
+			puts @uri.normalize
 
+			# build(url)
+		end
 
+		def print
+			"#{@uri.schema} #{@uri.host} #{@uri.path}"
+		end
 
-class URI
-	def initialize(url)
-    @uri = Addressable::URI.parse(url)
-    puts @uri.scheme
-    puts @uri.host
-    puts @uri.path
-    puts @uri.normalize
+		def build(url)
+			query        = url.split('/').last
+			@page        = query.split('?').first
+			query_string = query.split('?').last
 
-		# build(url)
-  end
+			if @page.include? '/s/'
 
-  def print
-    "#{@uri.schema} #{@uri.host} #{@uri.path}"
-  end
+				query_string.split('&').each do |part|
+					puts part
+					puts REGEX_QUERY.match(part)
+				end
 
-
-	def build(url)
-		query        = url.split('/').last
-		@page        = query.split('?').first
-		query_string = query.split('?').last
-		
-		if @page.include? "/s/"
-
-			query_string.split('&').each do |part|
-				puts part
-				puts REGEX_QUERY.match(part)
 			end
 
-		end
-
-
-
-			
-			if @page.include? "product_detail.do"
-			query_string.split('&').each do |part|
-				if part.include? "gsin"
-					@gsin = part.split('=').last
-				elsif part.include? "contractNumber"
-					@contnum = part.split('=').last
-				elsif part.include? "itemNumber"
-					@vendpart = part.split('=').last
-				elsif part.include? "mfrName"
-					@mfgname = part.split('=').last
-				elsif part.include? "bpaNumber"
-					@bpanum = part.split('=').last
+			if @page.include? 'product_detail.do'
+				query_string.split('&').each do |part|
+					if part.include? 'gsin'
+						@gsin = part.split('=').last
+					elsif part.include? 'contractNumber'
+						@contnum = part.split('=').last
+					elsif part.include? 'itemNumber'
+						@vendpart = part.split('=').last
+					elsif part.include? 'mfrName'
+						@mfgname = part.split('=').last
+					elsif part.include? 'bpaNumber'
+						@bpanum = part.split('=').last
+					end
 				end
+
+				@url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=#{@contnum}&itemNumber=#{@mfgpart}&mfrName=#{@mfgname}"
+
+			end
+			# /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
 		end
 
-
-			@url = "https://www.gsaadvantage.gov/advantage/catalog/product_detail.do?contractNumber=#{@contnum}&itemNumber=#{@mfgpart}&mfrName=#{@mfgname}"
-
+		def contnum
+			@contnum
 		end
-		# /advantage/contractor/contractor_detail.do?mapName=/s/search/&cat=ADV&contractNumber=GS-21F-0072Y
-	end
 
-	def contnum
-		@contnum
-	end
+		def bpanum
+			@bpanum
+		end
 
-	def bpanum
-		@bpanum
-	end
+		def gsin
+			@gsin
+		end
 
-	def gsin
-		@gsin
-	end
+		def mfgname
+			@mfgname
+		end
 
-	def mfgname
-		@mfgname
-	end
+		def mfgpart
+			@mfgpart
+		end
 
-	def mfgpart
-		@mfgpart
-	end
-
-	def url
+		def url
 			@url
-	end
+		end
 
-end
+	end
 end
 
 require 'pp'
@@ -200,13 +190,12 @@ https://www.gsaadvantage.gov/advantage/s/refineSearch.do?q=1:4*&searchType=1&_a=
 
 )
 
-
 test_array = []
 
 test_urls.each_with_index do |url, i|
 	test_array[i] = GSA::URI.new(url)
 	# puts test_array[i].gsin
 	puts test_array[i].url
-  #"#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"
+	#"#{test_array[i].gsin} #{test_array[i].mfgpart} #{test_array[i].mfgname} #{test_array[i].contnum} #{test_array[i].bpanum}"
 end
 

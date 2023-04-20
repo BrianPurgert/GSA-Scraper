@@ -15,9 +15,9 @@
 # https://www.sam.gov/sam/transcript/SAM_Entity_Management_Public_Extract_Layout_v1.1.pdf
 
 class SystemAwardManagement
-	
+
 	# Probably should just scrape the json urls and map them to tables
-	
+
 	'http://gsa.github.io/sam_api/static/businessTypes.json'
 	'http://gsa.github.io/sam_api/static/purpose.json'
 	'http://gsa.github.io/sam_api/static/country.json'
